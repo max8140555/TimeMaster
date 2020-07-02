@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Toolbar -->
+    <dimen name="height_toolbar">80dp</dimen>
+    <dimen name="height_status_bar_origin">24dp</dimen>
+
+    <!-- General -->
+    <dimen name="elevation_all">4dp</dimen>
+
+    <!-- Bottom Navigation -->
+    <dimen name="height_bottom_nav_view_main">56dp</dimen>
+    <dimen name="size_bottom_nav_icon">36dp</dimen>
+
+    <!-- Logo -->
+    <dimen name="width_logo">254dp</dimen>
+    <dimen name="height_logo">39dp</dimen>
+    <dimen name="duration_logo_translate">-575dp</dimen>
+    <dimen name="size_particle_logo">30dp</dimen>
+</resources>
