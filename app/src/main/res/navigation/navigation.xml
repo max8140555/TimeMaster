@@ -14,7 +14,11 @@
         android:id="@+id/calendarDetailFragment"
         android:name="com.max.timemaster.calendar.CalendarDetailFragment"
         android:label="CalendarDetailFragment"
-        tools:layout="@layout/fragment_calendar_delail" />
+        tools:layout="@layout/fragment_calendar_detail" >
+        <argument
+            android:name="datekey"
+            app:argType="string" />
+    </fragment>
 
     <action
         android:id="@+id/action_global_calendarDetailFragment"

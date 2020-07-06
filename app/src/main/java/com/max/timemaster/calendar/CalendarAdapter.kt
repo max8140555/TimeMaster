@@ -1,16 +1,17 @@
 package com.max.timemaster.calendar
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.max.timemaster.data.CalendarId
+import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.databinding.ItemCalendarBinding
+import com.max.timemaster.util.TimeUtil.stampToDate
+import java.util.*
 
 class CalendarAdapter() :
-    ListAdapter<CalendarId, CalendarAdapter.ProductDetailedEvaluationViewHolder>(
+    ListAdapter<CalendarEvent, CalendarAdapter.ProductDetailedEvaluationViewHolder>(
         DiffCallback
     ) {
 
@@ -22,9 +23,10 @@ class CalendarAdapter() :
     //1.ViewHolder 畫布
     class ProductDetailedEvaluationViewHolder(private var binding: ItemCalendarBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(calendarId: CalendarId) {
+        fun bind(calendarId: CalendarEvent) {
             binding.title.text = calendarId.calendarTitle
-            binding.context.text = calendarId.calendarContent
+            binding.attendee.text = calendarId.attendee
+            binding.time.text = calendarId.dataStamp?.let { stampToDate(it, Locale.TAIWAN) }
 
 
             // This is important, because it forces the data binding to execute immediately,
@@ -37,17 +39,17 @@ class CalendarAdapter() :
      * Allows the RecyclerView to determine which items have changed when the [List] of [MarsProperty]
      * has been updated.
      */
-    companion object DiffCallback : DiffUtil.ItemCallback<CalendarId>() {
+    companion object DiffCallback : DiffUtil.ItemCallback<CalendarEvent>() {
         override fun areItemsTheSame(
-            oldItem: CalendarId,
-            newItem: CalendarId
+            oldItem: CalendarEvent,
+            newItem: CalendarEvent
         ): Boolean {
             return oldItem === newItem
         }
 
         override fun areContentsTheSame(
-            oldItem: CalendarId,
-            newItem: CalendarId
+            oldItem: CalendarEvent,
+            newItem: CalendarEvent
         ): Boolean {
             return oldItem == newItem
         }

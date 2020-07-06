@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.max.timemaster.NavigationDirections
 import com.max.timemaster.R
 
 import com.max.timemaster.databinding.FragmentCalendarBinding
@@ -37,8 +38,15 @@ class CalendarFragment : Fragment() {
     ): View? {
         binding = FragmentCalendarBinding.inflate(inflater, container, false)
         viewModel.getArticlesResult()
+        viewModel.selectDate.value = LocalDate.now().toString()
+
         binding.btnAdd.setOnClickListener {
-            findNavController().navigate(R.id.action_global_calendarDetailFragment)
+
+            viewModel.selectDate.value?.let {selectDate ->
+                findNavController().navigate(NavigationDirections.actionGlobalCalendarDetailFragment(selectDate))
+            }
+
+
         }
         val adapter = CalendarAdapter()
         binding.recyclerCalendar.adapter = adapter
@@ -64,25 +72,17 @@ class CalendarFragment : Fragment() {
                 "current date \n ${date.date}",
                 Toast.LENGTH_SHORT
             ).show()
+//            date.date.format(Da)
 
+
+            viewModel.selectDate.value = date.date.toString()
+            Log.d("viewModel.selectDate","${viewModel.selectDate.value}")
         }
         val calendar = LocalDate.now()
         widget.setSelectedDate(calendar)
     }
 
-    fun addData() {
-        val calendar = FirebaseFirestore.getInstance().collection("calendar")
-        val document = calendar.document()
-        val data = hashMapOf(
-            "calendarTitle" to "約會",
-            "attendee" to "小小",
-            "createdTime" to Calendar.getInstance().timeInMillis,
-            "calendarContent" to "吃西餐廳",
-            "hour" to 8,
-            "minute" to 20
-        )
-        document.set(data)
-    }
+
 
 }
 

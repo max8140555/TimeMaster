@@ -1,12 +1,14 @@
 package com.max.timemaster.data.source.remote
 
 
-import android.util.Log
+import android.icu.util.Calendar
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
-import com.max.timemaster.data.CalendarId
+import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.data.Result
 import com.max.timemaster.data.TimeMasterDataSource
 import com.max.timemaster.util.Logger
@@ -21,22 +23,46 @@ import kotlin.coroutines.suspendCoroutine
 object TimeMasterRemoteDataSource : TimeMasterDataSource {
 
     private const val PATH_ARTICLES = "calendar"
-    private const val KEY_CREATED_TIME = "createdTime"
-    override suspend fun getCalendarId(): Result<List<CalendarId>> = suspendCoroutine { continuation ->
+    private const val KEY_CREATED_TIME = "dataStamp"
+    override suspend fun getCalendarId(): Result<List<CalendarEvent>> = suspendCoroutine { continuation ->
         FirebaseFirestore.getInstance()
             .collection(PATH_ARTICLES)
-           // .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)   時間相關
+            .orderBy(KEY_CREATED_TIME, Query.Direction.ASCENDING)
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val list = mutableListOf<CalendarId>()
+                    val list = mutableListOf<CalendarEvent>()
                     for (document in task.result!!) {
                         Logger.d(document.id + " => " + document.data)
 
-                        val calendar = document.toObject(CalendarId::class.java)
+                        val calendar = document.toObject(CalendarEvent::class.java)
                         list.add(calendar)
                     }
                     continuation.resume(Result.Success(list))
+                } else {
+                    task.exception?.let {
+
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                        return@addOnCompleteListener
+                    }
+                    continuation.resume(Result.Fail(TimeMasterApplication.instance.getString(R.string.you_know_nothing)))
+                }
+            }
+    }
+
+
+    override suspend fun postEvent(calendarEvent: CalendarEvent): Result<Boolean> = suspendCoroutine { continuation ->
+        val event = FirebaseFirestore.getInstance().collection(PATH_ARTICLES)
+        val document = event.document()
+//        calendarEvent.dataStamp = Calendar.getInstance().timeInMillis
+        document
+            .set(calendarEvent)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Logger.i("postEvent: $calendarEvent")
+
+                    continuation.resume(Result.Success(true))
                 } else {
                     task.exception?.let {
 

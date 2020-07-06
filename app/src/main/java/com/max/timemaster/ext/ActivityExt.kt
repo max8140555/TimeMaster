@@ -3,10 +3,7 @@ package app.appworks.school.stylish.ext
 import android.app.Activity
 import android.view.Gravity
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import com.max.timemaster.TimeMasterApplication
-import com.max.timemaster.data.CalendarId
-import com.max.timemaster.factory.CalendarViewModelFactory
 import com.max.timemaster.factory.ViewModelFactory
 
 

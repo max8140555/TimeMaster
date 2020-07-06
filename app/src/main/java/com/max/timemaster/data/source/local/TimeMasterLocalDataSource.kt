@@ -1,7 +1,7 @@
 package com.max.timemaster.data.source.local
 
 import android.content.Context
-import com.max.timemaster.data.CalendarId
+import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.data.Result
 import com.max.timemaster.data.TimeMasterDataSource
 
@@ -12,7 +12,11 @@ import com.max.timemaster.data.TimeMasterDataSource
  * Concrete implementation of a Stylish source as a db.
  */
 class TimeMasterLocalDataSource(val context: Context) : TimeMasterDataSource {
-    override suspend fun getCalendarId(): Result<List<CalendarId>> {
+    override suspend fun getCalendarId(): Result<List<CalendarEvent>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun postEvent(calendarEvent: CalendarEvent): Result<Boolean> {
         TODO("Not yet implemented")
     }
 

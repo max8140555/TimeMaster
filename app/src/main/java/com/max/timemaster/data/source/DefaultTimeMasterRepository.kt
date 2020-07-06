@@ -1,12 +1,9 @@
 package com.max.timemaster.data.source
 
-import com.max.timemaster.data.CalendarId
+import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.data.Result
 import com.max.timemaster.data.TimeMasterDataSource
 import com.max.timemaster.data.TimeMasterRepository
-import com.max.timemaster.data.source.remote.TimeMasterRemoteDataSource
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 
 /**
  * Created by Wayne Chen in Jul. 2019.
@@ -16,8 +13,12 @@ import kotlinx.coroutines.Dispatchers
 class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSource,
                                   private val localDataSource: TimeMasterDataSource
 ) : TimeMasterRepository {
-    override suspend fun getCalendarId(): Result<List<CalendarId>> {
+    override suspend fun getCalendarId(): Result<List<CalendarEvent>> {
         return remoteDataSource.getCalendarId()
+    }
+
+    override suspend fun postEvent(calendarEvent: CalendarEvent): Result<Boolean> {
+        return remoteDataSource.postEvent(calendarEvent)
     }
 
 

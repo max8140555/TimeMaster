@@ -1,12 +1,11 @@
 package com.max.timemaster.calendar
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
-import com.max.timemaster.data.CalendarId
+import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.network.LoadApiStatus
 import kotlinx.coroutines.CoroutineScope
@@ -16,10 +15,11 @@ import kotlinx.coroutines.launch
 
 class CalendarViewModel(
     private val timeMasterRepository: TimeMasterRepository
-) : ViewModel() {
-    private val _calendar = MutableLiveData<List<CalendarId>>()
 
-    val calendar: LiveData<List<CalendarId>>
+) : ViewModel() {
+    private val _calendar = MutableLiveData<List<CalendarEvent>>()
+
+    val calendar: LiveData<List<CalendarEvent>>
         get() = _calendar
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -40,6 +40,8 @@ class CalendarViewModel(
         get() = _refreshStatus
 
     val selectDate = MutableLiveData<String>()
+
+
 
 
 
@@ -68,7 +70,6 @@ class CalendarViewModel(
                 is com.max.timemaster.data.Result.Success -> {
                     _error.value = null
                     _status.value = LoadApiStatus.DONE
-                    Log.d("9999","${result.data}")
                     result.data
                 }
                 is com.max.timemaster.data.Result.Fail -> {
