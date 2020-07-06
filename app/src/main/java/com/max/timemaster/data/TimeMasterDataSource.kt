@@ -10,7 +10,8 @@ import androidx.lifecycle.MutableLiveData
  * Main entry point for accessing Stylish sources.
  */
 interface TimeMasterDataSource {
-//
+    suspend fun getCalendarId(): Result<List<CalendarId>>
+
 //    suspend fun getMarketingHots(): Result<List<HomeItem>>
 //
 //    suspend fun getProductList(type: String, paging: String? = null): Result<ProductListResult>

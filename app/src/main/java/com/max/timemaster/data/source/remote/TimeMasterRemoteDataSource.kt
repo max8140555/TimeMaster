@@ -1,7 +1,17 @@
 package com.max.timemaster.data.source.remote
 
 
+import android.util.Log
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.max.timemaster.R
+import com.max.timemaster.TimeMasterApplication
+import com.max.timemaster.data.CalendarId
+import com.max.timemaster.data.Result
 import com.max.timemaster.data.TimeMasterDataSource
+import com.max.timemaster.util.Logger
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Created by Wayne Chen in Jul. 2019.
@@ -9,6 +19,36 @@ import com.max.timemaster.data.TimeMasterDataSource
  * Implementation of the Stylish source that from network.
  */
 object TimeMasterRemoteDataSource : TimeMasterDataSource {
+
+    private const val PATH_ARTICLES = "calendar"
+    private const val KEY_CREATED_TIME = "createdTime"
+    override suspend fun getCalendarId(): Result<List<CalendarId>> = suspendCoroutine { continuation ->
+        FirebaseFirestore.getInstance()
+            .collection(PATH_ARTICLES)
+           // .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)   時間相關
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val list = mutableListOf<CalendarId>()
+                    for (document in task.result!!) {
+                        Logger.d(document.id + " => " + document.data)
+
+                        val calendar = document.toObject(CalendarId::class.java)
+                        list.add(calendar)
+                    }
+                    continuation.resume(Result.Success(list))
+                } else {
+                    task.exception?.let {
+
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                        return@addOnCompleteListener
+                    }
+                    continuation.resume(Result.Fail(TimeMasterApplication.instance.getString(R.string.you_know_nothing)))
+                }
+            }
+    }
+
 
 //    override suspend fun getMarketingHots(): Result<List<HomeItem>> {
 //

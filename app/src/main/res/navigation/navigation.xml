@@ -3,10 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/calendarMonthFragment">
+    app:startDestination="@id/calendarFragment">
+
     <fragment
-        android:id="@+id/calendarMonthFragment"
-        android:name="com.max.timemaster.Calendar.CalendarMonthFragment"
-        android:label="calendar_month_fragment"
-        tools:layout="@layout/calendar_month_fragment" />
+        android:id="@+id/calendarFragment"
+        android:name="com.max.timemaster.calendar.CalendarFragment"
+        android:label="calendar_fragment"
+        tools:layout="@layout/fragment_calendar" />
+    <fragment
+        android:id="@+id/calendarDetailFragment"
+        android:name="com.max.timemaster.calendar.CalendarDetailFragment"
+        android:label="CalendarDetailFragment"
+        tools:layout="@layout/fragment_calendar_delail" />
+
+    <action
+        android:id="@+id/action_global_calendarDetailFragment"
+        app:destination="@id/calendarDetailFragment" />
 </navigation>

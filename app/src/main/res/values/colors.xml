@@ -9,4 +9,12 @@
     <!-- Bottom Navigation -->
     <color name="bottom_navigation_item_normal">@color/gray_999999</color>
     <color name="bottom_navigation_item_selected">@color/black_3f3a3a</color>
+
+    <!-- Gray Series -->
+    <color name="gray_e7e7e7">#e7e7e7</color>
+
+
+
+    <color name="transparent">#00000000</color>
+    <color name="translucent_80">#cc000000</color>
 </resources>

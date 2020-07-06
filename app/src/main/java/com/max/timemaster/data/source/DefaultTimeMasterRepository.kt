@@ -1,7 +1,10 @@
 package com.max.timemaster.data.source
 
+import com.max.timemaster.data.CalendarId
+import com.max.timemaster.data.Result
 import com.max.timemaster.data.TimeMasterDataSource
 import com.max.timemaster.data.TimeMasterRepository
+import com.max.timemaster.data.source.remote.TimeMasterRemoteDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
@@ -10,10 +13,13 @@ import kotlinx.coroutines.Dispatchers
  *
  * Concrete implementation to load Stylish sources.
  */
-class DefaultTimeMasterRepository(private val timeMasterDataSource: TimeMasterDataSource,
-                               private val timeMasterLocalDataSource: TimeMasterDataSource,
-                               private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSource,
+                                  private val localDataSource: TimeMasterDataSource
 ) : TimeMasterRepository {
+    override suspend fun getCalendarId(): Result<List<CalendarId>> {
+        return remoteDataSource.getCalendarId()
+    }
+
 
 //    override suspend fun getMarketingHots(): Result<List<HomeItem>> {
 //        return stylishRemoteDataSource.getMarketingHots()

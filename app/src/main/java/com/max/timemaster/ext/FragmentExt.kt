@@ -2,6 +2,8 @@ package com.max.timemaster.ext
 
 import androidx.fragment.app.Fragment
 import com.max.timemaster.TimeMasterApplication
+import com.max.timemaster.data.CalendarId
+import com.max.timemaster.factory.CalendarViewModelFactory
 
 import com.max.timemaster.factory.ViewModelFactory
 
@@ -13,6 +15,10 @@ import com.max.timemaster.factory.ViewModelFactory
 fun Fragment.getVmFactory(): ViewModelFactory {
     val repository = (requireContext().applicationContext as TimeMasterApplication).timeMasterRepository
     return ViewModelFactory(repository)
+}
+fun Fragment.getVmFactory(calendarId: CalendarId): CalendarViewModelFactory {
+    val repository = (requireContext().applicationContext as TimeMasterApplication).timeMasterRepository
+    return CalendarViewModelFactory(repository, calendarId)
 }
 //
 //fun Fragment.getVmFactory(user: User?): ProfileViewModelFactory {

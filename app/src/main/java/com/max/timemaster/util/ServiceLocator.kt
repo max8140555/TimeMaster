@@ -6,7 +6,7 @@ import com.max.timemaster.data.TimeMasterDataSource
 import com.max.timemaster.data.source.remote.TimeMasterRemoteDataSource
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.data.source.DefaultTimeMasterRepository
-import com.max.timemaster.data.source.TimeMasterLocalDataSource
+import com.max.timemaster.data.source.local.TimeMasterLocalDataSource
 
 /**
  * A Service Locator for the [StylishRepository].
@@ -33,6 +33,8 @@ object ServiceLocator {
     }
 
     private fun createLocalDataSource(context: Context): TimeMasterDataSource {
-        return TimeMasterLocalDataSource(context)
+        return TimeMasterLocalDataSource(
+            context
+        )
     }
 }
