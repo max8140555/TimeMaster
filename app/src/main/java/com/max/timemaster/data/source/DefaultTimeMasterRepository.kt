@@ -13,8 +13,8 @@ import com.max.timemaster.data.TimeMasterRepository
 class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSource,
                                   private val localDataSource: TimeMasterDataSource
 ) : TimeMasterRepository {
-    override suspend fun getCalendarId(): Result<List<CalendarEvent>> {
-        return remoteDataSource.getCalendarId()
+    override suspend fun getCalendarId(greaterThan: Long ,lessThan: Long): Result<List<CalendarEvent>> {
+        return remoteDataSource.getCalendarId(greaterThan ,lessThan)
     }
 
     override suspend fun postEvent(calendarEvent: CalendarEvent): Result<Boolean> {

@@ -7,7 +7,7 @@ package com.max.timemaster.data
  * Main entry point for accessing Stylish sources.
  */
 interface TimeMasterDataSource {
-    suspend fun getCalendarId(): Result<List<CalendarEvent>>
+    suspend fun getCalendarId(greaterThan: Long ,lessThan: Long): Result<List<CalendarEvent>>
 
     suspend fun postEvent(calendarEvent: CalendarEvent): Result<Boolean>
 

@@ -12,7 +12,7 @@ import com.max.timemaster.data.TimeMasterDataSource
  * Concrete implementation of a Stylish source as a db.
  */
 class TimeMasterLocalDataSource(val context: Context) : TimeMasterDataSource {
-    override suspend fun getCalendarId(): Result<List<CalendarEvent>> {
+    override suspend fun getCalendarId(greaterThan: Long ,lessThan: Long): Result<List<CalendarEvent>> {
         TODO("Not yet implemented")
     }
 

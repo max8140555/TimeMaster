@@ -41,8 +41,8 @@ class CalendarViewModel(
 
     val selectDate = MutableLiveData<String>()
 
-
-
+    var greaterThan : Long = 0
+    var lessThan : Long = 0
 
 
 
@@ -64,7 +64,7 @@ class CalendarViewModel(
 
             _status.value = LoadApiStatus.LOADING
 
-            val result = timeMasterRepository.getCalendarId()
+            val result = timeMasterRepository.getCalendarId(greaterThan ,lessThan)
 
             _calendar.value = when (result) {
                 is com.max.timemaster.data.Result.Success -> {

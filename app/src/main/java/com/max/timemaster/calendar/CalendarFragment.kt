@@ -18,6 +18,7 @@ import com.max.timemaster.R
 import com.max.timemaster.databinding.FragmentCalendarBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.Logger.d
+import com.max.timemaster.util.TimeUtil.dateToStamp
 
 
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
@@ -37,6 +38,10 @@ class CalendarFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCalendarBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+//        binding.viewModel = viewModel
+        viewModel.greaterThan = dateToStamp(LocalDate.now().toString() + " 00:00", Locale.TAIWAN)
+        viewModel.lessThan = dateToStamp(LocalDate.now().toString() + " 24:59", Locale.TAIWAN)
         viewModel.getArticlesResult()
         viewModel.selectDate.value = LocalDate.now().toString()
 
@@ -72,11 +77,11 @@ class CalendarFragment : Fragment() {
                 "current date \n ${date.date}",
                 Toast.LENGTH_SHORT
             ).show()
-//            date.date.format(Da)
-
 
             viewModel.selectDate.value = date.date.toString()
-            Log.d("viewModel.selectDate","${viewModel.selectDate.value}")
+            viewModel.greaterThan = dateToStamp(date.date.toString() + " 00:00", Locale.TAIWAN)
+            viewModel.lessThan = dateToStamp(date.date.toString() + " 24:59", Locale.TAIWAN)
+            viewModel.getArticlesResult()
         }
         val calendar = LocalDate.now()
         widget.setSelectedDate(calendar)

@@ -24,9 +24,11 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
 
     private const val PATH_ARTICLES = "calendar"
     private const val KEY_CREATED_TIME = "dataStamp"
-    override suspend fun getCalendarId(): Result<List<CalendarEvent>> = suspendCoroutine { continuation ->
+    override suspend fun getCalendarId(greaterThan: Long ,lessThan: Long): Result<List<CalendarEvent>> = suspendCoroutine { continuation ->
         FirebaseFirestore.getInstance()
             .collection(PATH_ARTICLES)
+            .whereGreaterThan("dataStamp",greaterThan)
+            .whereLessThan("dataStamp",lessThan)
             .orderBy(KEY_CREATED_TIME, Query.Direction.ASCENDING)
             .get()
             .addOnCompleteListener { task ->
