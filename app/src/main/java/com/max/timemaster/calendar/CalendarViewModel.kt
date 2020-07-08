@@ -17,10 +17,17 @@ class CalendarViewModel(
     private val timeMasterRepository: TimeMasterRepository
 
 ) : ViewModel() {
-    private val _calendar = MutableLiveData<List<CalendarEvent>>()
+    private val _selectEvent = MutableLiveData<List<CalendarEvent>>()
 
-    val calendar: LiveData<List<CalendarEvent>>
-        get() = _calendar
+    val selectEvent: LiveData<List<CalendarEvent>>
+        get() = _selectEvent
+
+    var liveAllEvent = MutableLiveData<List<CalendarEvent>>()
+    var liveAllEventTime = MutableLiveData<List<Long>>()
+    var liveAllEventTimeString = MutableLiveData<List<String>>()
+
+
+
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
 
@@ -41,11 +48,8 @@ class CalendarViewModel(
 
     val selectDate = MutableLiveData<String>()
 
-    var greaterThan : Long = 0
-    var lessThan : Long = 0
-
-
-
+    var greaterThan: Long = 0
+    var lessThan: Long = 0
 
 
     // Create a Coroutine scope using a job to be able to cancel when needed
@@ -58,15 +62,16 @@ class CalendarViewModel(
         super.onCleared()
         viewModelJob.cancel()
     }
-    fun getArticlesResult() {
+
+    fun getSelectEventResult() {
 
         coroutineScope.launch {
 
             _status.value = LoadApiStatus.LOADING
 
-            val result = timeMasterRepository.getCalendarId(greaterThan ,lessThan)
+            val result = timeMasterRepository.getSelectEvent(greaterThan, lessThan)
 
-            _calendar.value = when (result) {
+            _selectEvent.value = when (result) {
                 is com.max.timemaster.data.Result.Success -> {
                     _error.value = null
                     _status.value = LoadApiStatus.DONE
@@ -83,7 +88,8 @@ class CalendarViewModel(
                     null
                 }
                 else -> {
-                    _error.value = TimeMasterApplication.instance.getString(R.string.you_know_nothing)
+                    _error.value =
+                        TimeMasterApplication.instance.getString(R.string.you_know_nothing)
                     _status.value = LoadApiStatus.ERROR
                     null
                 }
@@ -92,4 +98,17 @@ class CalendarViewModel(
         }
     }
 
+
+    fun getAllEventResult() {
+        liveAllEvent = timeMasterRepository.getLiveAllEvent()
+        _status.value = LoadApiStatus.DONE
+        _refreshStatus.value = false
+    }
+
+
+    fun getAllEventTimeResult() {
+        liveAllEventTime = timeMasterRepository.getLiveAllEventTime()
+        _status.value = LoadApiStatus.DONE
+        _refreshStatus.value = false
+    }
 }

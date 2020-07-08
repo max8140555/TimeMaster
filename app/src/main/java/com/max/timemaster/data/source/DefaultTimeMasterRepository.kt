@@ -1,5 +1,6 @@
 package com.max.timemaster.data.source
 
+import androidx.lifecycle.MutableLiveData
 import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.data.Result
 import com.max.timemaster.data.TimeMasterDataSource
@@ -13,12 +14,20 @@ import com.max.timemaster.data.TimeMasterRepository
 class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSource,
                                   private val localDataSource: TimeMasterDataSource
 ) : TimeMasterRepository {
-    override suspend fun getCalendarId(greaterThan: Long ,lessThan: Long): Result<List<CalendarEvent>> {
-        return remoteDataSource.getCalendarId(greaterThan ,lessThan)
+    override suspend fun getSelectEvent(greaterThan: Long, lessThan: Long): Result<List<CalendarEvent>> {
+        return remoteDataSource.getSelectEvent(greaterThan ,lessThan)
     }
 
     override suspend fun postEvent(calendarEvent: CalendarEvent): Result<Boolean> {
         return remoteDataSource.postEvent(calendarEvent)
+    }
+
+    override fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>> {
+        return remoteDataSource.getLiveAllEvent()
+    }
+
+    override fun getLiveAllEventTime(): MutableLiveData<List<Long>> {
+        return remoteDataSource.getLiveAllEventTime()
     }
 
 

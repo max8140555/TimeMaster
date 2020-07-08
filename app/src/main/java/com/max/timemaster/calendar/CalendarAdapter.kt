@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.databinding.ItemCalendarBinding
-import com.max.timemaster.util.TimeUtil.stampToDate
+import com.max.timemaster.util.TimeUtil.stampToDateTime
 import java.util.*
 
 class CalendarAdapter() :
@@ -26,7 +26,7 @@ class CalendarAdapter() :
         fun bind(calendarId: CalendarEvent) {
             binding.title.text = calendarId.calendarTitle
             binding.attendee.text = calendarId.attendee
-            binding.time.text = calendarId.dataStamp?.let { stampToDate(it, Locale.TAIWAN) }
+            binding.time.text = calendarId.dataStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
 
 
             // This is important, because it forces the data binding to execute immediately,
