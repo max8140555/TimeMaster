@@ -6,6 +6,7 @@ buildscript {
         version_navigation = "2.3.0-beta01"
         version_moshi = "1.8.0"
         version_retrofit = "2.9.0"
+        version_glide = "4.9.0"
     }
     repositories {
         google()
@@ -27,6 +28,8 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://jitpack.io' }
+        mavenCentral()
+
     }
 }
 

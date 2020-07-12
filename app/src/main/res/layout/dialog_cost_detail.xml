@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".cost.CostDetailDialog">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.max.timemaster.cost.CostDetailDialogViewModel"/>
+        <import type="com.max.timemaster.network.LoadApiStatus"/>
+        <import type="android.view.View"/>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_publish"
+            android:layout_width="0dp"
+            android:layout_height="400dp"
+            android:layout_marginHorizontal="24dp"
+            android:background="@drawable/bg_publish"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/edit_publish_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/top_circle_frame"
+                android:gravity="center_vertical"
+                android:hint="Title"
+                android:letterSpacing="0.1"
+                android:maxLines="2"
+                android:paddingHorizontal="18dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <EditText
+                android:id="@+id/edit_publish_money"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:hint="money"
+                android:letterSpacing="0.1"
+                android:maxLines="2"
+                android:paddingHorizontal="18dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:inputType="number"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_publish_title" />
+            <TextView
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#cccccc"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_publish_title"
+                app:layout_constraintBottom_toTopOf="@+id/edit_publish_money"/>
+            <TextView
+                android:id="@+id/line_2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#cccccc"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_publish_money"
+/>
+
+
+            <EditText
+                android:id="@+id/edit_publish_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:paddingHorizontal="18dp"
+                android:background="@color/white"
+                android:gravity="top|start"
+                android:hint="Content"
+                android:paddingTop="16dp"
+                android:letterSpacing="0.1"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@+id/button_publish"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/line_2" />
+
+            <Button
+                android:id="@+id/button_publish"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:background="@drawable/ripple_button_article_tag"
+                android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
+                android:gravity="center"
+                android:text='@{viewModel.status != LoadApiStatus.LOADING ? "Publish" : ""}'
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:letterSpacing="0.1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_publish_content" />
+
+            <ProgressBar
+                android:id="@+id/progress_publish"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:theme="@style/ProgressThemeDark"
+                android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/button_publish"
+                app:layout_constraintEnd_toEndOf="@+id/button_publish"
+                app:layout_constraintStart_toStartOf="@+id/button_publish"
+                app:layout_constraintTop_toTopOf="@+id/button_publish"/>
+
+            <org.angmarch.views.NiceSpinner
+                android:id="@+id/niceSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="2dp"
+                android:padding="4dp"
+
+                app:layout_constraintBottom_toBottomOf="@+id/edit_publish_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

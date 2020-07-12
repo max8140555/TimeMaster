@@ -4,16 +4,16 @@ package com.max.timemaster.calendar
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.max.timemaster.NavigationDirections
 import com.max.timemaster.databinding.FragmentCalendarDetailBinding
 import com.max.timemaster.ext.getVmFactory
-import com.max.timemaster.util.TimeUtil.dateToStamp
+import com.max.timemaster.util.TimeUtil.dateToStampTime
 import java.lang.String.format
 import java.util.*
 
@@ -47,9 +47,9 @@ class CalendarDetailFragment : Fragment() {
 
         binding.save.setOnClickListener {
             val stamp = "${viewModel.editDate.value} ${viewModel.editTime.value}"
-            val event = viewModel.insertCalendar(dateToStamp(stamp, Locale.TAIWAN))
+            val event = viewModel.insertCalendar(dateToStampTime(stamp, Locale.TAIWAN))
             viewModel.postEvent(event)
-            findNavController().navigateUp()
+            findNavController().navigate(NavigationDirections.navigateToCalendarFragment(viewModel.editDate.value as String))
             viewModel.onLeft()
         }
 
@@ -82,9 +82,7 @@ class CalendarDetailFragment : Fragment() {
             var newDay = format("%02d", day)
             binding.selectDate.text = "$year-$newMonth-$newDay"
             viewModel.editDate.value = "$year-$newMonth-$newDay"
-
         }
-
         val selectedDate = viewModel.selectDate.split("-")
         val year = selectedDate[0]
         val month = selectedDate[1]
@@ -98,9 +96,7 @@ class CalendarDetailFragment : Fragment() {
                 month.toInt() - 1,
                 date.toInt()
             ).show()
-
         }
-
     }
 
 

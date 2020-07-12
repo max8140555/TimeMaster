@@ -10,10 +10,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
-import com.max.timemaster.data.CalendarEvent
-import com.max.timemaster.data.Result
-import com.max.timemaster.data.TimeMasterDataSource
+import com.max.timemaster.data.*
 import com.max.timemaster.util.Logger
+import com.max.timemaster.util.UserManager
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -25,15 +24,15 @@ import kotlin.coroutines.suspendCoroutine
 object TimeMasterRemoteDataSource : TimeMasterDataSource {
 
     private const val PATH_ARTICLES = "calendar"
-    private const val KEY_CREATED_TIME = "dataStamp"
+    private const val KEY_CREATED_TIME = "dateStamp"
     override suspend fun getSelectEvent(
         greaterThan: Long,
         lessThan: Long
     ): Result<List<CalendarEvent>> = suspendCoroutine { continuation ->
         FirebaseFirestore.getInstance()
             .collection(PATH_ARTICLES)
-            .whereGreaterThan("dataStamp", greaterThan)
-            .whereLessThan("dataStamp", lessThan)
+            .whereGreaterThan("dateStamp", greaterThan)
+            .whereLessThan("dateStamp", lessThan)
             .orderBy(KEY_CREATED_TIME, Query.Direction.ASCENDING)
             .get()
             .addOnCompleteListener { task ->
@@ -63,7 +62,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
         suspendCoroutine { continuation ->
             val event = FirebaseFirestore.getInstance().collection(PATH_ARTICLES)
             val document = event.document()
-//        calendarEvent.dataStamp = Calendar.getInstance().timeInMillis
+//        calendarEvent.dateStamp = Calendar.getInstance().timeInMillis
             document
                 .set(calendarEvent)
                 .addOnCompleteListener { task ->
@@ -82,6 +81,90 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                     }
                 }
         }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    override suspend fun postUser(user: User): Result<Boolean> =
+        suspendCoroutine { continuation ->
+            val db = FirebaseFirestore.getInstance().collection("users")
+            val document = UserManager.userEmail?.let { db.document(it) }
+
+            db
+                .whereEqualTo("email", UserManager.userEmail)
+                .get()
+                .addOnSuccessListener {
+                    user.firstLoginTime = Calendar.getInstance().timeInMillis
+                    if (it.isEmpty) {
+                        document
+                            ?.set(user)
+                            ?.addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+
+                                    Logger.i("postUser: $user")
+
+                                    continuation.resume(Result.Success(true))
+                                } else {
+                                    task.exception?.let {
+
+                                        Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                                        continuation.resume(Result.Error(it))
+                                        return@addOnCompleteListener
+                                    }
+                                    continuation.resume(
+                                        Result.Fail(
+                                            TimeMasterApplication.instance.getString(
+                                                R.string.you_know_nothing
+                                            )
+                                        )
+                                    )
+                                }
+                            }
+                    } else {
+                        Log.d("postUser else", "已註冊過")
+                    }
+                }
+
+        }
+
+    override suspend fun postDate(myDate: MyDate): Result<Boolean> =
+        suspendCoroutine { continuation ->
+            val db = FirebaseFirestore.getInstance().collection("users")
+            val document = UserManager.userEmail?.let { db.document(it) }
+
+            UserManager.userEmail?.let {
+                db.document(it).collection("date")
+                    .get()
+                    .addOnSuccessListener { doc ->
+                        Log.d("doc","${doc}")
+
+                        Log.d("doc.documents","${doc.documents}")
+                            document?.collection("date")?.add(myDate)
+                                ?.addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Logger.i("postMyDate: $myDate")
+
+                                        continuation.resume(Result.Success(true))
+                                    } else {
+                                        task.exception?.let {
+
+                                            Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                                            continuation.resume(Result.Error(it))
+                                            return@addOnCompleteListener
+                                        }
+                                        continuation.resume(
+                                            Result.Fail(
+                                                TimeMasterApplication.instance.getString(
+                                                    R.string.you_know_nothing
+                                                )
+                                            )
+                                        )
+                                    }
+                                }
+                    }
+            }
+
+
+        }
+
 
     override fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>> {
         val liveData = MutableLiveData<List<CalendarEvent>>()
@@ -115,7 +198,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
 
         FirebaseFirestore.getInstance()
             .collection(PATH_ARTICLES)
-            .whereGreaterThan("dataStamp", 0)
+            .whereGreaterThan("dateStamp", 0)
             .addSnapshotListener { snapshot, exception ->
 
                 Logger.i("addSnapshotListener detect")
@@ -129,13 +212,42 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                 for (document in snapshot!!) {
                     Logger.d(document.id + " => " + document.data)
 
-                   var stamp = document.getLong("dataStamp")
+                    var stamp = document.getLong("dateStamp")
                     if (stamp != null) {
                         list.add(stamp)
                     }
                 }
 
                 liveData.value = list
+            }
+        return liveData
+    }
+
+    override fun getLiveUser(): MutableLiveData<User> {
+        val liveData = MutableLiveData<User>()
+
+        FirebaseFirestore.getInstance()
+            .collection("users")
+            .whereEqualTo("email", UserManager.userEmail)
+
+            .addSnapshotListener { snapshot, exception ->
+
+                Logger.i("addSnapshotListener detect")
+
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                }
+
+                var user = User()
+
+                for (document in snapshot!!) {
+                    Logger.d(document.id + " => " + document.data)
+
+                    val info = document.toObject(User::class.java)
+                    user = info
+                }
+
+                liveData.value = user
             }
         return liveData
     }

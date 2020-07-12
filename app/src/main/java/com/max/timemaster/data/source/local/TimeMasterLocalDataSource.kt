@@ -2,9 +2,7 @@ package com.max.timemaster.data.source.local
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
-import com.max.timemaster.data.CalendarEvent
-import com.max.timemaster.data.Result
-import com.max.timemaster.data.TimeMasterDataSource
+import com.max.timemaster.data.*
 
 
 /**
@@ -21,11 +19,23 @@ class TimeMasterLocalDataSource(val context: Context) : TimeMasterDataSource {
         TODO("Not yet implemented")
     }
 
+    override suspend fun postUser(user: User): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun postDate(myDate: MyDate): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
     override fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>> {
         TODO("Not yet implemented")
     }
 
     override fun getLiveAllEventTime(): MutableLiveData<List<Long>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLiveUser(): MutableLiveData<User> {
         TODO("Not yet implemented")
     }
 

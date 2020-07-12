@@ -1,5 +1,6 @@
 package com.max.timemaster.calendar
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,15 +8,17 @@ import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.data.TimeMasterRepository
+import com.max.timemaster.data.User
 import com.max.timemaster.network.LoadApiStatus
+import com.max.timemaster.util.UserManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class CalendarViewModel(
-    private val timeMasterRepository: TimeMasterRepository
-
+    private val timeMasterRepository: TimeMasterRepository,
+    var returnDate: String?
 ) : ViewModel() {
     private val _selectEvent = MutableLiveData<List<CalendarEvent>>()
 
@@ -25,7 +28,6 @@ class CalendarViewModel(
     var liveAllEvent = MutableLiveData<List<CalendarEvent>>()
     var liveAllEventTime = MutableLiveData<List<Long>>()
     var liveAllEventTimeString = MutableLiveData<List<String>>()
-
 
 
     // status: The internal MutableLiveData that stores the status of the most recent request
@@ -39,6 +41,11 @@ class CalendarViewModel(
 
     val error: LiveData<String>
         get() = _error
+
+    private val _leave = MutableLiveData<Boolean>()
+
+    val leave: LiveData<Boolean>
+        get() = _leave
 
     // status for the loading icon of swl
     private val _refreshStatus = MutableLiveData<Boolean>()
@@ -57,6 +64,8 @@ class CalendarViewModel(
 
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+
 
     override fun onCleared() {
         super.onCleared()
@@ -98,7 +107,6 @@ class CalendarViewModel(
         }
     }
 
-
     fun getAllEventResult() {
         liveAllEvent = timeMasterRepository.getLiveAllEvent()
         _status.value = LoadApiStatus.DONE
@@ -111,4 +119,5 @@ class CalendarViewModel(
         _status.value = LoadApiStatus.DONE
         _refreshStatus.value = false
     }
+
 }

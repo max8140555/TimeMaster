@@ -2,18 +2,24 @@ package com.max.timemaster
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import app.appworks.school.stylish.ext.getVmFactory
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.max.timemaster.databinding.ActivityMainBinding
+import com.max.timemaster.util.UserManager
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,14 +30,58 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     lateinit var navController: NavController
 
+    private val onNavigationItemSelectedListener =
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_calendar -> {
+                    findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navigateToCalendarFragment())
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_favorite -> {
+
+                    findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navigateToFavoriteFragment())
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_cost -> {
+
+                    findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navigateToCostFragment())
+
+
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_profile -> {
+
+                    findNavController(R.id.myNavHostFragment).navigate(NavigationDirections.navigateToProfileFragment())
+                    return@OnNavigationItemSelectedListener true
+                }
+            }
+            false
+        }
+
+    private fun setupBottomNav() {
+        binding.bottomNavView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         navController = findNavController(R.id.myNavHostFragment)
         binding.lifecycleOwner = this
-        viewModel
+
+        viewModel.postUser(UserManager.user)
+        viewModel.getLiveUserResult()
+
+        viewModel.liveUser.observe(this, Observer {
+            it?.let {
+                UserManager.user = viewModel.liveUser.value!!
+                Log.d("ccc","${UserManager.user}")
+            }
+        })
+
         setupDrawer()
+        setupBottomNav()
     }
+
     /**
      * Set up [androidx.drawerlayout.widget.DrawerLayout] with [androidx.appcompat.widget.Toolbar]
      */
@@ -49,7 +99,12 @@ class MainActivity : AppCompatActivity() {
         binding.drawerLayout.clipToPadding = false
 
         actionBarDrawerToggle = object : ActionBarDrawerToggle(
-            this, binding.drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            this,
+            binding.drawerLayout,
+            binding.toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        ) {
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
 
@@ -58,6 +113,27 @@ class MainActivity : AppCompatActivity() {
             binding.drawerLayout.addDrawerListener(this)
             syncState()
         }
+
+        val m = binding.drawerNavView.menu
+        val menu = m.addSubMenu("時間管理").setIcon(R.drawable.ic_home_black_24dp)
+
+        menu.add("Me").setIcon(R.drawable.ic_nav_profile).setOnMenuItemClickListener {
+            Log.d("zxc", "Me")
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+            return@setOnMenuItemClickListener true
+        }
+        var x = listOf("小花", "小美", "Ann")
+        for (i in x ) {
+                menu.add(i).setIcon(R.drawable.baseline_favorite_border_black_36).setOnMenuItemClickListener {
+                    Log.d("zxc", i)
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    return@setOnMenuItemClickListener true
+                }
+
+        }
+
+
+
 
 //        // Set up header of drawer ui using data binding
 //        val bindingNavHeader = NavHeaderDrawerBinding.inflate(
@@ -89,17 +165,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
     /**
      * override back key for the drawer design
      */
@@ -112,3 +177,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+

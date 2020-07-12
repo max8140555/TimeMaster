@@ -13,9 +13,8 @@ import com.max.timemaster.R
 import com.max.timemaster.databinding.FragmentCalendarBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.CurrentDayDecorator
-import com.max.timemaster.util.TimeUtil.dateToStamp
+import com.max.timemaster.util.TimeUtil.dateToStampTime
 import com.max.timemaster.util.TimeUtil.stampToDate
-import com.max.timemaster.util.TimeUtil.stampToDateTime
 
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
@@ -24,7 +23,13 @@ import java.util.*
 
 
 class CalendarFragment : Fragment() {
-    private val viewModel by viewModels<CalendarViewModel> { getVmFactory() }
+    private val viewModel by viewModels<CalendarViewModel> {
+        getVmFactory(
+            CalendarFragmentArgs.fromBundle(
+                requireArguments()
+            ).returnDate
+        )
+    }
     lateinit var widget: MaterialCalendarView
     lateinit var binding: FragmentCalendarBinding
 
@@ -36,13 +41,13 @@ class CalendarFragment : Fragment() {
         binding = FragmentCalendarBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 //        binding.viewModel = viewModel
-        
-        showTodayEvent()
+
+
+
 
 
         viewModel.selectDate.value = LocalDate.now().toString()
-
-
+        showTodayEvent()
 
 
 
@@ -53,7 +58,7 @@ class CalendarFragment : Fragment() {
         binding.btnAdd.setOnClickListener {
             viewModel.selectDate.value?.let { selectDate ->
                 findNavController().navigate(
-                    NavigationDirections.actionGlobalCalendarDetailFragment(
+                    NavigationDirections.navigateToCalendarDetailFragment(
                         selectDate
                     )
                 )
@@ -71,7 +76,7 @@ class CalendarFragment : Fragment() {
         })
 
 
- // LiveData .. 取得所有Event
+        // LiveData .. 取得所有Event
         /*
          viewModel.getAllEventResult()
          viewModel.liveAllEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -87,7 +92,10 @@ class CalendarFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+
+
         val calendar = LocalDate.now()
+
         widget = view?.findViewById(R.id.calendarView) as MaterialCalendarView
 
         viewModel.getAllEventTimeResult()
@@ -101,42 +109,63 @@ class CalendarFragment : Fragment() {
         showSelectEvent()
 
 
+        if (viewModel.returnDate == null) {
+            widget.setSelectedDate(calendar)
+        } else {
+            val selectedDate = viewModel.returnDate!!.split("-")
+            val year = selectedDate[0]
+            val month = selectedDate[1]
+            val date = selectedDate[2]
+            widget.selectedDate = CalendarDay.from(year.toInt(), month.toInt(), date.toInt())
+        }
 
-        widget.setSelectedDate(calendar)
     }
 
 
     // 把所有Event標示在calendar上
-    private fun addAllEventMark(){
+    private fun addAllEventMark() {
         viewModel.liveAllEventTime.value?.let { it ->
-
             val list = mutableListOf<String>()
-            for (a in it){
+            for (a in it) {
                 val selectedDate = stampToDate(a, Locale.TAIWAN).split("-")
                 val year = selectedDate[0]
                 val month = selectedDate[1]
                 val date = selectedDate[2]
-                val addDate = CalendarDay.from(year.toInt(), month.toInt(), date.toInt()) // year, month, date
-                widget.addDecorators(CurrentDayDecorator(-0x10000, addDate))
+                val addDate =
+                    CalendarDay.from(year.toInt(), month.toInt(), date.toInt()) // year, month, date
+                widget.addDecorators(
+                    CurrentDayDecorator(
+                        resources.getColor(R.color.black_3f3a3a),
+                        addDate
+                    )
+                )
                 list.add(stampToDate(a, Locale.TAIWAN))
             }
         }
     }
 
     // 顯示選擇日期的Event
-    private fun showSelectEvent(){
+    private fun showSelectEvent() {
         widget.setOnDateChangedListener { widget, date, selected ->
             viewModel.selectDate.value = date.date.toString()
-            viewModel.greaterThan = dateToStamp(date.date.toString() + " 00:00", Locale.TAIWAN)
-            viewModel.lessThan = dateToStamp(date.date.toString() + " 24:59", Locale.TAIWAN)
+            viewModel.greaterThan = dateToStampTime(date.date.toString() + " 00:00", Locale.TAIWAN)
+            viewModel.lessThan = dateToStampTime(date.date.toString() + " 24:59", Locale.TAIWAN)
             viewModel.getSelectEventResult()
         }
     }
 
-    private fun showTodayEvent(){
-        viewModel.greaterThan = dateToStamp(LocalDate.now().toString() + " 00:00", Locale.TAIWAN)
-        viewModel.lessThan = dateToStamp(LocalDate.now().toString() + " 24:59", Locale.TAIWAN)
-        viewModel.getSelectEventResult()
+    private fun showTodayEvent() {
+        if (viewModel.returnDate == null) {
+            viewModel.greaterThan =
+                dateToStampTime(LocalDate.now().toString() + " 00:00", Locale.TAIWAN)
+            viewModel.lessThan = dateToStampTime(LocalDate.now().toString() + " 24:59", Locale.TAIWAN)
+            viewModel.getSelectEventResult()
+        } else {
+            viewModel.greaterThan = dateToStampTime(viewModel.returnDate + " 00:00", Locale.TAIWAN)
+            viewModel.lessThan = dateToStampTime(viewModel.returnDate + " 24:59", Locale.TAIWAN)
+            viewModel.getSelectEventResult()
+
+        }
     }
 }
 

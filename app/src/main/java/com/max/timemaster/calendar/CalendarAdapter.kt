@@ -26,11 +26,16 @@ class CalendarAdapter() :
         fun bind(calendarId: CalendarEvent) {
             binding.title.text = calendarId.calendarTitle
             binding.attendee.text = calendarId.attendee
-            binding.time.text = calendarId.dataStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
 
 
-            // This is important, because it forces the data binding to execute immediately,
-            // which allows the RecyclerView to make the correct view size measurements
+            val selectedDate = calendarId.dateStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
+            val splitTime = selectedDate?.split(" ")
+            val date = splitTime?.get(0)  // 年/月/日
+            val time = splitTime?.get(1)  // 時:分+
+            binding.time.text = time.toString()
+            binding.content.text = calendarId.calendarContent
+
+
             binding.executePendingBindings()
         }
     }
@@ -44,7 +49,7 @@ class CalendarAdapter() :
             oldItem: CalendarEvent,
             newItem: CalendarEvent
         ): Boolean {
-            return oldItem === newItem
+            return oldItem.dateStamp == newItem.dateStamp
         }
 
         override fun areContentsTheSame(

@@ -5,27 +5,36 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 
 import com.max.timemaster.R
+import com.max.timemaster.databinding.FragmentFavoriteBinding
+import com.max.timemaster.ext.getVmFactory
 
 class FavoriteFragment : Fragment() {
 
 
 
-    private lateinit var viewModel: FavoriteViewModel
-
+    private val viewModel by viewModels<FavoriteViewModel> {
+        getVmFactory()
+    }
+    lateinit var binding: FragmentFavoriteBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_favorite, container, false)
+        binding = FragmentFavoriteBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
+        binding.btnAdd.setOnClickListener {
+            findNavController().navigate(R.id.navigate_to_favoriteDetailDialog)
+        }
+
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(FavoriteViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
+
 
 }

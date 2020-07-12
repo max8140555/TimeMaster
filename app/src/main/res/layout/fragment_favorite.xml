@@ -23,7 +23,6 @@
                 android:id="@+id/layout_favorite_header"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_favorite_header"
-                android:background="@color/black_3f3a3a"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -43,17 +42,17 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/text_profile_name"
+                    android:id="@+id/text_profile_lv_number"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:letterSpacing="0.15"
                     android:maxLines="1"
-                    android:text=""
-                    android:textColor="@color/white"
+                    android:text="Date Name"
+                    android:textColor="@color/black"
                     android:textSize="18sp"
-                    app:layout_constraintBottom_toTopOf="@+id/text_profile_info"
+                    app:layout_constraintBottom_toTopOf="@+id/text_profile_lv"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/image_profile_avatar"
@@ -62,7 +61,7 @@
                     tools:text="date name" />
 
                 <TextView
-                    android:id="@+id/text_profile_info"
+                    android:id="@+id/text_profile_lv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -70,14 +69,14 @@
                     android:layout_marginEnd="16dp"
                     android:letterSpacing="0.15"
                     android:maxLines="2"
-                    android:text=""
-                    android:textColor="@color/white"
+                    android:text="04-07"
+                    android:textColor="@color/black"
                     android:textSize="13sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/image_profile_avatar"
-                    app:layout_constraintTop_toBottomOf="@+id/text_profile_name"
+                    app:layout_constraintTop_toBottomOf="@+id/text_profile_lv_number"
                     tools:text="4 / 4" />
 
                 <ProgressBar
@@ -93,7 +92,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_fa"
+                android:id="@+id/recycler_favorite"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="16dp"
@@ -105,6 +104,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/layout_favorite_header"/>
+            <ImageView
+                android:id="@+id/btn_add"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/icon_add"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -5,4 +5,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="you_know_nothing">You know nothing</string>
+
+    <!--供Firebase第三方登入畫面模組使用-->
+    <string name="facebook_application_id">272552614171781</string>
+    <!--供Facebook登入模組使用-->
+    <string name="facebook_app_id">272552614171781</string>
+
 </resources>

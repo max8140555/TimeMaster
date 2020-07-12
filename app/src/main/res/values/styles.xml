@@ -12,4 +12,7 @@
         <item name="colorAccent">@color/white</item>
     </style>
 
+    <style name="PublishDialog">
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
 </resources>

@@ -9,18 +9,80 @@
         android:id="@+id/calendarFragment"
         android:name="com.max.timemaster.calendar.CalendarFragment"
         android:label="calendar_fragment"
-        tools:layout="@layout/fragment_calendar" />
+        tools:layout="@layout/fragment_calendar">
+        <argument
+            android:name="returnDate"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
     <fragment
         android:id="@+id/calendarDetailFragment"
         android:name="com.max.timemaster.calendar.CalendarDetailFragment"
         android:label="CalendarDetailFragment"
-        tools:layout="@layout/fragment_calendar_detail" >
+        tools:layout="@layout/fragment_calendar_detail">
         <argument
             android:name="datekey"
             app:argType="string" />
     </fragment>
 
+    <fragment
+        android:id="@+id/costFragment"
+        android:name="com.max.timemaster.cost.CostFragment"
+        android:label="fragment_cost"
+        tools:layout="@layout/fragment_cost" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.max.timemaster.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.max.timemaster.favorite.FavoriteFragment"
+        android:label="FavoriteFragment"
+        tools:layout="@layout/fragment_favorite" />
+
+
     <action
-        android:id="@+id/action_global_calendarDetailFragment"
+        android:id="@+id/navigate_to_favoriteFragment"
+        app:destination="@id/favoriteFragment" />
+    <action
+        android:id="@+id/navigate_to_costFragment"
+        app:destination="@id/costFragment" />
+    <action
+        android:id="@+id/navigate_to_profileFragment"
+        app:destination="@id/profileFragment" />
+    <action
+        android:id="@+id/navigate_to_calendarDetailFragment"
         app:destination="@id/calendarDetailFragment" />
+    <action
+        android:id="@+id/navigate_to_calendarFragment"
+        app:destination="@id/calendarFragment" />
+
+    <action android:id="@+id/navigate_to_favoriteDetailDialog"
+        app:destination="@id/favoriteDetailDialog" />
+
+    <action android:id="@+id/navigate_to_costDetailDialog"
+        app:destination="@id/costDetailDialog" />
+
+    <action android:id="@+id/navigate_to_profileDetailFragment"
+        app:destination="@id/profileDetailFragment" />
+    <dialog
+        android:id="@+id/costDetailDialog"
+        android:name="com.max.timemaster.cost.CostDetailDialog"
+        android:label="dialog_cost_detail"
+        tools:layout="@layout/dialog_cost_detail" />
+    <dialog
+        android:id="@+id/favoriteDetailDialog"
+        android:name="com.max.timemaster.favorite.FavoriteDetailDialog"
+        android:label="dialog_favorite_detail"
+        tools:layout="@layout/dialog_favorite_detail" />
+
+    <dialog
+        android:id="@+id/profileDetailFragment"
+        android:name="com.max.timemaster.profile.detail.ProfileDetailDialog"
+        android:label="ProfileDetailFragment"
+        tools:layout="@layout/dialog_profile_detail"/>
+
+
 </navigation>

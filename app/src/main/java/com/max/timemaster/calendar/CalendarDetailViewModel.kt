@@ -116,7 +116,7 @@ class CalendarDetailViewModel(
 //            "attendee" to editAttendee.value,
 //            "createdTime" to Calendar.getInstance().timeInMillis,
 //            "calendarContent" to editContent.value,
-//            "dataStamp" to 8
+//            "dateStamp" to 8
 //        )
 //        document.set(data)
 //    }

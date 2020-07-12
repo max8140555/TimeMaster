@@ -13,8 +13,14 @@ interface TimeMasterDataSource {
 
     suspend fun postEvent(calendarEvent: CalendarEvent): Result<Boolean>
 
+    suspend fun postUser(user: User): Result<Boolean>
+
+    suspend fun postDate(myDate: MyDate): Result<Boolean>
+
     fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>>
 
     fun getLiveAllEventTime(): MutableLiveData<List<Long>>
+
+    fun getLiveUser(): MutableLiveData<User>
 
 }

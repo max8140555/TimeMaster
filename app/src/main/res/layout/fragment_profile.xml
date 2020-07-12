@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.max.timemaster.util.UserManager"/>
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".profile.ProfileFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_profile_header"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/text_profile_slash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:letterSpacing="0.15"
+                    android:maxLines="1"
+                    android:text="/"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toEndOf="@+id/text_profile_now_exp"
+                    app:layout_constraintTop_toTopOf="@+id/text_profile_now_exp"
+                    tools:text="/" />
+
+                <TextView
+                    android:id="@+id/text_profile_name4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:letterSpacing="0.15"
+                    android:maxLines="1"
+                    android:text="10"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/text_profile_slash"
+                    app:layout_constraintStart_toEndOf="@+id/text_profile_slash"
+                    tools:text="10" />
+
+                <ImageView
+                    android:id="@+id/image_profile_avatar"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="32dp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" 
+                    app:imageUrl="@{UserManager.INSTANCE.user.image}"/>
+
+                <TextView
+                    android:id="@+id/text_profile_lv_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.15"
+                    android:maxLines="1"
+                    android:text="@{String.valueOf(UserManager.INSTANCE.user.lv)}"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toTopOf="@+id/text_profile_lv"
+                    app:layout_constraintEnd_toEndOf="@+id/text_profile_lv"
+                    app:layout_constraintStart_toStartOf="@+id/text_profile_lv"
+                    app:layout_constraintTop_toTopOf="@+id/image_profile_avatar"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    tools:text="1" />
+
+                <TextView
+                    android:id="@+id/text_profile_lv_number2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.15"
+                    android:maxLines="1"
+                    android:text="？"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="@+id/text_profile_use_day"
+                    app:layout_constraintStart_toStartOf="@+id/text_profile_use_day"
+                    app:layout_constraintTop_toTopOf="@+id/text_profile_name4" />
+
+                <TextView
+                    android:id="@+id/text_profile_lv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="4dp"
+                    android:letterSpacing="0.15"
+                    android:maxLines="2"
+                    android:text="等級"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/image_profile_avatar"
+                    app:layout_constraintStart_toEndOf="@+id/image_profile_avatar"
+                    app:layout_constraintTop_toBottomOf="@+id/text_profile_lv_number"
+                    tools:text="等級" />
+
+                <TextView
+                    android:id="@+id/text_profile_exp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.15"
+                    android:maxLines="2"
+                    android:text="經驗值"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/text_profile_lv"
+                    app:layout_constraintEnd_toEndOf="@+id/text_profile_name4"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="@+id/text_profile_now_exp"
+                    tools:text="經驗值" />
+
+                <TextView
+                    android:id="@+id/text_profile_use_day"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="4dp"
+                    android:letterSpacing="0.15"
+                    android:maxLines="2"
+                    android:text="使用天數"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    app:layout_constraintStart_toEndOf="@+id/text_profile_exp"
+                    app:layout_constraintTop_toBottomOf="@+id/text_profile_lv_number2"
+                    tools:text="使用天數" />
+
+                <TextView
+                    android:id="@+id/text_profile_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:letterSpacing="0.15"
+                    android:maxLines="2"
+                    android:text="@{UserManager.INSTANCE.user.titleName}"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="@+id/image_profile_avatar"
+                    app:layout_constraintStart_toStartOf="@+id/image_profile_avatar"
+                    app:layout_constraintTop_toBottomOf="@+id/image_profile_avatar"
+                    tools:text="時間管理大師" />
+
+                <TextView
+                    android:id="@+id/text_profile_now_exp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginBottom="4dp"
+                    android:letterSpacing="0.15"
+                    android:maxLines="1"
+                    android:text="@{String.valueOf(UserManager.INSTANCE.user.exp)}"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toTopOf="@+id/text_profile_exp"
+                    app:layout_constraintStart_toEndOf="@+id/text_profile_lv"
+                    tools:text="1" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/ProgressThemeDark"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_profile_slash" />
+                <!--            app:setupApiStatus="@{viewModel.status}"-->
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/btn_add_date"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/frame"
+                android:text="新增對象"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_profile_header" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_add_date">
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/viewpager_profile_date"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0">
+
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tabs_profile_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        app:tabIndicatorColor="@color/black_3f3a3a"
+                        app:tabSelectedTextColor="@color/black_3f3a3a"
+                        app:tabTextColor="@color/black_3f3a3a">
+
+                    </com.google.android.material.tabs.TabLayout>
+
+                </androidx.viewpager.widget.ViewPager>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+</layout>
