@@ -141,6 +141,7 @@ class CalendarFragment : Fragment() {
                 )
                 list.add(stampToDate(a, Locale.TAIWAN))
             }
+
         }
     }
 

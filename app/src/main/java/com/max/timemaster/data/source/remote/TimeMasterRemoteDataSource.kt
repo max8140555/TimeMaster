@@ -132,10 +132,10 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
 
             UserManager.userEmail?.let {
                 db.document(it).collection("date")
-                    .whereEqualTo("name",myDate.name)
+                    .whereEqualTo("name", myDate.name)
                     .get()
                     .addOnSuccessListener { doc ->
-                        if (doc.isEmpty){
+                        if (doc.isEmpty) {
                             document?.collection("date")?.add(myDate)
                                 ?.addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
@@ -158,7 +158,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                         )
                                     }
                                 }
-                        }else{
+                        } else {
                             Log.d("postDate else", "已註冊過")
                         }
 
@@ -255,6 +255,39 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
         return liveData
     }
 
+    override fun getLiveMyDate(): MutableLiveData<List<MyDate>> {
+        val liveData = MutableLiveData<List<MyDate>>()
+
+        val db = FirebaseFirestore.getInstance().collection("users")
+        Log.d("EEEMAIL","${UserManager.userEmail}")
+        db
+            .whereEqualTo("email", UserManager.userEmail)
+            .get()
+            .addOnSuccessListener { doc ->
+                UserManager.userEmail?.let {
+                    db.document(it).collection("date")
+                        .addSnapshotListener { snapshot, exception ->
+
+                            Logger.i("addSnapshotListener detect")
+
+                            exception?.let {
+                                Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                            }
+
+                            val list = mutableListOf<MyDate>()
+                            for (document in snapshot!!) {
+                                Logger.d(document.id + " => " + document.data)
+
+                                val myDate = document.toObject(MyDate::class.java)
+                                list.add(myDate)
+                            }
+
+                            liveData.value = list
+                        }
+                }
+            }
+        return liveData
+    }
 
 }
 

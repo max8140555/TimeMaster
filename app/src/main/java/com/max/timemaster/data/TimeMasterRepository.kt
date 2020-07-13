@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 
 
 interface TimeMasterRepository {
+
     suspend fun getSelectEvent(greaterThan: Long, lessThan: Long): Result<List<CalendarEvent>>
 
     suspend fun postEvent(calendarEvent: CalendarEvent): Result<Boolean>
@@ -18,6 +19,6 @@ interface TimeMasterRepository {
 
     fun getLiveUser(): MutableLiveData<User>
 
-    fun getLiveMyDate(): MutableLiveData<MyDate>
+    fun getLiveMyDate(): MutableLiveData<List<MyDate>>
 
 }

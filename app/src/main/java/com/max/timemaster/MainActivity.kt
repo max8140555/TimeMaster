@@ -70,15 +70,22 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.postUser(UserManager.user)
         viewModel.getLiveUserResult()
-
+        viewModel.getLiveMyDateResult()
         viewModel.liveUser.observe(this, Observer {
             it?.let {
                 UserManager.user = viewModel.liveUser.value!!
                 Log.d("ccc","${UserManager.user}")
             }
         })
+        viewModel.liveMyDate.observe(this, Observer {
+            it?.let {
+                UserManager.myDate.value = viewModel.liveMyDate.value
+                setupDrawer()
+            }
+        })
 
-        setupDrawer()
+
+
         setupBottomNav()
     }
 
@@ -116,20 +123,24 @@ class MainActivity : AppCompatActivity() {
 
         val m = binding.drawerNavView.menu
         val menu = m.addSubMenu("時間管理").setIcon(R.drawable.ic_home_black_24dp)
-
         menu.add("Me").setIcon(R.drawable.ic_nav_profile).setOnMenuItemClickListener {
             Log.d("zxc", "Me")
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             return@setOnMenuItemClickListener true
         }
-        var x = listOf("小花", "小美", "Ann")
-        for (i in x ) {
+        val s = UserManager.myDate.value?.map {
+            it.name
+        }
+        Log.d("zxc", "$s")
+        if (s != null) {
+            for (i in s ) {
                 menu.add(i).setIcon(R.drawable.baseline_favorite_border_black_36).setOnMenuItemClickListener {
                     Log.d("zxc", i)
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                     return@setOnMenuItemClickListener true
                 }
 
+            }
         }
 
 

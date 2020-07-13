@@ -37,5 +37,8 @@ class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSo
 
     override fun getLiveUser(): MutableLiveData<User> {
         return remoteDataSource.getLiveUser()    }
+    override fun getLiveMyDate(): MutableLiveData<List<MyDate>> {
+        return remoteDataSource.getLiveMyDate()
+    }
 
 }

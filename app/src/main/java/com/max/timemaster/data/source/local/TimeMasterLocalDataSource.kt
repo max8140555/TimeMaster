@@ -39,5 +39,9 @@ class TimeMasterLocalDataSource(val context: Context) : TimeMasterDataSource {
         TODO("Not yet implemented")
     }
 
+    override fun getLiveMyDate(): MutableLiveData<List<MyDate>> {
+        TODO("Not yet implemented")
+    }
+
 
 }
