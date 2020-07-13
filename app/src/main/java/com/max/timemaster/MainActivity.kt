@@ -71,16 +71,23 @@ class MainActivity : AppCompatActivity() {
         viewModel.postUser(UserManager.user)
         viewModel.getLiveUserResult()
         viewModel.getLiveMyDateResult()
+        viewModel.getAllEventResult()
         viewModel.liveUser.observe(this, Observer {
             it?.let {
                 UserManager.user = viewModel.liveUser.value!!
-                Log.d("ccc","${UserManager.user}")
             }
         })
         viewModel.liveMyDate.observe(this, Observer {
             it?.let {
                 UserManager.myDate.value = viewModel.liveMyDate.value
                 setupDrawer()
+            }
+        })
+        viewModel.liveAllEvent.observe(this, Observer {
+            it?.let {
+                UserManager.allEvent.value = viewModel.liveAllEvent.value
+                Log.d("ccc","$it")
+                Log.d("ccc","${UserManager.allEvent.value}")
             }
         })
 

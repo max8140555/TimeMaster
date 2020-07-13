@@ -27,7 +27,6 @@ class CalendarViewModel(
 
     var liveAllEvent = MutableLiveData<List<CalendarEvent>>()
     var liveAllEventTime = MutableLiveData<List<Long>>()
-    var liveAllEventTimeString = MutableLiveData<List<String>>()
 
 
     // status: The internal MutableLiveData that stores the status of the most recent request

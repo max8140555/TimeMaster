@@ -4,6 +4,7 @@ import android.os.UserManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.data.MyDate
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.data.User
@@ -20,6 +21,7 @@ class MainViewModel(
 
     var liveUser = MutableLiveData<User>()
     var liveMyDate = MutableLiveData<List<MyDate>>()
+    var liveAllEvent = MutableLiveData<List<CalendarEvent>>()
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -108,6 +110,12 @@ class MainViewModel(
     }
     fun getLiveMyDateResult() {
         liveMyDate = timeMasterRepository.getLiveMyDate()
+        _status.value = LoadApiStatus.DONE
+        _refreshStatus.value = false
+    }
+
+    fun getAllEventResult() {
+        liveAllEvent = timeMasterRepository.getLiveAllEvent()
         _status.value = LoadApiStatus.DONE
         _refreshStatus.value = false
     }

@@ -15,6 +15,7 @@ import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.CurrentDayDecorator
 import com.max.timemaster.util.TimeUtil.dateToStampTime
 import com.max.timemaster.util.TimeUtil.stampToDate
+import com.max.timemaster.util.UserManager
 
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
@@ -105,7 +106,6 @@ class CalendarFragment : Fragment() {
                 addAllEventMark()
             }
         })
-
         showSelectEvent()
 
 
@@ -124,10 +124,12 @@ class CalendarFragment : Fragment() {
 
     // 把所有Event標示在calendar上
     private fun addAllEventMark() {
-        viewModel.liveAllEventTime.value?.let { it ->
+       var allEventTime = UserManager.allEvent.value?.map {
+           it.dateStamp
+       }
             val list = mutableListOf<String>()
-            for (a in it) {
-                val selectedDate = stampToDate(a, Locale.TAIWAN).split("-")
+            for (a in allEventTime!!) {
+                val selectedDate = stampToDate(a as Long, Locale.TAIWAN).split("-")
                 val year = selectedDate[0]
                 val month = selectedDate[1]
                 val date = selectedDate[2]
@@ -139,10 +141,10 @@ class CalendarFragment : Fragment() {
                         addDate
                     )
                 )
-                list.add(stampToDate(a, Locale.TAIWAN))
+                list.add(stampToDate(a , Locale.TAIWAN))
             }
 
-        }
+
     }
 
     // 顯示選擇日期的Event
