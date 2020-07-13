@@ -23,4 +23,6 @@ interface TimeMasterDataSource {
 
     fun getLiveUser(): MutableLiveData<User>
 
+    fun getLiveMyDate(): MutableLiveData<MyDate>
+
 }

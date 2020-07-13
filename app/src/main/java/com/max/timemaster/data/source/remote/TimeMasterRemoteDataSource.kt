@@ -132,11 +132,10 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
 
             UserManager.userEmail?.let {
                 db.document(it).collection("date")
+                    .whereEqualTo("name",myDate.name)
                     .get()
                     .addOnSuccessListener { doc ->
-                        Log.d("doc","${doc}")
-
-                        Log.d("doc.documents","${doc.documents}")
+                        if (doc.isEmpty){
                             document?.collection("date")?.add(myDate)
                                 ?.addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
@@ -159,6 +158,10 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                         )
                                     }
                                 }
+                        }else{
+                            Log.d("postDate else", "已註冊過")
+                        }
+
                     }
             }
 

@@ -18,4 +18,6 @@ interface TimeMasterRepository {
 
     fun getLiveUser(): MutableLiveData<User>
 
+    fun getLiveMyDate(): MutableLiveData<MyDate>
+
 }
