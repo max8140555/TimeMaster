@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 
 class CalendarViewModel(
     private val timeMasterRepository: TimeMasterRepository,
-    var returnDate: String?
+    var returnDate: String?,
+    var selectAttendee: String?
 ) : ViewModel() {
     private val _selectEvent = MutableLiveData<List<CalendarEvent>>()
 

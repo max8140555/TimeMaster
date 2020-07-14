@@ -20,6 +20,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.max.timemaster.databinding.ActivityMainBinding
 import com.max.timemaster.util.UserManager
+import kotlinx.coroutines.awaitAll
 
 class MainActivity : AppCompatActivity() {
 
@@ -79,15 +80,20 @@ class MainActivity : AppCompatActivity() {
         })
         viewModel.liveMyDate.observe(this, Observer {
             it?.let {
-                UserManager.myDate.value = viewModel.liveMyDate.value
-                setupDrawer()
+                Log.d("", "")
+                UserManager.addDate.value?.let { savedDate ->
+                        UserManager.myDate.value = viewModel.liveMyDate.value
+                        setupDrawer()
+                }
+
+
             }
         })
         viewModel.liveAllEvent.observe(this, Observer {
             it?.let {
                 UserManager.allEvent.value = viewModel.liveAllEvent.value
-                Log.d("ccc","$it")
-                Log.d("ccc","${UserManager.allEvent.value}")
+                Log.d("ccc", "$it")
+                Log.d("ccc", "${UserManager.allEvent.value}")
             }
         })
 
@@ -129,9 +135,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         val m = binding.drawerNavView.menu
+        m.clear()
         val menu = m.addSubMenu("時間管理").setIcon(R.drawable.ic_home_black_24dp)
-        menu.add("Me").setIcon(R.drawable.ic_nav_profile).setOnMenuItemClickListener {
-            Log.d("zxc", "Me")
+
+
+        menu.add("所有").setIcon(R.drawable.ic_nav_profile).setOnMenuItemClickListener {
+            Log.d("zxc", "所有")
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             return@setOnMenuItemClickListener true
         }
@@ -140,17 +149,22 @@ class MainActivity : AppCompatActivity() {
         }
         Log.d("zxc", "$s")
         if (s != null) {
-            for (i in s ) {
-                menu.add(i).setIcon(R.drawable.baseline_favorite_border_black_36).setOnMenuItemClickListener {
-                    Log.d("zxc", i)
-                    binding.drawerLayout.closeDrawer(GravityCompat.START)
-                    return@setOnMenuItemClickListener true
-                }
-
+            for (i in s) {
+                menu.add(i).setIcon(R.drawable.baseline_favorite_border_black_36)
+                    .setOnMenuItemClickListener {
+                        Log.d("zxc", i)
+                        findNavController(R.id.myNavHostFragment).navigate(
+                            NavigationDirections.navigateToCalendarFragment(
+                                selectAttendee = i
+                            )
+                        )
+                        binding.drawerLayout.closeDrawer(GravityCompat.START)
+                        return@setOnMenuItemClickListener true
+                    }
             }
+        } else {
+            Log.d("zxcERR", "有問題")
         }
-
-
 
 
 //        // Set up header of drawer ui using data binding

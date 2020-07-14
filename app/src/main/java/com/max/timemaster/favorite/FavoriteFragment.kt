@@ -12,9 +12,10 @@ import androidx.navigation.fragment.findNavController
 import com.max.timemaster.R
 import com.max.timemaster.databinding.FragmentFavoriteBinding
 import com.max.timemaster.ext.getVmFactory
+import com.max.timemaster.util.TimeUtil.stampToDate
+import com.max.timemaster.util.UserManager
 
 class FavoriteFragment : Fragment() {
-
 
 
     private val viewModel by viewModels<FavoriteViewModel> {
@@ -31,10 +32,11 @@ class FavoriteFragment : Fragment() {
         binding.btnAdd.setOnClickListener {
             findNavController().navigate(R.id.navigate_to_favoriteDetailDialog)
         }
-
+        val adapter = FavoriteAdapter()
+        binding.recyclerFavorite.adapter = adapter
+        adapter.submitList(viewModel.fakerFavorite.value)
         return binding.root
     }
-
 
 
 }

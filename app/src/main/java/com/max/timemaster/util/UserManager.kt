@@ -10,7 +10,10 @@ import com.max.timemaster.data.User
 object UserManager {
     var user = User()
     var myDate = MutableLiveData<List<MyDate>>()
+
+    var addDate = MutableLiveData<String>().apply { value = "" }
     var allEvent = MutableLiveData<List<CalendarEvent>>()
+
 
     val pref = TimeMasterApplication.instance.getSharedPreferences("FbUseEmail", Context.MODE_PRIVATE)
 

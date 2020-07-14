@@ -1,4 +1,4 @@
-package com.max.timemaster.calendar
+package com.max.timemaster.favorite
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,12 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.max.timemaster.data.CalendarEvent
+import com.max.timemaster.data.FavoriteContent
 import com.max.timemaster.databinding.ItemCalendarBinding
+import com.max.timemaster.databinding.ItemFavoriteBinding
 import com.max.timemaster.util.TimeUtil.stampToDateTime
 import java.util.*
 
-class CalendarAdapter() :
-    ListAdapter<CalendarEvent, CalendarAdapter.ProductDetailedEvaluationViewHolder>(
+class FavoriteAdapter() :
+    ListAdapter<FavoriteContent, FavoriteAdapter.ProductDetailedEvaluationViewHolder>(
         DiffCallback
     ) {
 
@@ -21,19 +23,13 @@ class CalendarAdapter() :
      */
 
     //1.ViewHolder 畫布
-    class ProductDetailedEvaluationViewHolder(private var binding: ItemCalendarBinding) :
+    class ProductDetailedEvaluationViewHolder(private var binding: ItemFavoriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(calendarEvent: CalendarEvent) {
-            binding.title.text = calendarEvent.calendarTitle
-            binding.attendee.text = calendarEvent.attendee
-
-
-            val selectedDate = calendarEvent.dateStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
-            val splitTime = selectedDate?.split(" ")
-            val date = splitTime?.get(0)  // 年/月/日
-            val time = splitTime?.get(1)  // 時:分+
-            binding.time.text = time.toString()
-            binding.content.text = calendarEvent.calendarContent
+        fun bind(favoriteContent: FavoriteContent) {
+            binding.favoriteTag.text = favoriteContent.favoriteTitle
+            favoriteContent.favoriteContent?.get(0)?.let {
+                binding.favoriteContent.text = favoriteContent.favoriteContent!![0]
+            }
 
 
             binding.executePendingBindings()
@@ -44,17 +40,17 @@ class CalendarAdapter() :
      * Allows the RecyclerView to determine which items have changed when the [List] of [MarsProperty]
      * has been updated.
      */
-    companion object DiffCallback : DiffUtil.ItemCallback<CalendarEvent>() {
+    companion object DiffCallback : DiffUtil.ItemCallback<FavoriteContent>() {
         override fun areItemsTheSame(
-            oldItem: CalendarEvent,
-            newItem: CalendarEvent
+            oldItem: FavoriteContent,
+            newItem: FavoriteContent
         ): Boolean {
-            return oldItem.dateStamp == newItem.dateStamp
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(
-            oldItem: CalendarEvent,
-            newItem: CalendarEvent
+            oldItem: FavoriteContent,
+            newItem: FavoriteContent
         ): Boolean {
             return oldItem == newItem
         }
@@ -70,7 +66,7 @@ class CalendarAdapter() :
         viewType: Int
     ): ProductDetailedEvaluationViewHolder {
         return ProductDetailedEvaluationViewHolder(
-            ItemCalendarBinding.inflate(
+            ItemFavoriteBinding.inflate(
                 LayoutInflater.from(
                     parent.context
                 ), parent, false                  //在有inflate 的地方 要注意   parnt, false

@@ -30,6 +30,9 @@ class CostFragment : Fragment() {
         binding.btnAdd.setOnClickListener {
             findNavController().navigate(R.id.navigate_to_costDetailDialog)
         }
+        val adapter = CostAdapter()
+        binding.recyclerCost.adapter = adapter
+        adapter.submitList(viewModel.fakerCost.value)
 
 
 

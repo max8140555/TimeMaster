@@ -16,6 +16,7 @@ import androidx.fragment.app.viewModels
 import com.max.timemaster.R
 import com.max.timemaster.databinding.DialogProfileDetailBinding
 import com.max.timemaster.ext.getVmFactory
+import com.max.timemaster.util.UserManager
 import java.lang.String
 import java.util.*
 
@@ -28,6 +29,7 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         setStyle(DialogFragment.STYLE_NO_FRAME, R.style.PublishDialog)
     }
 
+    @SuppressLint("LongLogTag")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,6 +45,8 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
             viewModel.myDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
                 it?.let {
                     viewModel.myDate.value?.let { it1 -> viewModel.postAddDate(it1) }
+                    UserManager.addDate.value = viewModel.edDateName.value
+                    Log.d(" UserManager.addDate.value","${UserManager.addDate.value}")
                 }
             })
         }

@@ -20,9 +20,9 @@ fun Fragment.getVmFactory(selectDate: String): CalendarDetailViewModelFactory {
     val repository = (requireContext().applicationContext as TimeMasterApplication).timeMasterRepository
     return CalendarDetailViewModelFactory(repository, selectDate)
 }
-fun Fragment.getVmFactory(selectDate: String?): CalendarViewModelFactory {
+fun Fragment.getVmFactory(selectDate: String?, selectAttendee: String?): CalendarViewModelFactory {
     val repository = (requireContext().applicationContext as TimeMasterApplication).timeMasterRepository
-    return CalendarViewModelFactory(repository, selectDate)
+    return CalendarViewModelFactory(repository, selectDate,selectAttendee)
 }
 //
 //fun Fragment.getVmFactory(user: User?): ProfileViewModelFactory {

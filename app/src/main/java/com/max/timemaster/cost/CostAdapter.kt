@@ -1,17 +1,21 @@
-package com.max.timemaster.calendar
+package com.max.timemaster.cost
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.max.timemaster.data.CalendarEvent
+import com.max.timemaster.data.CostContent
+import com.max.timemaster.data.FavoriteContent
 import com.max.timemaster.databinding.ItemCalendarBinding
+import com.max.timemaster.databinding.ItemFavoriteBinding
 import com.max.timemaster.util.TimeUtil.stampToDateTime
 import java.util.*
 
-class CalendarAdapter() :
-    ListAdapter<CalendarEvent, CalendarAdapter.ProductDetailedEvaluationViewHolder>(
+class CostAdapter() :
+    ListAdapter<CostContent, CostAdapter.ProductDetailedEvaluationViewHolder>(
         DiffCallback
     ) {
 
@@ -23,17 +27,13 @@ class CalendarAdapter() :
     //1.ViewHolder 畫布
     class ProductDetailedEvaluationViewHolder(private var binding: ItemCalendarBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(calendarEvent: CalendarEvent) {
-            binding.title.text = calendarEvent.calendarTitle
-            binding.attendee.text = calendarEvent.attendee
+        @SuppressLint("SetTextI18n")
+        fun bind(costContent: CostContent) {
+            binding.title.text = costContent.costTitle
+            binding.time.text = "07/14"
 
+            binding.content.text = "NT : ${costContent.costPrice.toString()}"
 
-            val selectedDate = calendarEvent.dateStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
-            val splitTime = selectedDate?.split(" ")
-            val date = splitTime?.get(0)  // 年/月/日
-            val time = splitTime?.get(1)  // 時:分+
-            binding.time.text = time.toString()
-            binding.content.text = calendarEvent.calendarContent
 
 
             binding.executePendingBindings()
@@ -44,17 +44,17 @@ class CalendarAdapter() :
      * Allows the RecyclerView to determine which items have changed when the [List] of [MarsProperty]
      * has been updated.
      */
-    companion object DiffCallback : DiffUtil.ItemCallback<CalendarEvent>() {
+    companion object DiffCallback : DiffUtil.ItemCallback<CostContent>() {
         override fun areItemsTheSame(
-            oldItem: CalendarEvent,
-            newItem: CalendarEvent
+            oldItem: CostContent,
+            newItem: CostContent
         ): Boolean {
-            return oldItem.dateStamp == newItem.dateStamp
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(
-            oldItem: CalendarEvent,
-            newItem: CalendarEvent
+            oldItem: CostContent,
+            newItem: CostContent
         ): Boolean {
             return oldItem == newItem
         }

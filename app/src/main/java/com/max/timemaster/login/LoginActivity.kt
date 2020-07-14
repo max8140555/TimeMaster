@@ -34,12 +34,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         btn_login.setOnClickListener {
             facebookLogin()
-
         }
         auth = FirebaseAuth.getInstance()
-
-
-
         //printHashKey()
         callbackManager = CallbackManager.Factory.create()
     }

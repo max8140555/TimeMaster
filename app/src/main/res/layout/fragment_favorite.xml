@@ -8,6 +8,8 @@
         <variable
             name="viewModel"
             type="com.max.timemaster.favorite.FavoriteViewModel" />
+        <import type="com.max.timemaster.util.UserManager"/>
+        <import type="com.max.timemaster.util.TimeUtil"/>
     </data>
 
     <FrameLayout
@@ -42,17 +44,17 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/text_profile_lv_number"
+                    android:id="@+id/text_date_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:letterSpacing="0.15"
                     android:maxLines="1"
-                    android:text="Date Name"
+                    android:text="Ray"
                     android:textColor="@color/black"
                     android:textSize="18sp"
-                    app:layout_constraintBottom_toTopOf="@+id/text_profile_lv"
+                    app:layout_constraintBottom_toTopOf="@+id/text_date_birthday"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/image_profile_avatar"
@@ -61,7 +63,7 @@
                     tools:text="date name" />
 
                 <TextView
-                    android:id="@+id/text_profile_lv"
+                    android:id="@+id/text_date_birthday"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -69,14 +71,14 @@
                     android:layout_marginEnd="16dp"
                     android:letterSpacing="0.15"
                     android:maxLines="2"
-                    android:text="04-07"
+                    android:text="1993/02/11"
                     android:textColor="@color/black"
                     android:textSize="13sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/image_profile_avatar"
-                    app:layout_constraintTop_toBottomOf="@+id/text_profile_lv_number"
+                    app:layout_constraintTop_toBottomOf="@+id/text_date_name"
                     tools:text="4 / 4" />
 
                 <ProgressBar

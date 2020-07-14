@@ -1,6 +1,7 @@
 package com.max.timemaster.calendar
 
 import android.os.Bundle
+import android.util.Log
 
 import android.view.LayoutInflater
 import android.view.View
@@ -26,9 +27,8 @@ import java.util.*
 class CalendarFragment : Fragment() {
     private val viewModel by viewModels<CalendarViewModel> {
         getVmFactory(
-            CalendarFragmentArgs.fromBundle(
-                requireArguments()
-            ).returnDate
+            CalendarFragmentArgs.fromBundle(requireArguments()).returnDate,
+            CalendarFragmentArgs.fromBundle(requireArguments()).selectAttendee
         )
     }
     lateinit var widget: MaterialCalendarView
@@ -42,9 +42,6 @@ class CalendarFragment : Fragment() {
         binding = FragmentCalendarBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 //        binding.viewModel = viewModel
-
-
-
 
 
         viewModel.selectDate.value = LocalDate.now().toString()
@@ -72,7 +69,10 @@ class CalendarFragment : Fragment() {
 
         viewModel.selectEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
+
                 adapter.submitList(it)
+
+
             }
         })
 
@@ -101,7 +101,7 @@ class CalendarFragment : Fragment() {
 
         viewModel.getAllEventTimeResult()
 
-        viewModel.liveAllEventTime.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        UserManager.allEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
                 addAllEventMark()
             }
@@ -124,11 +124,12 @@ class CalendarFragment : Fragment() {
 
     // 把所有Event標示在calendar上
     private fun addAllEventMark() {
-       var allEventTime = UserManager.allEvent.value?.map {
-           it.dateStamp
-       }
-            val list = mutableListOf<String>()
-            for (a in allEventTime!!) {
+        val allEventTime = UserManager.allEvent.value?.map {
+            it.dateStamp
+        }
+        val list = mutableListOf<String>()
+        allEventTime?.let {
+            for (a in it) {
                 val selectedDate = stampToDate(a as Long, Locale.TAIWAN).split("-")
                 val year = selectedDate[0]
                 val month = selectedDate[1]
@@ -143,6 +144,8 @@ class CalendarFragment : Fragment() {
                 )
                 list.add(stampToDate(a , Locale.TAIWAN))
             }
+            showTodayEvent()
+        }
 
 
     }
@@ -161,7 +164,8 @@ class CalendarFragment : Fragment() {
         if (viewModel.returnDate == null) {
             viewModel.greaterThan =
                 dateToStampTime(LocalDate.now().toString() + " 00:00", Locale.TAIWAN)
-            viewModel.lessThan = dateToStampTime(LocalDate.now().toString() + " 24:59", Locale.TAIWAN)
+            viewModel.lessThan =
+                dateToStampTime(LocalDate.now().toString() + " 24:59", Locale.TAIWAN)
             viewModel.getSelectEventResult()
         } else {
             viewModel.greaterThan = dateToStampTime(viewModel.returnDate + " 00:00", Locale.TAIWAN)

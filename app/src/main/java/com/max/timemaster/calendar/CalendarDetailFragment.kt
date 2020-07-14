@@ -49,10 +49,9 @@ class CalendarDetailFragment : Fragment() {
             val stamp = "${viewModel.editDate.value} ${viewModel.editTime.value}"
             val event = viewModel.insertCalendar(dateToStampTime(stamp, Locale.TAIWAN))
             viewModel.postEvent(event)
-            findNavController().navigate(NavigationDirections.navigateToCalendarFragment(viewModel.editDate.value as String))
+            findNavController().navigate(NavigationDirections.navigateToCalendarFragment(returnDate = viewModel.editDate.value as String))
             viewModel.onLeft()
         }
-
 
 
 
