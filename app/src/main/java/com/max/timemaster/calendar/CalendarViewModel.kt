@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class CalendarViewModel(
     private val timeMasterRepository: TimeMasterRepository,
     var returnDate: String?,
-    var selectAttendee: String?
+    var selectAttendeeArg: String?
 ) : ViewModel() {
     private val _selectEvent = MutableLiveData<List<CalendarEvent>>()
 
@@ -29,6 +29,9 @@ class CalendarViewModel(
     var liveAllEvent = MutableLiveData<List<CalendarEvent>>()
     var liveAllEventTime = MutableLiveData<List<Long>>()
 
+    var selectAttendee = MutableLiveData<String>().apply {
+        selectAttendeeArg?.let { value = it }
+    }
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -64,7 +67,6 @@ class CalendarViewModel(
 
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
 
 
     override fun onCleared() {

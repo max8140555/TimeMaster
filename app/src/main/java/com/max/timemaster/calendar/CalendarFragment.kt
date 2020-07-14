@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.max.timemaster.MainViewModel
 import com.max.timemaster.NavigationDirections
 import com.max.timemaster.R
 import com.max.timemaster.databinding.FragmentCalendarBinding
@@ -19,6 +21,7 @@ import com.max.timemaster.util.TimeUtil.stampToDate
 import com.max.timemaster.util.UserManager
 
 import com.prolificinteractive.materialcalendarview.CalendarDay
+import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import org.threeten.bp.LocalDate
 import java.util.*
@@ -31,8 +34,11 @@ class CalendarFragment : Fragment() {
             CalendarFragmentArgs.fromBundle(requireArguments()).selectAttendee
         )
     }
+
     lateinit var widget: MaterialCalendarView
     lateinit var binding: FragmentCalendarBinding
+
+    var previousDates = mutableListOf<Any?>()
 
 
     override fun onCreateView(
@@ -40,17 +46,13 @@ class CalendarFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCalendarBinding.inflate(inflater, container, false)
+        val viewModel2 = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         binding.lifecycleOwner = this
 //        binding.viewModel = viewModel
 
 
         viewModel.selectDate.value = LocalDate.now().toString()
         showTodayEvent()
-
-
-
-
-
 
 
         binding.btnAdd.setOnClickListener {
@@ -67,14 +69,57 @@ class CalendarFragment : Fragment() {
         val adapter = CalendarAdapter()
         binding.recyclerCalendar.adapter = adapter
 
+
+
         viewModel.selectEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
+                adapter.submitList(viewModel.selectEvent.value)
+                UserManager.selectTime.value = viewModel.selectEvent.value
 
-                adapter.submitList(it)
+                viewModel2.selectAttendee.value?.let { select ->
+                    if (select.isEmpty()) {
+                        adapter.submitList(UserManager.selectTime.value)
+                    } else {
+                        val x = UserManager.selectTime.value?.filter {
+                            it.attendee == select
+                        }
+                        Log.d("viewModel22", "${UserManager.selectTime.value}")
+                        Log.d("viewModel2", "$x")
+                        adapter.submitList(x)
+
+                    }
+                }
 
 
             }
         })
+
+        viewModel2.selectAttendee.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer { select ->
+
+                if (select.isEmpty()) {
+                    adapter.submitList(UserManager.selectTime.value)
+                    UserManager.selectTime.value?.let {
+//                        mark(it.map { event ->
+//                            event.dateStamp
+//                        })
+
+
+                    }
+                } else {
+                    val selectedPersonEvents = UserManager.selectTime.value?.filter {
+                        it.attendee == select
+                    }
+                    selectedPersonEvents?.let {
+//                        mark(it.map { event ->
+//                            event.dateStamp
+//                        })
+                    }
+                    adapter.submitList(selectedPersonEvents)
+
+                }
+            })
 
 
         // LiveData .. 取得所有Event
@@ -99,13 +144,14 @@ class CalendarFragment : Fragment() {
 
         widget = view?.findViewById(R.id.calendarView) as MaterialCalendarView
 
-        viewModel.getAllEventTimeResult()
+//        viewModel.getAllEventTimeResult()
 
         UserManager.allEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
                 addAllEventMark()
             }
         })
+
         showSelectEvent()
 
 
@@ -127,26 +173,53 @@ class CalendarFragment : Fragment() {
         val allEventTime = UserManager.allEvent.value?.map {
             it.dateStamp
         }
-        val list = mutableListOf<String>()
-        allEventTime?.let {
-            for (a in it) {
-                val selectedDate = stampToDate(a as Long, Locale.TAIWAN).split("-")
-                val year = selectedDate[0]
-                val month = selectedDate[1]
-                val date = selectedDate[2]
-                val addDate =
-                    CalendarDay.from(year.toInt(), month.toInt(), date.toInt()) // year, month, date
-                widget.addDecorators(
-                    CurrentDayDecorator(
-                        resources.getColor(R.color.black_3f3a3a),
-                        addDate
-                    )
-                )
-                list.add(stampToDate(a , Locale.TAIWAN))
-            }
-            showTodayEvent()
-        }
 
+
+        allEventTime?.let {
+            mark(it)
+        }
+        showTodayEvent()
+    }
+
+
+    fun mark(events: List<Long?>) {
+
+//
+//        if(previousDates.isNotEmpty()){
+//            for(day in previousDates)
+//            widget.removeDecorator()
+//
+//        }
+//        widget.invalidateDecorators()
+//        widget.removeDecorators()
+
+
+
+
+        val list = mutableListOf<String>()
+
+        for (a in events) {
+            val selectedDate = stampToDate(a as Long, Locale.TAIWAN).split("-")
+            val year = selectedDate[0]
+            val month = selectedDate[1]
+            val date = selectedDate[2]
+            val calendarDay =
+                CalendarDay.from(year.toInt(), month.toInt(), date.toInt()) // year, month, date
+
+
+
+            widget.addDecorators(
+                CurrentDayDecorator(
+                    resources.getColor(R.color.black_3f3a3a),
+                    calendarDay
+                )
+            )
+
+            list.add(stampToDate(a, Locale.TAIWAN))
+
+            previousDates.add(calendarDay)
+        }
+        Log.e("Max", previousDates.toString())
 
     }
 
@@ -175,6 +248,7 @@ class CalendarFragment : Fragment() {
         }
     }
 }
+
 
 
 

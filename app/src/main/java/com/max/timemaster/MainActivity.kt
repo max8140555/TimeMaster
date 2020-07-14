@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity() {
         })
         viewModel.liveMyDate.observe(this, Observer {
             it?.let {
-                Log.d("", "")
                 UserManager.addDate.value?.let { savedDate ->
                         UserManager.myDate.value = viewModel.liveMyDate.value
                         setupDrawer()
@@ -139,8 +138,9 @@ class MainActivity : AppCompatActivity() {
         val menu = m.addSubMenu("時間管理").setIcon(R.drawable.ic_home_black_24dp)
 
 
-        menu.add("所有").setIcon(R.drawable.ic_nav_profile).setOnMenuItemClickListener {
-            Log.d("zxc", "所有")
+        menu.add("All").setIcon(R.drawable.ic_nav_profile).setOnMenuItemClickListener {
+            Log.d("zxc", "All")
+            viewModel.selectAttendee.value = ""
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             return@setOnMenuItemClickListener true
         }
@@ -153,11 +153,7 @@ class MainActivity : AppCompatActivity() {
                 menu.add(i).setIcon(R.drawable.baseline_favorite_border_black_36)
                     .setOnMenuItemClickListener {
                         Log.d("zxc", i)
-                        findNavController(R.id.myNavHostFragment).navigate(
-                            NavigationDirections.navigateToCalendarFragment(
-                                selectAttendee = i
-                            )
-                        )
+                        viewModel.selectAttendee.value = i
                         binding.drawerLayout.closeDrawer(GravityCompat.START)
                         return@setOnMenuItemClickListener true
                     }
