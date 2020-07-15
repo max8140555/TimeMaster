@@ -100,24 +100,29 @@ class CalendarFragment : Fragment() {
 
                 if (select.isEmpty()) {
                     adapter.submitList(UserManager.selectTime.value)
-                    UserManager.selectTime.value?.let {
-//                        mark(it.map { event ->
-//                            event.dateStamp
-//                        })
-
-
+                    val selectAllMark = UserManager.allEvent.value?.let { allEvent ->
+                        allEvent.map {
+                            it.dateStamp
+                        }
+                    }
+                    selectAllMark?.let {
+                        mark(it)
                     }
                 } else {
                     val selectedPersonEvents = UserManager.selectTime.value?.filter {
                         it.attendee == select
                     }
-                    selectedPersonEvents?.let {
-//                        mark(it.map { event ->
-//                            event.dateStamp
-//                        })
-                    }
                     adapter.submitList(selectedPersonEvents)
-
+                    val selectAllMark = UserManager.allEvent.value?.let { allEvent ->
+                        allEvent.filter {att ->
+                            att.attendee == select
+                        }.map {
+                            it.dateStamp
+                        }
+                    }
+                    selectAllMark?.let {
+                        mark(it)
+                    }
                 }
             })
 
@@ -185,14 +190,20 @@ class CalendarFragment : Fragment() {
     fun mark(events: List<Long?>) {
 
 //
-//        if(previousDates.isNotEmpty()){
-//            for(day in previousDates)
-//            widget.removeDecorator()
-//
+//        if (previousDates.isNotEmpty()) {
+//            for (day in previousDates) {
+//                widget.removeDecorator(
+//                    CurrentDayDecorator(
+//                        resources.getColor(R.color.black_3f3a3a),
+//                        day as CalendarDay
+//                    )
+//                )
+//                Log.e("dayday","$day")
+                widget.removeDecorators()
+                widget.invalidateDecorators()
+//            }
 //        }
 //        widget.invalidateDecorators()
-//        widget.removeDecorators()
-
 
 
 
@@ -247,6 +258,19 @@ class CalendarFragment : Fragment() {
 
         }
     }
+//    fun remove(){
+//
+//        if(previousDates.isNotEmpty()){
+//            for(day in previousDates)
+//            widget.removeDecorator(CurrentDayDecorator(
+//                resources.getColor(R.color.black_3f3a3a),
+//                day
+//            ))
+//
+//        }
+//        widget.invalidateDecorators()
+//        widget.removeDecorators()
+//    }
 }
 
 
