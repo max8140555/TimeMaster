@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="imageString"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_profile_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp">
+
+        <ImageView
+            android:id="@+id/image_profile_main"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="W, 1:1"
+            app:profileImageUrl="@{imageString}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_placeholder" />
+
+        <TextView
+            android:id="@+id/text_profile_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:letterSpacing="0.15"
+            android:maxLines="2"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/black_3f3a3a"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_profile_main" />
+
+        <TextView
+            android:id="@+id/text_profile_birthday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:ellipsize="end"
+            android:letterSpacing="0.15"
+            android:lines="1"
+            android:textColor="@color/gray_999999"
+            android:gravity="center"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/text_profile_name"
+            app:layout_constraintStart_toStartOf="@+id/text_profile_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_profile_name"
+            tools:text="1993/04/04" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

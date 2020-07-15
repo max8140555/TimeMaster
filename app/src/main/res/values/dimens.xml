@@ -19,4 +19,7 @@
 
     <!-- Profile  -->
     <dimen name="height_favorite_header">92dp</dimen>
+
+    <!-- ProfileItem  -->
+    <dimen name="space_catalog_grid">16dp</dimen>
 </resources>

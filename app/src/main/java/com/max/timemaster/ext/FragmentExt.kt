@@ -4,8 +4,10 @@ import androidx.fragment.app.Fragment
 import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.factory.CalendarDetailViewModelFactory
 import com.max.timemaster.factory.CalendarViewModelFactory
+import com.max.timemaster.factory.ProfileItemViewModelFactory
 
 import com.max.timemaster.factory.ViewModelFactory
+import com.max.timemaster.profile.ProfileTypeFilter
 
 /**
  * Created by Wayne Chen in Jul. 2019.
@@ -23,6 +25,11 @@ fun Fragment.getVmFactory(selectDate: String): CalendarDetailViewModelFactory {
 fun Fragment.getVmFactory(selectDate: String?, selectAttendee: String?): CalendarViewModelFactory {
     val repository = (requireContext().applicationContext as TimeMasterApplication).timeMasterRepository
     return CalendarViewModelFactory(repository, selectDate,selectAttendee)
+}
+
+fun Fragment.getVmFactory(catalogType: ProfileTypeFilter): ProfileItemViewModelFactory {
+    val repository = (requireContext().applicationContext as TimeMasterApplication).timeMasterRepository
+    return ProfileItemViewModelFactory(repository, catalogType)
 }
 //
 //fun Fragment.getVmFactory(user: User?): ProfileViewModelFactory {

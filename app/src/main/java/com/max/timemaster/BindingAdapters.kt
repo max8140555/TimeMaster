@@ -3,6 +3,7 @@ package com.max.timemaster
 
 import android.os.Build
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
@@ -53,5 +54,39 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
                     .placeholder(R.drawable.ic_placeholder)
                     .error(R.drawable.ic_placeholder))
             .into(imgView)
+    }
+}
+
+@BindingAdapter("profileImageUrl")
+fun bindProfileImage(imgView: ImageView, imgUrl: String?) {
+    imgUrl?.let {
+        val imgUrl = imgUrl.toUri().buildUpon().scheme("https").build()
+        Glide.with(imgView.context)
+            .load(imgUrl)
+            .apply(
+                RequestOptions()
+                    .circleCrop()
+            )
+            .into(imgView)
+    }
+}
+
+/**
+ * Displays exp to [TextView] by [Long]
+ */
+
+@RequiresApi(Build.VERSION_CODES.O)
+@BindingAdapter("exp")
+fun bindExp(textView: TextView, exp: Long?) {
+    exp?.let {
+        textView.text = "${exp % 100}%"
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@BindingAdapter("level")
+fun bindLevel(textView: TextView, exp: Long?) {
+    exp?.let {
+        textView.text = "${exp / 100 + 1}"
     }
 }

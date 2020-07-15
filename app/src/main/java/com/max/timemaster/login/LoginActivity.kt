@@ -75,12 +75,14 @@ class LoginActivity : AppCompatActivity() {
 
                     //Third step
                     //Login
+                    val userId = task.result?.additionalUserInfo?.profile?.getValue("id")
+                    UserManager.user.image = "https://graph.facebook.com/$userId/picture?height=500"
                     moveMainPage(task.result?.user)
                     UserManager.userEmail = task.result?.user?.email.toString()
 
                     UserManager.user.email = task.result?.user?.email.toString()
                     UserManager.user.name = task.result?.user?.displayName.toString()
-                    UserManager.user.image = task.result?.user?.photoUrl.toString()
+
 
 
                 }else{

@@ -14,12 +14,14 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.tabs.TabLayout
 import com.max.timemaster.NavigationDirections
 
 
 import com.max.timemaster.R
 import com.max.timemaster.databinding.FragmentProfileBinding
 import com.max.timemaster.ext.getVmFactory
+import com.max.timemaster.profile.detail.ProfileAdapter
 import com.max.timemaster.util.UserManager
 
 class ProfileFragment : Fragment() {
@@ -37,11 +39,11 @@ class ProfileFragment : Fragment() {
                     findNavController().navigate(R.id.navigate_to_profileDetailFragment)
 
                 }
-//               viewpagerProfileDate.let {
-//                    tabsProfileDate.setupWithViewPager(it)
-//                    it.adapter = CatalogAdapter(childFragmentManager)
-//                    it.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabsProfileDate))
-//                }
+               viewpagerProfileDate.let {
+                    tabsProfileDate.setupWithViewPager(it)
+                    it.adapter = ProfileAdapter(childFragmentManager)
+                    it.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabsProfileDate))
+                }
 
 
                 return@onCreateView root

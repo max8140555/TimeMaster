@@ -20,44 +20,16 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_profile_header"
                 android:layout_width="0dp"
-                android:layout_height="120dp"
+                android:layout_height="150dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/text_profile_slash"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:letterSpacing="0.15"
-                    android:maxLines="1"
-                    android:text="/"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toEndOf="@+id/text_profile_now_exp"
-                    app:layout_constraintTop_toTopOf="@+id/text_profile_now_exp"
-                    tools:text="/" />
-
-                <TextView
-                    android:id="@+id/text_profile_name4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:letterSpacing="0.15"
-                    android:maxLines="1"
-                    android:text="10"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/text_profile_slash"
-                    app:layout_constraintStart_toEndOf="@+id/text_profile_slash"
-                    tools:text="10" />
-
                 <ImageView
                     android:id="@+id/image_profile_avatar"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="105dp"
+                    android:layout_height="105dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="32dp"
@@ -67,7 +39,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.0" 
-                    app:imageUrl="@{UserManager.INSTANCE.user.image}"/>
+                    app:profileImageUrl="@{UserManager.INSTANCE.user.image}"/>
 
                 <TextView
                     android:id="@+id/text_date_name"
@@ -75,9 +47,10 @@
                     android:layout_height="wrap_content"
                     android:letterSpacing="0.15"
                     android:maxLines="1"
-                    android:text="@{String.valueOf(UserManager.INSTANCE.user.lv)}"
+                    app:level="@{UserManager.INSTANCE.user.exp}"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/text_date_birthday"
                     app:layout_constraintEnd_toEndOf="@+id/text_date_birthday"
                     app:layout_constraintStart_toStartOf="@+id/text_date_birthday"
@@ -91,12 +64,13 @@
                     android:layout_height="wrap_content"
                     android:letterSpacing="0.15"
                     android:maxLines="1"
-                    android:text="？"
+                    android:text="50"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="@+id/text_profile_use_day"
                     app:layout_constraintStart_toStartOf="@+id/text_profile_use_day"
-                    app:layout_constraintTop_toTopOf="@+id/text_profile_name4" />
+                    app:layout_constraintTop_toTopOf="@+id/text_profile_now_exp" />
 
                 <TextView
                     android:id="@+id/text_date_birthday"
@@ -120,14 +94,13 @@
                     android:layout_height="wrap_content"
                     android:letterSpacing="0.15"
                     android:maxLines="2"
+                    android:layout_marginStart="50dp"
                     android:text="經驗值"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="13sp"
                     app:layout_constraintBottom_toBottomOf="@+id/text_date_birthday"
-                    app:layout_constraintEnd_toEndOf="@+id/text_profile_name4"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="@+id/text_profile_now_exp"
+                    app:layout_constraintStart_toEndOf="@+id/text_date_birthday"
                     tools:text="經驗值" />
 
                 <TextView
@@ -147,7 +120,7 @@
                     tools:text="使用天數" />
 
                 <TextView
-                    android:id="@+id/text_profile_title"
+                    android:id="@+id/text_profile_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -170,12 +143,14 @@
                     android:layout_marginBottom="4dp"
                     android:letterSpacing="0.15"
                     android:maxLines="1"
-                    android:text="@{String.valueOf(UserManager.INSTANCE.user.exp)}"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:exp="@{UserManager.INSTANCE.user.exp}"
                     app:layout_constraintBottom_toTopOf="@+id/text_profile_exp"
+                    app:layout_constraintEnd_toEndOf="@+id/text_profile_exp"
                     app:layout_constraintStart_toEndOf="@+id/text_date_birthday"
-                    tools:text="1" />
+                    tools:text="15%" />
 
                 <ProgressBar
                     android:id="@+id/progressBar"
@@ -183,9 +158,10 @@
                     android:layout_height="wrap_content"
                     android:theme="@style/ProgressThemeDark"
                     android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/text_profile_slash" />
+                    app:layout_constraintTop_toTopOf="parent" />
                 <!--            app:setupApiStatus="@{viewModel.status}"-->
 
 
