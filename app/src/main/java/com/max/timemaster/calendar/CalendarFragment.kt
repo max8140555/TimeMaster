@@ -239,7 +239,7 @@ class CalendarFragment : Fragment() {
         widget.setOnDateChangedListener { widget, date, selected ->
             viewModel.selectDate.value = date.date.toString()
             viewModel.greaterThan = dateToStampTime(date.date.toString() + " 00:00", Locale.TAIWAN)
-            viewModel.lessThan = dateToStampTime(date.date.toString() + " 24:59", Locale.TAIWAN)
+            viewModel.lessThan = dateToStampTime(date.date.toString() + " 23:59", Locale.TAIWAN)
             viewModel.getSelectEventResult()
         }
     }
@@ -249,11 +249,11 @@ class CalendarFragment : Fragment() {
             viewModel.greaterThan =
                 dateToStampTime(LocalDate.now().toString() + " 00:00", Locale.TAIWAN)
             viewModel.lessThan =
-                dateToStampTime(LocalDate.now().toString() + " 24:59", Locale.TAIWAN)
+                dateToStampTime(LocalDate.now().toString() + " 23:59", Locale.TAIWAN)
             viewModel.getSelectEventResult()
         } else {
             viewModel.greaterThan = dateToStampTime(viewModel.returnDate + " 00:00", Locale.TAIWAN)
-            viewModel.lessThan = dateToStampTime(viewModel.returnDate + " 24:59", Locale.TAIWAN)
+            viewModel.lessThan = dateToStampTime(viewModel.returnDate + " 23:59", Locale.TAIWAN)
             viewModel.getSelectEventResult()
 
         }

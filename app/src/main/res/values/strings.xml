@@ -10,5 +10,8 @@
     <string name="facebook_application_id">272552614171781</string>
     <!--供Facebook登入模組使用-->
     <string name="facebook_app_id">272552614171781</string>
+    <string name="level3_6">魚池管理員</string>
+    <string name="level7_up">時間管理大師</string>
+    <string name="level1_2">小小釣手</string>
 
 </resources>

@@ -22,6 +22,7 @@ object TimeUtil {
         /// 輸出為毫秒為單位
         return simpleDateFormat.parse(date).time
     }
+
     @JvmStatic
     fun dateToStamp(date: String, locale: Locale): Long {
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", locale)
