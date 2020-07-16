@@ -41,7 +41,8 @@ class FavoriteFragment : Fragment() {
         }
         val adapter = FavoriteAdapter()
         binding.recyclerFavorite.adapter = adapter
-        adapter.submitList(viewModel.fakerFavorite.value)
+
+//        adapter.submitList(viewModel.fakerFavorite.value)
 
         mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {
             it?.let {

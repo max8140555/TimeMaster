@@ -6,16 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.max.timemaster.data.CalendarEvent
-import com.max.timemaster.data.CostContent
-import com.max.timemaster.data.FavoriteContent
+import com.max.timemaster.data.DateCost
 import com.max.timemaster.databinding.ItemCalendarBinding
-import com.max.timemaster.databinding.ItemFavoriteBinding
-import com.max.timemaster.util.TimeUtil.stampToDateTime
-import java.util.*
 
 class CostAdapter() :
-    ListAdapter<CostContent, CostAdapter.ProductDetailedEvaluationViewHolder>(
+    ListAdapter<DateCost, CostAdapter.ProductDetailedEvaluationViewHolder>(
         DiffCallback
     ) {
 
@@ -28,11 +23,11 @@ class CostAdapter() :
     class ProductDetailedEvaluationViewHolder(private var binding: ItemCalendarBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
-        fun bind(costContent: CostContent) {
-            binding.title.text = costContent.costTitle
+        fun bind(dateCost: DateCost) {
+            binding.title.text = dateCost.costTitle
             binding.time.text = "07/14"
 
-            binding.content.text = "NT : ${costContent.costPrice.toString()}"
+            binding.content.text = "NT : ${dateCost.costPrice.toString()}"
 
 
 
@@ -44,17 +39,17 @@ class CostAdapter() :
      * Allows the RecyclerView to determine which items have changed when the [List] of [MarsProperty]
      * has been updated.
      */
-    companion object DiffCallback : DiffUtil.ItemCallback<CostContent>() {
+    companion object DiffCallback : DiffUtil.ItemCallback<DateCost>() {
         override fun areItemsTheSame(
-            oldItem: CostContent,
-            newItem: CostContent
+            oldItem: DateCost,
+            newItem: DateCost
         ): Boolean {
             return oldItem == newItem
         }
 
         override fun areContentsTheSame(
-            oldItem: CostContent,
-            newItem: CostContent
+            oldItem: DateCost,
+            newItem: DateCost
         ): Boolean {
             return oldItem == newItem
         }

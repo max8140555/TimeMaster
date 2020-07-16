@@ -3,7 +3,8 @@ package com.max.timemaster.favorite
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.max.timemaster.data.FavoriteContent
+import com.max.timemaster.data.DateFavorite
+
 import com.max.timemaster.data.MyDate
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.network.LoadApiStatus
@@ -13,18 +14,18 @@ import kotlinx.coroutines.Job
 
 class FavoriteViewModel(timeMasterRepository: TimeMasterRepository) : ViewModel() {
 
-    var fakerFavorite = MutableLiveData<List<FavoriteContent>>().apply {
-        value = listOf(
-            FavoriteContent(
-                favoriteTitle = "愛吃",
-                favoriteContent = listOf("鰻魚飯","生魚片")
-            ),
-            FavoriteContent(
-                favoriteTitle = "愛喝",
-                favoriteContent = listOf("珍珠奶茶半糖少冰","茶湯會鐵觀音")
-            )
-        )
-    }
+//    var fakerFavorite = MutableLiveData<List<DateFavorite>>().apply {
+//        value = listOf(
+//            DateFavorite(
+//                favoriteTitle = "愛吃",
+//                favoriteContent = listOf("鰻魚飯","生魚片")
+//            ),
+//            DateFavorite(
+//                favoriteTitle = "愛喝",
+//                favoriteContent = listOf("珍珠奶茶半糖少冰","茶湯會鐵觀音")
+//            )
+//        )
+//    }
 
 
     // status: The internal MutableLiveData that stores the status of the most recent request

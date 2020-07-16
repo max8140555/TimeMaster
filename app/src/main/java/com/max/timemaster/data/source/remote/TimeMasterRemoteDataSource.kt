@@ -153,7 +153,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
             val db = FirebaseFirestore.getInstance().collection("users")
             val document = UserManager.userEmail?.let { db.document(it) }
 
-            UserManager.userEmail?.let {
+            UserManager.userEmail?.let { it ->
                 db.document(it).collection("date")
                     .whereEqualTo("name", myDate.name)
                     .get()
@@ -191,6 +191,46 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
 
         }
 
+    override suspend fun postFavorite(dateFavorite: DateFavorite): Result<Boolean> =
+        suspendCoroutine { continuation ->
+            val db = FirebaseFirestore.getInstance().collection("users")
+            val document = UserManager.userEmail?.let { db.document(it) }
+
+            UserManager.userEmail?.let {
+                db.document(it).collection("date")
+                    .whereEqualTo("name", dateFavorite.attendeeName)
+                    .get()
+                    .addOnSuccessListener { docs ->
+                        for (doc in docs) {
+                            document?.collection("date")?.document(doc.id)
+                                ?.collection("dateFavorite")?.add(dateFavorite)
+                                ?.addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Logger.i("postDateFavorite: $dateFavorite")
+
+                                        continuation.resume(Result.Success(true))
+                                    } else {
+                                        task.exception?.let {
+
+                                            Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                                            continuation.resume(Result.Error(it))
+                                            return@addOnCompleteListener
+                                        }
+                                        continuation.resume(
+                                            Result.Fail(
+                                                TimeMasterApplication.instance.getString(
+                                                    R.string.you_know_nothing
+                                                )
+                                            )
+                                        )
+                                    }
+                                }
+                        }
+
+
+                    }
+            }
+        }
 
     override fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>> {
         val liveData = MutableLiveData<List<CalendarEvent>>()
@@ -221,98 +261,98 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
         return liveData
     }
 
-        override fun getLiveAllEventTime(): MutableLiveData<List<Long>> {
-            val liveData = MutableLiveData<List<Long>>()
+    override fun getLiveAllEventTime(): MutableLiveData<List<Long>> {
+        val liveData = MutableLiveData<List<Long>>()
 
-            FirebaseFirestore.getInstance()
-                .collection(PATH_ARTICLES)
-                .whereGreaterThan("dateStamp", 0)
-                .addSnapshotListener { snapshot, exception ->
+        FirebaseFirestore.getInstance()
+            .collection(PATH_ARTICLES)
+            .whereGreaterThan("dateStamp", 0)
+            .addSnapshotListener { snapshot, exception ->
 
-                    Logger.i("addSnapshotListener detect")
+                Logger.i("addSnapshotListener detect")
 
-                    exception?.let {
-                        Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
-                    }
-
-                    val list = mutableListOf<Long>()
-
-                    for (document in snapshot!!) {
-                        Logger.d(document.id + " => " + document.data)
-
-                        var stamp = document.getLong("dateStamp")
-                        if (stamp != null) {
-                            list.add(stamp)
-                        }
-                    }
-
-                    liveData.value = list
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
                 }
-            return liveData
-        }
 
-        override fun getLiveUser(): MutableLiveData<User> {
-            val liveData = MutableLiveData<User>()
+                val list = mutableListOf<Long>()
 
-            FirebaseFirestore.getInstance()
-                .collection("users")
-                .whereEqualTo("email", UserManager.userEmail)
+                for (document in snapshot!!) {
+                    Logger.d(document.id + " => " + document.data)
 
-                .addSnapshotListener { snapshot, exception ->
-
-                    Logger.i("addSnapshotListener detect")
-
-                    exception?.let {
-                        Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
-                    }
-
-                    var user = User()
-
-                    for (document in snapshot!!) {
-                        Logger.d(document.id + " => " + document.data)
-
-                        val info = document.toObject(User::class.java)
-                        user = info
-                    }
-
-                    liveData.value = user
-                }
-            return liveData
-        }
-
-        override fun getLiveMyDate(): MutableLiveData<List<MyDate>> {
-            val liveData = MutableLiveData<List<MyDate>>()
-
-            val db = FirebaseFirestore.getInstance().collection("users")
-            Log.d("EEEMAIL", "${UserManager.userEmail}")
-            db
-                .whereEqualTo("email", UserManager.userEmail)
-                .get()
-                .addOnSuccessListener { doc ->
-                    UserManager.userEmail?.let {
-                        db.document(it).collection("date")
-                            .addSnapshotListener { snapshot, exception ->
-
-                                Logger.i("addSnapshotListener detect")
-
-                                exception?.let {
-                                    Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
-                                }
-
-                                val list = mutableListOf<MyDate>()
-                                for (document in snapshot!!) {
-                                    Logger.d(document.id + " => " + document.data)
-
-                                    val myDate = document.toObject(MyDate::class.java)
-                                    list.add(myDate)
-                                }
-
-                                liveData.value = list
-                            }
+                    var stamp = document.getLong("dateStamp")
+                    if (stamp != null) {
+                        list.add(stamp)
                     }
                 }
-            return liveData
-        }
 
+                liveData.value = list
+            }
+        return liveData
     }
+
+    override fun getLiveUser(): MutableLiveData<User> {
+        val liveData = MutableLiveData<User>()
+
+        FirebaseFirestore.getInstance()
+            .collection("users")
+            .whereEqualTo("email", UserManager.userEmail)
+
+            .addSnapshotListener { snapshot, exception ->
+
+                Logger.i("addSnapshotListener detect")
+
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                }
+
+                var user = User()
+
+                for (document in snapshot!!) {
+                    Logger.d(document.id + " => " + document.data)
+
+                    val info = document.toObject(User::class.java)
+                    user = info
+                }
+
+                liveData.value = user
+            }
+        return liveData
+    }
+
+    override fun getLiveMyDate(): MutableLiveData<List<MyDate>> {
+        val liveData = MutableLiveData<List<MyDate>>()
+
+        val db = FirebaseFirestore.getInstance().collection("users")
+        Log.d("EEEMAIL", "${UserManager.userEmail}")
+        db
+            .whereEqualTo("email", UserManager.userEmail)
+            .get()
+            .addOnSuccessListener { doc ->
+                UserManager.userEmail?.let {
+                    db.document(it).collection("date")
+                        .addSnapshotListener { snapshot, exception ->
+
+                            Logger.i("addSnapshotListener detect")
+
+                            exception?.let {
+                                Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                            }
+
+                            val list = mutableListOf<MyDate>()
+                            for (document in snapshot!!) {
+                                Logger.d(document.id + " => " + document.data)
+
+                                val myDate = document.toObject(MyDate::class.java)
+                                list.add(myDate)
+                            }
+
+                            liveData.value = list
+                        }
+                }
+            }
+        return liveData
+    }
+
+}
 

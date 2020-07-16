@@ -27,6 +27,10 @@ class TimeMasterLocalDataSource(val context: Context) : TimeMasterDataSource {
         TODO("Not yet implemented")
     }
 
+    override suspend fun postFavorite(dateFavorite: DateFavorite): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
     override fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>> {
         TODO("Not yet implemented")
     }

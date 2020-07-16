@@ -6,14 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.max.timemaster.data.CalendarEvent
-import com.max.timemaster.data.FavoriteContent
+import com.max.timemaster.data.DateFavorite
 import com.max.timemaster.databinding.ItemCalendarBinding
 import com.max.timemaster.databinding.ItemFavoriteBinding
 import com.max.timemaster.util.TimeUtil.stampToDateTime
 import java.util.*
 
 class FavoriteAdapter() :
-    ListAdapter<FavoriteContent, FavoriteAdapter.ProductDetailedEvaluationViewHolder>(
+    ListAdapter<DateFavorite, FavoriteAdapter.ProductDetailedEvaluationViewHolder>(
         DiffCallback
     ) {
 
@@ -25,10 +25,10 @@ class FavoriteAdapter() :
     //1.ViewHolder 畫布
     class ProductDetailedEvaluationViewHolder(private var binding: ItemFavoriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(favoriteContent: FavoriteContent) {
-            binding.favoriteTag.text = favoriteContent.favoriteTitle
-            favoriteContent.favoriteContent?.get(0)?.let {
-                binding.favoriteContent.text = favoriteContent.favoriteContent!![0]
+        fun bind(dateFavorite: DateFavorite) {
+            binding.favoriteTag.text = dateFavorite.favoriteTitle
+            dateFavorite.favoriteContent?.get(0)?.let {
+                binding.favoriteContent.text = dateFavorite.favoriteContent!![0]
             }
 
 
@@ -40,17 +40,17 @@ class FavoriteAdapter() :
      * Allows the RecyclerView to determine which items have changed when the [List] of [MarsProperty]
      * has been updated.
      */
-    companion object DiffCallback : DiffUtil.ItemCallback<FavoriteContent>() {
+    companion object DiffCallback : DiffUtil.ItemCallback<DateFavorite>() {
         override fun areItemsTheSame(
-            oldItem: FavoriteContent,
-            newItem: FavoriteContent
+            oldItem: DateFavorite,
+            newItem: DateFavorite
         ): Boolean {
             return oldItem == newItem
         }
 
         override fun areContentsTheSame(
-            oldItem: FavoriteContent,
-            newItem: FavoriteContent
+            oldItem: DateFavorite,
+            newItem: DateFavorite
         ): Boolean {
             return oldItem == newItem
         }

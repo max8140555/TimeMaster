@@ -19,7 +19,7 @@ data class MyDate(
     var loginDate: Long? = 0,
     var calendar: List<CalendarEvent>? = listOf(),
     var dateCost: List<DateCost>? = listOf(),
-    var dateLike: List<DateLike>? = listOf(),
+    var dateLike: List<DateFavorite>? = listOf(),
     var active: Boolean? = true
 )
 
@@ -31,20 +31,15 @@ data class CalendarEvent(
 )
 
 data class DateCost(
-    var costGroup: List<CostContent>? = listOf()
-)
-
-data class CostContent(
+    var attendeeName: String = "",
     var costTitle: String? = "",
     var costPrice: Long? = 0,
     var time: Long? = 0
 )
 
-data class DateLike(
-    var favoriteGroup: List<FavoriteContent>? = listOf()
-)
 
-data class FavoriteContent(
+data class DateFavorite(
+    var attendeeName: String?= "",
     var favoriteTitle: String? = "",
     var favoriteContent: List<String>? = listOf()
 )

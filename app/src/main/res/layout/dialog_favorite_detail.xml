@@ -36,6 +36,7 @@
                 android:background="@drawable/top_circle_frame"
                 android:gravity="center_vertical"
                 android:hint="Title"
+                android:text="@={viewModel.edTitle}"
                 android:letterSpacing="0.1"
                 android:maxLines="2"
                 android:paddingHorizontal="18dp"
@@ -61,20 +62,36 @@
             <EditText
                 android:id="@+id/edit_publish_content"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:paddingHorizontal="18dp"
+                android:layout_height="40dp"
                 android:background="@color/white"
-                android:gravity="top|start"
                 android:hint="Content"
-                android:paddingTop="16dp"
                 android:letterSpacing="0.1"
+                android:paddingHorizontal="18dp"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
                 android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/line" />
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="16dp"
+                android:text="新增"
+                android:textSize="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_publish_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/edit_publish_content" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 app:layout_constraintBottom_toTopOf="@+id/button_publish"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/line" />
+                app:layout_constraintTop_toBottomOf="@+id/edit_publish_content" />
 
             <Button
                 android:id="@+id/button_publish"
@@ -84,15 +101,14 @@
                 android:background="@drawable/ripple_button_article_tag"
                 android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                 android:gravity="center"
+                android:letterSpacing="0.1"
                 android:text='@{viewModel.status != LoadApiStatus.LOADING ? "Publish" : ""}'
                 android:textAllCaps="false"
                 android:textColor="@color/black"
                 android:textSize="14sp"
-                android:letterSpacing="0.1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_publish_content" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <ProgressBar
                 android:id="@+id/progress_publish"

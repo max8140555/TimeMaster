@@ -2,39 +2,40 @@ package com.max.timemaster.cost
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.max.timemaster.data.CostContent
+import com.max.timemaster.data.DateCost
+
 import com.max.timemaster.data.TimeMasterRepository
 
 class CostViewModel(timeMasterRepository: TimeMasterRepository) : ViewModel() {
-    var fakerCost = MutableLiveData<List<CostContent>>().apply {
+    var fakerCost = MutableLiveData<List<DateCost>>().apply {
         value = listOf(
-            CostContent(
+            DateCost(
                 costTitle = "口紅",
                 costPrice = 800
             ),
-            CostContent(
+            DateCost(
                 costTitle = "外套",
                 costPrice = 3600
             ),
-            CostContent(
+            DateCost(
                 costTitle = "手錶",
                 costPrice = 4800
             ),
-            CostContent(
+            DateCost(
                 costTitle = "外套",
                 costPrice = 3600
             ),
-            CostContent(
+            DateCost(
                 costTitle = "外套",
                 costPrice = 3600
             ),
-            CostContent(
+            DateCost(
                 costTitle = "外套",
                 costPrice = 3600
-            ),CostContent(
+            ),DateCost(
                 costTitle = "外套",
                 costPrice = 3600
-            ),CostContent(
+            ),DateCost(
                 costTitle = "外套",
                 costPrice = 3600
             )

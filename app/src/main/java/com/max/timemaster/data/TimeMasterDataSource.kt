@@ -17,6 +17,8 @@ interface TimeMasterDataSource {
 
     suspend fun postDate(myDate: MyDate): Result<Boolean>
 
+    suspend fun postFavorite(dateFavorite: DateFavorite): Result<Boolean>
+
     fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>>
 
     fun getLiveAllEventTime(): MutableLiveData<List<Long>>
