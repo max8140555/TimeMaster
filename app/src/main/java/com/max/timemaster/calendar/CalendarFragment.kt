@@ -21,7 +21,6 @@ import com.max.timemaster.util.TimeUtil.stampToDate
 import com.max.timemaster.util.UserManager
 
 import com.prolificinteractive.materialcalendarview.CalendarDay
-import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import org.threeten.bp.LocalDate
 import java.util.*
@@ -45,8 +44,8 @@ class CalendarFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         binding = FragmentCalendarBinding.inflate(inflater, container, false)
-        val viewModel2 = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         binding.lifecycleOwner = this
 //        binding.viewModel = viewModel
 
@@ -76,7 +75,7 @@ class CalendarFragment : Fragment() {
                 adapter.submitList(viewModel.selectEvent.value)
                 UserManager.selectTime.value = viewModel.selectEvent.value
 
-                viewModel2.selectAttendee.value?.let { select ->
+                mainViewModel.selectAttendee.value?.let { select ->
                     if (select.isEmpty()) {
                         adapter.submitList(UserManager.selectTime.value)
                     } else {
@@ -86,7 +85,6 @@ class CalendarFragment : Fragment() {
                         Log.d("viewModel22", "${UserManager.selectTime.value}")
                         Log.d("viewModel2", "$x")
                         adapter.submitList(x)
-
                     }
                 }
 
@@ -94,7 +92,7 @@ class CalendarFragment : Fragment() {
             }
         })
 
-        viewModel2.selectAttendee.observe(
+        mainViewModel.selectAttendee.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer { select ->
 

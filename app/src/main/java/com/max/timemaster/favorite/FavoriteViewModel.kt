@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.max.timemaster.data.FavoriteContent
+import com.max.timemaster.data.MyDate
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.network.LoadApiStatus
 import kotlinx.coroutines.CoroutineScope
@@ -24,6 +25,7 @@ class FavoriteViewModel(timeMasterRepository: TimeMasterRepository) : ViewModel(
             )
         )
     }
+
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
