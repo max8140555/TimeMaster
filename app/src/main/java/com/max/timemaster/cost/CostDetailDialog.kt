@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import com.max.timemaster.MainViewModel
 import com.max.timemaster.R
 import com.max.timemaster.databinding.DialogCostDetailBinding
 import com.max.timemaster.ext.getVmFactory
@@ -29,10 +31,13 @@ class CostDetailDialog : AppCompatDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         binding = DialogCostDetailBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-
+        binding.buttonPublish.setOnClickListener {
+            viewModel.postCost()
+        }
 
         return binding.root
 

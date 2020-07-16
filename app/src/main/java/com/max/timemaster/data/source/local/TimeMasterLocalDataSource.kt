@@ -31,6 +31,10 @@ class TimeMasterLocalDataSource(val context: Context) : TimeMasterDataSource {
         TODO("Not yet implemented")
     }
 
+    override suspend fun postCost(dateCost: DateCost): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
     override fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>> {
         TODO("Not yet implemented")
     }
@@ -44,6 +48,10 @@ class TimeMasterLocalDataSource(val context: Context) : TimeMasterDataSource {
     }
 
     override fun getLiveMyDate(): MutableLiveData<List<MyDate>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLiveDateFavorite(): MutableLiveData<List<DateFavorite>> {
         TODO("Not yet implemented")
     }
 

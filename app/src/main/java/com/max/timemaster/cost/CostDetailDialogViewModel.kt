@@ -3,13 +3,18 @@ package com.max.timemaster.cost
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.max.timemaster.R
+import com.max.timemaster.TimeMasterApplication
+import com.max.timemaster.data.CalendarEvent
+import com.max.timemaster.data.DateCost
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.network.LoadApiStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
-class CostDetailDialogViewModel(timeMasterRepository: TimeMasterRepository) : ViewModel() {
+class CostDetailDialogViewModel( private val timeMasterRepository: TimeMasterRepository) : ViewModel() {
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
 
@@ -31,4 +36,41 @@ class CostDetailDialogViewModel(timeMasterRepository: TimeMasterRepository) : Vi
 
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+    var edAttendee = MutableLiveData<String>()
+    var edTitle = MutableLiveData<String>()
+    var edmoney = MutableLiveData<Long>()
+    var edContent = MutableLiveData<String>()
+
+    fun postCost(dateCost: DateCost) {
+
+        coroutineScope.launch {
+
+            _status.value = LoadApiStatus.LOADING
+
+            when (val result = timeMasterRepository.postCost(dateCost)) {
+                is com.max.timemaster.data.Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadApiStatus.DONE
+                    leave(true)
+                }
+                is com.max.timemaster.data.Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadApiStatus.ERROR
+                }
+                is com.max.timemaster.data.Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadApiStatus.ERROR
+                }
+                else -> {
+                    _error.value = TimeMasterApplication.instance.getString(R.string.you_know_nothing)
+                    _status.value = LoadApiStatus.ERROR
+                }
+            }
+        }
+    }
+    fun leave(needRefresh: Boolean = false) {
+        _leave.value = needRefresh
+    }
+
 }

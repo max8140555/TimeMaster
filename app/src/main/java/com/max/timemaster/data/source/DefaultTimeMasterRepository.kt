@@ -31,6 +31,11 @@ class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSo
         return remoteDataSource.postFavorite(dateFavorite)
     }
 
+    override suspend fun postCost(dateCost: DateCost): Result<Boolean> {
+        return remoteDataSource.postCost(dateCost)
+    }
+
+
     override fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>> {
         return remoteDataSource.getLiveAllEvent()
     }
@@ -43,6 +48,10 @@ class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSo
         return remoteDataSource.getLiveUser()    }
     override fun getLiveMyDate(): MutableLiveData<List<MyDate>> {
         return remoteDataSource.getLiveMyDate()
+    }
+
+    override fun getLiveDateFavorite(): MutableLiveData<List<DateFavorite>> {
+        return remoteDataSource.getLiveDateFavorite()
     }
 
 }

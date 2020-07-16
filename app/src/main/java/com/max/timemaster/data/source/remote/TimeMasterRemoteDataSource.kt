@@ -218,19 +218,52 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                         }
                                         continuation.resume(
                                             Result.Fail(
-                                                TimeMasterApplication.instance.getString(
-                                                    R.string.you_know_nothing
-                                                )
-                                            )
-                                        )
+                                                TimeMasterApplication.instance.getString(R.string.you_know_nothing)))
                                     }
                                 }
                         }
-
-
                     }
             }
         }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    override suspend fun postCost(dateCost: DateCost): Result<Boolean> =
+        suspendCoroutine { continuation ->
+            val db = FirebaseFirestore.getInstance().collection("users")
+            val document = UserManager.userEmail?.let { db.document(it) }
+
+
+            dateCost.time = Calendar.getInstance().timeInMillis
+            UserManager.userEmail?.let {
+                db.document(it).collection("date")
+                    .whereEqualTo("name", dateCost.attendeeName)
+                    .get()
+                    .addOnSuccessListener { docs ->
+                        for (doc in docs) {
+                            document?.collection("date")?.document(doc.id)
+                                ?.collection("dateCost")?.add(dateCost)
+                                ?.addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Logger.i("postDateCost: $dateCost")
+
+                                        continuation.resume(Result.Success(true))
+                                    } else {
+                                        task.exception?.let {
+
+                                            Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                                            continuation.resume(Result.Error(it))
+                                            return@addOnCompleteListener
+                                        }
+                                        continuation.resume(
+                                            Result.Fail(
+                                                TimeMasterApplication.instance.getString(R.string.you_know_nothing)))
+                                    }
+                                }
+                        }
+                    }
+            }
+        }
+
 
     override fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>> {
         val liveData = MutableLiveData<List<CalendarEvent>>()
@@ -328,7 +361,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
         db
             .whereEqualTo("email", UserManager.userEmail)
             .get()
-            .addOnSuccessListener { doc ->
+            .addOnSuccessListener {
                 UserManager.userEmail?.let {
                     db.document(it).collection("date")
                         .addSnapshotListener { snapshot, exception ->
@@ -352,6 +385,10 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                 }
             }
         return liveData
+    }
+
+    override fun getLiveDateFavorite(): MutableLiveData<List<DateFavorite>> {
+        TODO("Not yet implemented")
     }
 
 }

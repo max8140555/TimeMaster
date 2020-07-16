@@ -15,6 +15,8 @@ interface TimeMasterRepository {
 
     suspend fun postFavorite(dateFavorite: DateFavorite): Result<Boolean>
 
+    suspend fun postCost(dateCost: DateCost): Result<Boolean>
+
     fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>>
 
     fun getLiveAllEventTime(): MutableLiveData<List<Long>>
@@ -23,4 +25,5 @@ interface TimeMasterRepository {
 
     fun getLiveMyDate(): MutableLiveData<List<MyDate>>
 
+    fun getLiveDateFavorite(): MutableLiveData<List<DateFavorite>>
 }

@@ -34,6 +34,7 @@ data class DateCost(
     var attendeeName: String = "",
     var costTitle: String? = "",
     var costPrice: Long? = 0,
+    var costContent: String? = "",
     var time: Long? = 0
 )
 
