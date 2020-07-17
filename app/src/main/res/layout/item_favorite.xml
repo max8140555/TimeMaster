@@ -43,18 +43,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/favorite_content"
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/favorite_chipGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:gravity="top|start"
                 android:letterSpacing="0.15"
                 android:background="@drawable/frame"
                 android:padding="8dp"
-                android:text="123456"
-                android:textColor="@color/black"
-                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

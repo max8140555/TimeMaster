@@ -27,9 +27,7 @@ class FavoriteAdapter() :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(dateFavorite: DateFavorite) {
             binding.favoriteTag.text = dateFavorite.favoriteTitle
-            dateFavorite.favoriteContent?.get(0)?.let {
-                binding.favoriteContent.text = dateFavorite.favoriteContent!![0]
-            }
+
 
 
             binding.executePendingBindings()
