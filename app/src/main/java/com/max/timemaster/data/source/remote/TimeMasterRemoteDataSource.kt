@@ -313,7 +313,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                 for (document in snapshot!!) {
                     Logger.d(document.id + " => " + document.data)
 
-                    var stamp = document.getLong("dateStamp")
+                    val stamp = document.getLong("dateStamp")
                     if (stamp != null) {
                         list.add(stamp)
                     }

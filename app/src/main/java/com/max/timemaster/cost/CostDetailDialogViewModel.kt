@@ -39,10 +39,10 @@ class CostDetailDialogViewModel( private val timeMasterRepository: TimeMasterRep
 
     var edAttendee = MutableLiveData<String>()
     var edTitle = MutableLiveData<String>()
-    var edmoney = MutableLiveData<Long>()
+    var edMoney = MutableLiveData<String>()
     var edContent = MutableLiveData<String>()
 
-    fun postCost(dateCost: DateCost) {
+    fun postAddCost(dateCost: DateCost) {
 
         coroutineScope.launch {
 
