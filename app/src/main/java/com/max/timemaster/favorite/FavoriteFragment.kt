@@ -86,6 +86,8 @@ class FavoriteFragment : Fragment() {
                 }else{binding.btnAdd.visibility = GONE
                     binding.layoutFavoriteHeader.visibility = GONE}
             }
+
+            
         })
 
         return binding.root
