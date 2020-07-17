@@ -42,9 +42,8 @@ class FavoriteDetailDialogViewModel(private var timeMasterRepository: TimeMaster
 
     var edAttendee = MutableLiveData<String>()
     var edTitle = MutableLiveData<String>()
-    var edContent = MutableLiveData<List<String>>().apply {
-        value = listOf("123","456","789")
-    }
+    var edContent = MutableLiveData<String>()
+    var edListContent = mutableListOf<String>()
 
 
     fun postAddDateFavorite(dateFavorite: DateFavorite) {
