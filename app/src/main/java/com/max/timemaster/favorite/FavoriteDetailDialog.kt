@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -41,40 +42,45 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
         binding = DialogFavoriteDetailBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        binding.layoutPublish.startAnimation(AnimationUtils.loadAnimation(context, R.anim.anim_slide_up))
         var dataSet = mutableListOf("", "興趣", "飲料", "包包")
         binding.niceSpinner.attachDataSource(dataSet)
         chipGroup = binding.chipGroup
 
 
         binding.addChip.setOnClickListener {
+
             val chip = Chip(chipGroup.context)
             val content = viewModel.edContent.value
             val listContent = viewModel.edListContent
             if (content != null) {
                 viewModel.edListContent.add(content)
-            }
-            for (i in listContent.indices) {
-                val textContent = listContent[i]
-                //移除chip
-                chip.setOnClickListener {
-                    chip.isCloseIconEnabled = !chip.isCloseIconEnabled
+                for (i in listContent.indices) {
+                    val textContent = listContent[i]
+                    //移除chip
+                    chip.setOnClickListener {
+                        chip.isCloseIconEnabled = !chip.isCloseIconEnabled
 
-                    //Added click listener on close icon to remove tag from ChipGroup
-                    chip.setOnCloseIconClickListener {
-                        viewModel.edListContent.remove(textContent)
-                        chipGroup.removeView(chip)
-                        Log.e("123", "$listContent")
+                        //Added click listener on close icon to remove tag from ChipGroup
+                        chip.setOnCloseIconClickListener {
+                            viewModel.edListContent.remove(textContent)
+                            chipGroup.removeView(chip)
+                            Log.e("123", "$listContent")
+                        }
                     }
-                }
-                val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
-                val chipColors = intArrayOf(Color.parseColor("#E8DDB5"))
-                val chipColorsStateList = ColorStateList(states, chipColors)
-                chip.chipBackgroundColor = chipColorsStateList
+                    val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
+                    val chipColors = intArrayOf(Color.parseColor("#E8DDB5"))
+                    val chipColorsStateList = ColorStateList(states, chipColors)
+                    chip.chipBackgroundColor = chipColorsStateList
 
+                }
+                chip.text = content
+                chip.setTextColor(Color.WHITE)
+
+                chipGroup.addView(chip)
             }
-            chip.text = content
-            chip.setTextColor(Color.WHITE)
-            chipGroup.addView(chip)
+
+
             Log.e("456", "$content")
             Log.e("456", "$listContent")
             viewModel.edContent.value = null

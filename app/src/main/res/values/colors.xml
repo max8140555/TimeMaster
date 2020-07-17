@@ -18,4 +18,16 @@
     <color name="black">#000000</color>
     <color name="transparent">#77000000</color>
     <color name="translucent_80">#cc000000</color>
+
+    <color name="BAD7F2">#BAD7F2</color>
+    <color name="F2BAC9">#F2BAC9</color>
+    <color name="F2E2BA">#F2E2BA</color>
+    <color name="DEC3BE">#DEC3BE</color>
+    <color name="BDCFB5">#BDCFB5</color>
+
+    <color name="E5E6E4">#E5E6E4</color>
+    <color name="A9A587">#A9A587</color>
+    <color name="BFACB5">#BFACB5</color>
+    <color name="CBB8A9">#CBB8A9 </color>
+    <color name="CA907E">#CA907E</color>
 </resources>

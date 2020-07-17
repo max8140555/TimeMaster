@@ -22,4 +22,9 @@
 
     <!-- ProfileItem  -->
     <dimen name="space_catalog_grid">16dp</dimen>
+
+
+    <dimen name="one_dp">1dp</dimen>
+    <dimen name="edge_add2cart_select">2dp</dimen>
+    <dimen name="edge_add2cart_select_inside">10dp</dimen>
 </resources>

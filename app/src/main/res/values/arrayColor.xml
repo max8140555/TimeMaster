@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="colorList">
+        <item>BAD7F2</item>
+        <item>F2BAC9</item>
+        <item>F2E2BA</item>
+        <item>DEC3BE</item>
+        <item>BDCFB5</item>
+        <item>E5E6E4</item>
+        <item>A9A587</item>
+        <item>BFACB5</item>
+        <item>CBB8A9</item>
+        <item>CA907E</item>
+    </string-array>
+</resources>

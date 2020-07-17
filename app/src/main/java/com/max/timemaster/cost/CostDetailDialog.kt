@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -38,7 +39,7 @@ class CostDetailDialog : AppCompatDialogFragment() {
         binding = DialogCostDetailBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-
+        binding.layoutPublish.startAnimation(AnimationUtils.loadAnimation(context, R.anim.anim_slide_up))
         binding.buttonPublish.setOnClickListener {
             addCost()?.let { it1 -> viewModel.postAddCost(it1) }
             Log.d("addCost","${addCost()}")

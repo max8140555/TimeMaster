@@ -21,12 +21,11 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_publish"
             android:layout_width="0dp"
-            android:layout_height="400dp"
-            android:layout_marginHorizontal="24dp"
+            android:layout_height="225dp"
+            app:behavior_peekHeight="400dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintStart_toStartOf="parent">
 
             <EditText
                 android:id="@+id/edit_publish_title"
@@ -35,12 +34,12 @@
                 android:background="@drawable/top_circle_frame"
                 android:gravity="center_vertical"
                 android:hint="Title"
-                android:text="@={viewModel.edTitle}"
                 android:letterSpacing="0.1"
                 android:maxLines="2"
                 android:paddingHorizontal="18dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="12dp"
+                android:text="@={viewModel.edTitle}"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
                 android:textSize="14sp"
@@ -86,29 +85,33 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/edit_publish_content" />
 
+
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chip_group"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:padding="8dp"
+                android:background="@color/white"
+                android:theme="@style/Theme.MaterialComponents.Light"
                 app:layout_constraintBottom_toTopOf="@+id/button_publish"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_publish_content"
-                android:theme="@style/Theme.MaterialComponents.Light"/>
-
+                app:layout_constraintVertical_bias="0.0" />
 
             <Button
                 android:id="@+id/button_publish"
                 style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="0dp"
                 android:layout_height="45dp"
-                android:background="@drawable/ripple_button_article_tag"
+                android:background="@color/black_3f3a3a"
                 android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                 android:gravity="center"
                 android:letterSpacing="0.1"
                 android:text='@{viewModel.status != LoadApiStatus.LOADING ? "Publish" : ""}'
                 android:textAllCaps="false"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

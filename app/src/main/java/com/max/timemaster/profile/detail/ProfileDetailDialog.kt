@@ -9,15 +9,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 
 import com.max.timemaster.R
 import com.max.timemaster.databinding.DialogProfileDetailBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.UserManager
-import java.lang.String
 import java.util.*
 
 class ProfileDetailDialog : AppCompatDialogFragment() {
@@ -37,6 +38,12 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         binding = DialogProfileDetailBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.layoutPublish.startAnimation(
+            AnimationUtils.loadAnimation(
+                context,
+                R.anim.anim_slide_up
+            )
+        )
         binding.editBirthday.setOnClickListener {
             datePicker()
         }
@@ -46,10 +53,20 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
                 it?.let {
                     viewModel.myDate.value?.let { it1 -> viewModel.postAddDate(it1) }
                     UserManager.addDate.value = viewModel.edDateName.value
-                    Log.d(" UserManager.addDate.value","${UserManager.addDate.value}")
+                    Log.d(" UserManager.addDate.value", "${UserManager.addDate.value}")
                 }
             })
         }
+
+        val adapter = ProfileColorAdapter()
+        binding.recyclerProfileColor.adapter = adapter
+
+        val arrayList = this.resources.getStringArray(R.array.colorList)
+        val colorList = mutableListOf<String>()
+        for (x in 0..9) {
+            colorList.add(arrayList[x])
+        }
+        adapter.submitList(colorList)
 
 
 
@@ -63,9 +80,9 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         val dateListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
             calender.set(year, month, day)
             String.format("yyyy-MM-dd")
-            var newMonth = String.format("%02d", month)
-            var newDay = String.format("%02d", day)
-            binding.editBirthday.text = "$year-${newMonth.toInt()+1}-$newDay"
+            val newMonth = String.format("%02d", month)
+            val newDay = String.format("%02d", day)
+            binding.editBirthday.text = "$year-${newMonth.toInt() + 1}-$newDay"
             viewModel.editDate.value = "$year-$newMonth-$newDay"
         }
 
@@ -75,7 +92,8 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
                 dateListener,
                 calender.get(Calendar.YEAR),
                 calender.get(Calendar.MONTH),
-                calender.get(Calendar.DAY_OF_MONTH)).show()
+                calender.get(Calendar.DAY_OF_MONTH)
+            ).show()
         }
     }
 
