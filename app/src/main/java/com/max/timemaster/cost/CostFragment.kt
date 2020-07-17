@@ -1,14 +1,19 @@
 package com.max.timemaster.cost
 
+import android.opengl.Visibility
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.max.timemaster.MainViewModel
 
 import com.max.timemaster.R
 import com.max.timemaster.databinding.FragmentCostBinding
@@ -24,6 +29,7 @@ class CostFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         binding = FragmentCostBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
 //        binding.viewModel = viewModel
@@ -33,6 +39,17 @@ class CostFragment : Fragment() {
         val adapter = CostAdapter()
         binding.recyclerCost.adapter = adapter
         adapter.submitList(viewModel.fakerCost.value)
+        mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if(it.isEmpty()){
+                    binding.btnAdd.visibility = GONE
+                }else{
+                    binding.btnAdd.visibility = VISIBLE
+                }
+            }
+        })
+
+
 
 
 

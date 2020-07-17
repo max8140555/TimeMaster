@@ -23,7 +23,9 @@ class MainViewModel(
     var liveMyDate = MutableLiveData<List<MyDate>>()
     var liveAllEvent = MutableLiveData<List<CalendarEvent>>()
 
-    var selectAttendee = MutableLiveData<String>()
+    var selectAttendee = MutableLiveData<String>().apply {
+        value = ""
+    }
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()

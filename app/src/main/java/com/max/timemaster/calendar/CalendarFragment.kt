@@ -92,6 +92,7 @@ class CalendarFragment : Fragment() {
             }
         })
 
+
         mainViewModel.selectAttendee.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer { select ->
@@ -106,6 +107,7 @@ class CalendarFragment : Fragment() {
                     selectAllMark?.let {
                         mark(it)
                     }
+                    binding.btnAdd.visibility = View.GONE
                 } else {
                     val selectedPersonEvents = UserManager.selectTime.value?.filter {
                         it.attendee == select
@@ -121,6 +123,7 @@ class CalendarFragment : Fragment() {
                     selectAllMark?.let {
                         mark(it)
                     }
+                    binding.btnAdd.visibility = View.VISIBLE
                 }
             })
 

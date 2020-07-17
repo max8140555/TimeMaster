@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -44,6 +46,7 @@ class FavoriteFragment : Fragment() {
 
 //        adapter.submitList(viewModel.fakerFavorite.value)
 
+        binding.btnAdd.visibility = View.VISIBLE
         mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {
             it?.let {
                 if (it.isNotEmpty()) {
@@ -61,8 +64,10 @@ class FavoriteFragment : Fragment() {
                                     )
                                 }
                            bindProfileImage(binding.imageProfileAvatar ,list[0].image)
+
                             //還要加  adapter.submitList
                         }else{
+
                             //如果選擇ALL的時候
                         }
                 }
@@ -75,7 +80,11 @@ class FavoriteFragment : Fragment() {
 //                        infoBirthday.birthday
 //                    }
 //                    binding.textDateBirthday.text = stampToDateNoYear(x, Locale.TAIWAN)
-                }
+                    binding.btnAdd.visibility = VISIBLE
+                    binding.layoutFavoriteHeader.visibility = VISIBLE
+
+                }else{binding.btnAdd.visibility = GONE
+                    binding.layoutFavoriteHeader.visibility = GONE}
             }
         })
 
