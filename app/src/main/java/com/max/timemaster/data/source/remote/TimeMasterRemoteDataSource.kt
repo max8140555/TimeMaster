@@ -148,6 +148,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
 
         }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override suspend fun postDate(myDate: MyDate): Result<Boolean> =
         suspendCoroutine { continuation ->
             val db = FirebaseFirestore.getInstance().collection("users")
@@ -158,6 +159,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                     .whereEqualTo("name", myDate.name)
                     .get()
                     .addOnSuccessListener { doc ->
+                        myDate.loginDate = Calendar.getInstance().timeInMillis
                         if (doc.isEmpty) {
                             document?.collection("date")?.add(myDate)
                                 ?.addOnCompleteListener { task ->

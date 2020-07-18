@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.Shape
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
@@ -16,7 +17,7 @@ import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.databinding.ItemProfileColorBinding
 
-class ProfileColorAdapter() :
+class ProfileColorAdapter(var viewModel: ProfileDetailViewModel) :
     ListAdapter<String, ProfileColorAdapter.ProfileColorViewHolder>(
         DiffCallback
     ) {
@@ -31,7 +32,7 @@ class ProfileColorAdapter() :
     class ProfileColorViewHolder(private var binding: ItemProfileColorBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @RequiresApi(Build.VERSION_CODES.M)
-        fun bind(colorCode: String, selectedPosition: Int) {
+        fun bind(colorCode: String, selectedPosition: Int,viewModel: ProfileDetailViewModel) {
             colorCode.let {
                 binding.imageDetailColor.setBackgroundColor(Color.parseColor("#$colorCode"))
 
@@ -102,16 +103,18 @@ class ProfileColorAdapter() :
      * Replaces the contents of a view (invoked by the layout manager)
      */
     //2.綁定ViewHolder 畫布
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: ProfileColorViewHolder, position: Int) {
         val product =
             getItem(position)  //告訴onCreateViewHolder 要生成幾個viewholder
         holder.itemView.setOnClickListener {
             selectedPosition = position
+            viewModel.edColor.value = product
 //            viewModel.selectedColor.value = color
 //            viewModel.setVariantsByColor(color)
             notifyDataSetChanged()
         }
-        holder.bind(product,selectedPosition)
+        holder.bind(product,selectedPosition,viewModel)
     }
 
 }

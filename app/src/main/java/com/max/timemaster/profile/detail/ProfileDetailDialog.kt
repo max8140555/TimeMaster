@@ -2,6 +2,8 @@ package com.max.timemaster.profile.detail
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.graphics.Color
+import android.os.Build
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -30,6 +33,8 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         setStyle(DialogFragment.STYLE_NO_FRAME, R.style.PublishDialog)
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("LongLogTag")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,7 +63,7 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
             })
         }
 
-        val adapter = ProfileColorAdapter()
+        val adapter = ProfileColorAdapter(viewModel)
         binding.recyclerProfileColor.adapter = adapter
 
         val arrayList = this.resources.getStringArray(R.array.colorList)
@@ -69,6 +74,14 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         adapter.submitList(colorList)
 
 
+        viewModel.edColor.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            it?.let {
+//                binding.editBirthday.background.colorFilter = Color.parseColor("#$it"
+                binding.editBirthday.background.setTint(Color.parseColor("#$it"))
+                binding.editBirthday.setTextColor(Color.parseColor("#$it"))
+
+            }
+        })
 
 
         return binding.root

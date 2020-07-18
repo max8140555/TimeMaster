@@ -8,8 +8,7 @@ data class User(
     var lv: Long = 1,
     var exp: Long = 0,
     var titleName: String = "小釣手",
-    var firstLoginTime: Long = 0,
-    var date: List<MyDate>? = listOf()
+    var firstLoginTime: Long = 0
 )
 
 data class MyDate(
@@ -17,9 +16,7 @@ data class MyDate(
     var image: String? = "",
     var birthday: Long? = 0,
     var loginDate: Long? = 0,
-    var calendar: List<CalendarEvent>? = listOf(),
-    var dateCost: List<DateCost>? = listOf(),
-    var dateLike: List<DateFavorite>? = listOf(),
+    var color: String? = "",
     var active: Boolean? = true
 )
 
