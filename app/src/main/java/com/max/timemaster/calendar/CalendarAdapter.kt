@@ -1,13 +1,19 @@
 package com.max.timemaster.calendar
 
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.databinding.ItemCalendarBinding
 import com.max.timemaster.util.TimeUtil.stampToDateTime
+import com.max.timemaster.util.UserManager
 import java.util.*
 
 class CalendarAdapter() :
@@ -23,9 +29,27 @@ class CalendarAdapter() :
     //1.ViewHolder 畫布
     class ProductDetailedEvaluationViewHolder(private var binding: ItemCalendarBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        @RequiresApi(Build.VERSION_CODES.M)
         fun bind(calendarEvent: CalendarEvent) {
+
+
+
+            val color = UserManager.myDate.value?.filter {
+                it.name == calendarEvent.attendee
+            }!![0].color
             binding.title.text = calendarEvent.calendarTitle
             binding.attendee.text = calendarEvent.attendee
+
+            val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
+            val colors = intArrayOf(Color.parseColor("#$color"))
+            val colorsStateList = ColorStateList(states, colors)
+            binding.view.backgroundTintList = colorsStateList
+
+
+
+
+//            binding.view.foregroundTintList = ColorStateList()
+//            (Color.parseColor("#$color"))
 
 
             val selectedDate = calendarEvent.dateStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
@@ -82,6 +106,7 @@ class CalendarAdapter() :
      * Replaces the contents of a view (invoked by the layout manager)
      */
     //2.綁定ViewHolder 畫布
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: ProductDetailedEvaluationViewHolder, position: Int) {
         val product =
             getItem(position)  //告訴onCreateViewHolder 要生成幾個viewholderholder.itemView.setOnClickListener {

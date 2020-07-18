@@ -72,23 +72,27 @@ class CalendarFragment : Fragment() {
 
         viewModel.selectEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
-                adapter.submitList(viewModel.selectEvent.value)
-                UserManager.selectTime.value = viewModel.selectEvent.value
+                mainViewModel.liveMyDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
 
-                mainViewModel.selectAttendee.value?.let { select ->
-                    if (select.isEmpty()) {
-                        adapter.submitList(UserManager.selectTime.value)
-                    } else {
-                        val x = UserManager.selectTime.value?.filter {
-                            it.attendee == select
+                    adapter.submitList(viewModel.selectEvent.value)
+                    UserManager.selectTime.value = viewModel.selectEvent.value
+
+                    mainViewModel.selectAttendee.value?.let { select ->
+                        if (select.isEmpty()) {
+                            adapter.submitList(UserManager.selectTime.value)
+                        } else {
+                            val x = UserManager.selectTime.value?.filter {
+                                it.attendee == select
+                            }
+                            Log.d("viewModel22", "${UserManager.selectTime.value}")
+                            Log.d("viewModel2", "$x")
+
+                            adapter.submitList(x)
                         }
-                        Log.d("viewModel22", "${UserManager.selectTime.value}")
-                        Log.d("viewModel2", "$x")
-                        adapter.submitList(x)
                     }
-                }
 
 
+                })
             }
         })
 
@@ -114,7 +118,7 @@ class CalendarFragment : Fragment() {
                     }
                     adapter.submitList(selectedPersonEvents)
                     val selectAllMark = UserManager.allEvent.value?.let { allEvent ->
-                        allEvent.filter {att ->
+                        allEvent.filter { att ->
                             att.attendee == select
                         }.map {
                             it.dateStamp
@@ -200,12 +204,11 @@ class CalendarFragment : Fragment() {
 //                    )
 //                )
 //                Log.e("dayday","$day")
-                widget.removeDecorators()
-                widget.invalidateDecorators()
+        widget.removeDecorators()
+        widget.invalidateDecorators()
 //            }
 //        }
 //        widget.invalidateDecorators()
-
 
 
         val list = mutableListOf<String>()

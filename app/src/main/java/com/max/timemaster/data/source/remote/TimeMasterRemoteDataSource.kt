@@ -359,7 +359,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
         val liveData = MutableLiveData<List<MyDate>>()
 
         val db = FirebaseFirestore.getInstance().collection("users")
-        Log.d("EEEMAIL", "${UserManager.userEmail}")
         db
             .whereEqualTo("email", UserManager.userEmail)
             .get()

@@ -17,6 +17,7 @@ object UserManager {
     var selectTime = MutableLiveData<List<CalendarEvent>>()
 
 
+
     val pref = TimeMasterApplication.instance.getSharedPreferences("FbUseEmail", Context.MODE_PRIVATE)
 
     var userEmail: String?

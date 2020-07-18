@@ -96,7 +96,7 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
             val newMonth = String.format("%02d", month)
             val newDay = String.format("%02d", day)
             binding.editBirthday.text = "$year-${newMonth.toInt() + 1}-$newDay"
-            viewModel.editDate.value = "$year-$newMonth-$newDay"
+            viewModel.editDate.value = "$year-${newMonth.toInt() + 1}-$newDay"
         }
 
         context?.let {
