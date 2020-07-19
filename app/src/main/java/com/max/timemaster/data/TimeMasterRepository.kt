@@ -26,4 +26,6 @@ interface TimeMasterRepository {
     fun getLiveMyDate(): MutableLiveData<List<MyDate>>
 
     fun getLiveDateFavorite(): MutableLiveData<List<DateFavorite>>
+
+    fun getLiveDateCost(attendee: String): MutableLiveData<List<DateCost>>
 }

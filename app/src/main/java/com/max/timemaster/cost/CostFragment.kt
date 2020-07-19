@@ -36,11 +36,23 @@ class CostFragment : Fragment() {
         binding.btnAdd.setOnClickListener {
             findNavController().navigate(R.id.navigate_to_costDetailDialog)
         }
+
+
+
         val adapter = CostAdapter()
         binding.recyclerCost.adapter = adapter
-        adapter.submitList(viewModel.fakerCost.value)
+        viewModel.fakerCost.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                adapter.submitList(it)
+            }
+        })
+
+
         mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {
             it?.let {
+
+                viewModel.getLiveDateCostResult(it)
+
                 if(it.isEmpty()){
                     binding.btnAdd.visibility = GONE
                 }else{
