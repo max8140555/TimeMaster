@@ -56,8 +56,8 @@ class CostViewModel(private val timeMasterRepository: TimeMasterRepository) : Vi
 
 
 
-    fun getLiveDateCostResult(attendee: String) {
-        fakerCost = timeMasterRepository.getLiveDateCost(attendee)
+    fun getLiveDateCostResult() {
+        fakerCost = timeMasterRepository.getLiveDateCost()
         _status.value = LoadApiStatus.DONE
         _refreshStatus.value = false
     }

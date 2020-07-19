@@ -55,7 +55,7 @@ class TimeMasterLocalDataSource(val context: Context) : TimeMasterDataSource {
         TODO("Not yet implemented")
     }
 
-    override fun getLiveDateCost(attendee: String): MutableLiveData<List<DateCost>> {
+    override fun getLiveDateCost(): MutableLiveData<List<DateCost>> {
         TODO("Not yet implemented")
     }
 

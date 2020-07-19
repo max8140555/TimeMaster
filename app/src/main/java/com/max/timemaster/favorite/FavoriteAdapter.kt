@@ -26,7 +26,7 @@ class FavoriteAdapter() :
     class ProductDetailedEvaluationViewHolder(private var binding: ItemFavoriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(dateFavorite: DateFavorite) {
-            binding.favoriteTag.text = dateFavorite.favoriteTitle
+            binding.title.text = dateFavorite.favoriteTitle
 
 
 

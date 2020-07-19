@@ -3,6 +3,7 @@ package com.max.timemaster.cost
 import android.opengl.Visibility
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -38,7 +39,7 @@ class CostFragment : Fragment() {
         }
 
 
-
+        viewModel.getLiveDateCostResult()
         val adapter = CostAdapter()
         binding.recyclerCost.adapter = adapter
         viewModel.fakerCost.observe(viewLifecycleOwner, Observer {
@@ -51,7 +52,7 @@ class CostFragment : Fragment() {
         mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {
             it?.let {
 
-                viewModel.getLiveDateCostResult(it)
+
 
                 if(it.isEmpty()){
                     binding.btnAdd.visibility = GONE

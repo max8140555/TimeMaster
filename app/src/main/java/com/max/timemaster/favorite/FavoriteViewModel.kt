@@ -14,19 +14,7 @@ import kotlinx.coroutines.Job
 
 class FavoriteViewModel(timeMasterRepository: TimeMasterRepository) : ViewModel() {
 
-//    var fakerFavorite = MutableLiveData<List<DateFavorite>>().apply {
-//        value = listOf(
-//            DateFavorite(
-//                favoriteTitle = "愛吃",
-//                favoriteContent = listOf("鰻魚飯","生魚片")
-//            ),
-//            DateFavorite(
-//                favoriteTitle = "愛喝",
-//                favoriteContent = listOf("珍珠奶茶半糖少冰","茶湯會鐵觀音")
-//            )
-//        )
-//    }
-
+    var fakerFavorite = MutableLiveData<List<DateFavorite>>()
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()

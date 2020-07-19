@@ -391,7 +391,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
         val db = FirebaseFirestore.getInstance().collection("users")
         UserManager.userEmail?.let {
             db.document(it).collection("dateFavorite")
-                .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
                 .addSnapshotListener { snapshot, exception ->
 
                     Logger.i("addSnapshotListener detect")
@@ -414,13 +413,13 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
         return liveData
     }
 
-    override fun getLiveDateCost(attendee: String): MutableLiveData<List<DateCost>> {
+    override fun getLiveDateCost(): MutableLiveData<List<DateCost>> {
         val liveData = MutableLiveData<List<DateCost>>()
 
         val db = FirebaseFirestore.getInstance().collection("users")
         UserManager.userEmail?.let {
             db.document(it).collection("dateCost")
-                .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
+                .orderBy("time", Query.Direction.DESCENDING)
                 .addSnapshotListener { snapshot, exception ->
 
                     Logger.i("addSnapshotListener detect")

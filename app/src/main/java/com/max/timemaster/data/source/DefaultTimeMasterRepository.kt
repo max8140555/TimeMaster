@@ -54,8 +54,8 @@ class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSo
         return remoteDataSource.getLiveDateFavorite()
     }
 
-    override fun getLiveDateCost(attendee: String): MutableLiveData<List<DateCost>> {
-        return remoteDataSource.getLiveDateCost(attendee)
+    override fun getLiveDateCost(): MutableLiveData<List<DateCost>> {
+        return remoteDataSource.getLiveDateCost()
     }
 
 }

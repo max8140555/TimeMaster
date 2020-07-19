@@ -44,7 +44,7 @@ class FavoriteFragment : Fragment() {
         val adapter = FavoriteAdapter()
         binding.recyclerFavorite.adapter = adapter
 
-//        adapter.submitList(viewModel.fakerFavorite.value)
+
 
         binding.btnAdd.visibility = View.VISIBLE
         mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {
@@ -65,6 +65,7 @@ class FavoriteFragment : Fragment() {
                                 }
                            bindProfileImage(binding.imageProfileAvatar ,list[0].image)
 
+                                    adapter.submitList(viewModel.fakerFavorite.value)
                             //還要加  adapter.submitList
                         }else{
 
