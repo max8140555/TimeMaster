@@ -82,7 +82,7 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
 
                 }
                 chip.text = content
-                chip.setTextColor(Color.WHITE)
+                chip.setTextColor(Color.BLACK)
 
                 chipGroup.addView(chip)
             }

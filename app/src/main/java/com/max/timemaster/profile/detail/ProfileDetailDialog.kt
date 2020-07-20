@@ -20,6 +20,7 @@ import androidx.lifecycle.MutableLiveData
 
 import com.max.timemaster.R
 import com.max.timemaster.databinding.DialogProfileDetailBinding
+
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.UserManager
 import java.util.*

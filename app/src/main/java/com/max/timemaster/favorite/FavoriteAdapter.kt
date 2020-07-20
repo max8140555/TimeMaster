@@ -52,7 +52,7 @@ class FavoriteAdapter() :
                     val chip = Chip(chipGroup.context)
                     chip.text = content
                     chip.textSize = 12f
-                    chip.setTextColor(Color.WHITE)
+                    chip.setTextColor(Color.BLACK)
                     chip.chipBackgroundColor = colorsStateList
                     chip.closeIconTint = ColorStateList(states, intArrayOf(Color.WHITE))
 
