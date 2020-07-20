@@ -44,6 +44,7 @@ class FavoriteAdapter() :
 
             val chipGroup = binding.chipGroup
             val contentList = dateFavorite.favoriteContent
+            chipGroup.removeAllViews()
 //            val listContent = viewModel.edListContent
             if (contentList != null) {
                 for (index in contentList.indices) {
@@ -67,6 +68,7 @@ class FavoriteAdapter() :
 
                     chipGroup.addView(chip)
                     binding.executePendingBindings()
+
                 }
             }
 
@@ -116,7 +118,6 @@ class FavoriteAdapter() :
      * Replaces the contents of a view (invoked by the layout manager)
      */
     //2.綁定ViewHolder 畫布
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onBindViewHolder(holder: ProductDetailedEvaluationViewHolder, position: Int) {
         val product =
             getItem(position)  //告訴onCreateViewHolder 要生成幾個viewholderholder.itemView.setOnClickListener {

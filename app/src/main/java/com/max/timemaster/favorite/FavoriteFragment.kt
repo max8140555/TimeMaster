@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.max.timemaster.MainViewModel
+import com.max.timemaster.NavigationDirections
 
 import com.max.timemaster.R
 import com.max.timemaster.bindProfileImage
@@ -47,23 +48,27 @@ class FavoriteFragment : Fragment() {
 
 
 
-        mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {
-            it?.let { attendee ->
+        mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {attendee ->
+            attendee?.let {
+
                 viewModel.dateFavorite.observe(viewLifecycleOwner, Observer {
                     it?.let { dateFavorite ->
 
                         val dateSelect = dateFavorite.filter { date ->
                             date.attendeeName == attendee
                         }
-                        adapter.submitList(dateSelect)
+
 
 
                         if (attendee.isNotEmpty()) {
+
+                            adapter.submitList(dateSelect)
+                            adapter.notifyDataSetChanged()
+
                             val selectAttendeeInfo =
                                 UserManager.myDate.value?.filter { attendeeInfo ->
                                     attendeeInfo.name == attendee
                                 }
-
                             selectAttendeeInfo?.let { list ->
                                 if (list.isNotEmpty()) {
                                     binding.textDateName.text = list[0].name
@@ -75,8 +80,6 @@ class FavoriteFragment : Fragment() {
                                             )
                                         }
                                     bindProfileImage(binding.imageProfileAvatar, list[0].image)
-
-
                                 }
                             }
 
@@ -86,7 +89,10 @@ class FavoriteFragment : Fragment() {
                         } else {
                             binding.btnAdd.visibility = GONE
                             binding.layoutFavoriteHeader.visibility = GONE
-                            adapter.submitList(viewModel.dateFavorite.value)
+
+                            adapter.submitList(it)
+                            adapter.notifyDataSetChanged()
+
                         }
 
                     }
