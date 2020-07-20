@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.max.timemaster.MainViewModel
 
 import com.max.timemaster.R
+import com.max.timemaster.data.DateCost
 import com.max.timemaster.databinding.FragmentCostBinding
 import com.max.timemaster.ext.getVmFactory
 
@@ -55,7 +56,25 @@ class CostFragment : Fragment() {
 
 
                         if (attendee.isEmpty()) {
-                            adapter.submitList(it)
+
+                            val date = com.max.timemaster.util.UserManager.myDate.value?.filter { myDate ->
+                                myDate.active == true
+                            }?.map {
+                                it.name
+                            }
+                            val list = mutableListOf<DateCost>()
+
+                            if (date != null) {
+                                for (x in date.indices){
+                                    val item = viewModel.dateCost.value?.filter { dateCost ->
+                                        dateCost.attendeeName == date[x]
+                                    }
+                                    if (!item.isNullOrEmpty()){
+                                        list.add(item[0])}
+                                }
+                            }
+
+                            adapter.submitList(list)
                             binding.btnAdd.visibility = GONE
                         } else {
                             adapter.submitList(dateSelect)

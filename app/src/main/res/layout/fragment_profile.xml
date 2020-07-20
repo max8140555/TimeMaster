@@ -94,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:letterSpacing="0.15"
                     android:maxLines="2"
-                    android:layout_marginStart="50dp"
+                    android:layout_marginStart="40dp"
                     android:text="經驗值"
                     android:textAlignment="center"
                     android:textColor="@color/black"

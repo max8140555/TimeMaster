@@ -145,11 +145,15 @@ class MainActivity : AppCompatActivity() {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             return@setOnMenuItemClickListener true
         }
-        val s = UserManager.myDate.value?.map {
+        val s = UserManager.myDate.value?.filter {
+            it.active == true
+        }?.map {
             it.name
         }
-        Log.d("zxc", "$s")
-        if (s != null) {
+
+
+
+        if (s != null ) {
             for (i in s) {
                 menu.add(i).setIcon(R.drawable.baseline_favorite_border_black_36)
                     .setOnMenuItemClickListener {

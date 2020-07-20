@@ -1,6 +1,7 @@
 package com.max.timemaster.favorite
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.max.timemaster.NavigationDirections
 
 import com.max.timemaster.R
 import com.max.timemaster.bindProfileImage
+import com.max.timemaster.data.DateFavorite
 import com.max.timemaster.databinding.FragmentFavoriteBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.TimeUtil.stampToDate
@@ -90,7 +92,25 @@ class FavoriteFragment : Fragment() {
                             binding.btnAdd.visibility = GONE
                             binding.layoutFavoriteHeader.visibility = GONE
 
-                            adapter.submitList(it)
+                            val date = UserManager.myDate.value?.filter { myDate ->
+                                myDate.active == true
+                            }?.map {
+                                it.name
+                            }
+
+                            val list = mutableListOf<DateFavorite>()
+
+                            if (date != null) {
+                                for (x in date.indices){
+                                    val item = viewModel.dateFavorite.value?.filter { dateFavorite ->
+                                        dateFavorite.attendeeName == date[x]
+                                    }
+                                    if (!item.isNullOrEmpty()){
+                                        list.add(item[0])}
+                                }
+                            }
+
+                            adapter.submitList(list)
                             adapter.notifyDataSetChanged()
 
                         }
