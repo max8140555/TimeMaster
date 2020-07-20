@@ -43,33 +43,31 @@ class FavoriteAdapter() :
             binding.view.backgroundTintList = colorsStateList
 
             val chipGroup = binding.chipGroup
-            val tagList = dateFavorite.favoriteContent
+            val contentList = dateFavorite.favoriteContent
 //            val listContent = viewModel.edListContent
-            for (index in tagList!!.indices) {
-                val tagName = tagList[index]
-                val chip = Chip(chipGroup.context)
-//                val paddingDp = TypedValue.applyDimension(
-//                    TypedValue.COMPLEX_UNIT_DIP,
-//                    10f,
-//                    resources.displayMetrics
-//                ).toInt()
-//                chip.setPadding(paddingDp, paddingDp, paddingDp, paddingDp)
-                chip.text = tagName
-                chip.textSize = 12f
-                chip.setTextColor(Color.WHITE)
-                chip.chipBackgroundColor = colorsStateList
-                chip.closeIconTint = ColorStateList(states, intArrayOf(Color.WHITE))
-//                chip.setOnClickListener {
-//                    chip.isCloseIconEnabled = !chip.isCloseIconEnabled
-//                    //Added click listener on close icon to remove tag from ChipGroup
-//                    chip.setOnCloseIconClickListener {
-//                        tagList.remove(tagName)
-//                        chipGroup.removeView(chip)
-//                        Log.e ("Connie", tagList.toString())
+            if (contentList != null) {
+                for (index in contentList.indices) {
+                    val content = contentList[index]
+                    val chip = Chip(chipGroup.context)
+                    chip.text = content
+                    chip.textSize = 12f
+                    chip.setTextColor(Color.WHITE)
+                    chip.chipBackgroundColor = colorsStateList
+                    chip.closeIconTint = ColorStateList(states, intArrayOf(Color.WHITE))
+
+//                    chip.setOnClickListener {
+//                        chip.isCloseIconEnabled = !chip.isCloseIconEnabled
+//                        //Added click listener on close icon to remove tag from ChipGroup
+//                        chip.setOnCloseIconClickListener {
+//                            contentList.remove(tagName)
+//                            chipGroup.removeView(chip)
+//                            Log.e ("Connie", contentList.toString())
+//                        }
 //                    }
-//                }
-                chipGroup.addView(chip)
-                binding.executePendingBindings()
+
+                    chipGroup.addView(chip)
+                    binding.executePendingBindings()
+                }
             }
 
 

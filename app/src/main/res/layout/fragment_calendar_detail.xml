@@ -10,41 +10,32 @@
             type="com.max.timemaster.calendar.CalendarDetailViewModel" />
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".calendar.CalendarDetailFragment">
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutPublish"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="480dp"
+            android:background="@color/white"
+            tools:context=".calendar.CalendarDetailFragment"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <EditText
                 android:id="@+id/title_calendar_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
                 android:hint=" Title ( ex : 吃飯 )"
                 android:inputType="text"
                 android:text="@={viewModel.editTitle}"
+                app:layout_constraintBottom_toTopOf="@+id/select_date"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/attendee_calendar_detail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:hint=" Attendee ( ex : Willy )"
-                android:text="@={viewModel.editAttendee}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_calendar_detail" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <Button
                 android:id="@+id/select_date"
@@ -52,34 +43,34 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/ripple_button_article_tag"
+                app:layout_constraintBottom_toTopOf="@+id/content_calendar_detail"
                 app:layout_constraintEnd_toStartOf="@+id/select_time"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/attendee_calendar_detail" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <Button
                 android:id="@+id/select_time"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/ripple_button_article_tag"
                 android:text="Time"
+                app:layout_constraintBottom_toTopOf="@+id/content_calendar_detail"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/select_date"
-                app:layout_constraintTop_toBottomOf="@+id/attendee_calendar_detail" />
+                app:layout_constraintStart_toEndOf="@+id/select_date" />
 
             <EditText
                 android:id="@+id/content_calendar_detail"
                 android:layout_width="0dp"
                 android:layout_height="300dp"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/ripple_button_article_tag"
                 android:gravity="top|start"
                 android:hint="Content"
@@ -87,9 +78,9 @@
                 android:padding="8dp"
                 android:text="@={viewModel.editContent}"
                 android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@+id/save"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/select_time" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <Button
                 android:id="@+id/save"
@@ -97,15 +88,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/ripple_button_article_tag"
                 android:text="save"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/content_calendar_detail" />
-
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
