@@ -20,6 +20,7 @@ import com.max.timemaster.R
 import com.max.timemaster.data.DateFavorite
 import com.max.timemaster.databinding.DialogFavoriteDetailBinding
 import com.max.timemaster.ext.getVmFactory
+import com.max.timemaster.util.UserManager
 import kotlinx.android.synthetic.main.dialog_favorite_detail.*
 
 class FavoriteDetailDialog : AppCompatDialogFragment() {
@@ -65,13 +66,18 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
                         chip.setOnCloseIconClickListener {
                             viewModel.edListContent.remove(textContent)
                             chipGroup.removeView(chip)
-                            Log.e("123", "$listContent")
                         }
                     }
+//                    val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
+//                    val chipColors = intArrayOf(Color.parseColor("#E8DDB5"))
+//                    val chipColorsStateList = ColorStateList(states, chipColors)
+                    val color = UserManager.myDate.value?.filter {
+                        it.name == viewModel.edAttendee.value
+                    }!![0].color
                     val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
-                    val chipColors = intArrayOf(Color.parseColor("#E8DDB5"))
-                    val chipColorsStateList = ColorStateList(states, chipColors)
-                    chip.chipBackgroundColor = chipColorsStateList
+                    val colors = intArrayOf(Color.parseColor("#$color"))
+                    val colorsStateList = ColorStateList(states, colors)
+                    chip.chipBackgroundColor = colorsStateList
 
                 }
                 chip.text = content
@@ -81,8 +87,6 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
             }
 
 
-            Log.e("456", "$content")
-            Log.e("456", "$listContent")
             viewModel.edContent.value = null
         }
 

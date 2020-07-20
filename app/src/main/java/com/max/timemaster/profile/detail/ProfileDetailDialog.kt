@@ -79,7 +79,6 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
 //                binding.editBirthday.background.colorFilter = Color.parseColor("#$it"
                 binding.editBirthday.background.setTint(Color.parseColor("#$it"))
                 binding.editBirthday.setTextColor(Color.parseColor("#$it"))
-
             }
         })
 

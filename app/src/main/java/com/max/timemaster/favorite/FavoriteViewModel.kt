@@ -12,7 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 
-class FavoriteViewModel(timeMasterRepository: TimeMasterRepository) : ViewModel() {
+class FavoriteViewModel(private val timeMasterRepository: TimeMasterRepository) : ViewModel() {
 
     var fakerFavorite = MutableLiveData<List<DateFavorite>>()
 
@@ -28,14 +28,21 @@ class FavoriteViewModel(timeMasterRepository: TimeMasterRepository) : ViewModel(
     val error: LiveData<String>
         get() = _error
 
-    private val _leave = MutableLiveData<Boolean>()
+    // status for the loading icon of swl
+    private val _refreshStatus = MutableLiveData<Boolean>()
 
-    val leave: LiveData<Boolean>
-        get() = _leave
+    val refreshStatus: LiveData<Boolean>
+        get() = _refreshStatus
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+    fun getLiveDateCostResult() {
+        fakerFavorite = timeMasterRepository.getLiveDateFavorite()
+        _status.value = LoadApiStatus.DONE
+        _refreshStatus.value = false
+    }
 
 }

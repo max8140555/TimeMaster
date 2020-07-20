@@ -43,16 +43,21 @@ class FavoriteFragment : Fragment() {
         }
         val adapter = FavoriteAdapter()
         binding.recyclerFavorite.adapter = adapter
-
+        viewModel.getLiveDateCostResult()
 
 
         binding.btnAdd.visibility = View.VISIBLE
         mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                if (it.isNotEmpty()) {
+            it?.let {attendee->
+                viewModel.fakerFavorite.observe(viewLifecycleOwner, Observer {
+                    it?.let { dateFavorite ->
+
+
+                if (attendee.isNotEmpty()) {
                     val selectAttendeeInfo = UserManager.myDate.value?.filter { attendeeInfo ->
-                        attendeeInfo.name == it
+                        attendeeInfo.name == attendee
                     }
+                    adapter.submitList(viewModel.fakerFavorite.value)
                     selectAttendeeInfo?.let { list ->
                         if (list.isNotEmpty()) {
                             binding.textDateName.text = list[0].name
@@ -65,30 +70,24 @@ class FavoriteFragment : Fragment() {
                                 }
                            bindProfileImage(binding.imageProfileAvatar ,list[0].image)
 
-                                    adapter.submitList(viewModel.fakerFavorite.value)
+
                             //還要加  adapter.submitList
                         }else{
 
-                            //如果選擇ALL的時候
+
                         }
                 }
 
-//                        selectAttendeeInfo?.map {infoName ->
-//                        infoName.name
-//                    }.toString()
-
-//                    val x = selectAttendeeInfo?.map { infoBirthday ->
-//                        infoBirthday.birthday
-//                    }
-//                    binding.textDateBirthday.text = stampToDateNoYear(x, Locale.TAIWAN)
                     binding.btnAdd.visibility = VISIBLE
                     binding.layoutFavoriteHeader.visibility = VISIBLE
 
                 }else{binding.btnAdd.visibility = GONE
                     binding.layoutFavoriteHeader.visibility = GONE}
+                        adapter.submitList(viewModel.fakerFavorite.value)
+                    }
+                })
+
             }
-
-
         })
 
         return binding.root
