@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.max.timemaster.MainViewModel
 import com.max.timemaster.NavigationDirections
 import com.max.timemaster.R
+import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.databinding.FragmentCalendarBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.CurrentDayDecorator
@@ -74,11 +75,29 @@ class CalendarFragment : Fragment() {
             it?.let {
                 mainViewModel.liveMyDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
 
-                    adapter.submitList(viewModel.selectEvent.value)
+//                    adapter.submitList(viewModel.selectEvent.value)
                     UserManager.selectTime.value = viewModel.selectEvent.value
 
                     mainViewModel.selectAttendee.value?.let { select ->
                         if (select.isEmpty()) {
+
+//                            val date = UserManager.myDate.value?.filter { myDate ->
+//                                myDate.active == true
+//                            }?.map {
+//                                it.name
+//                            }
+//                            val list = mutableListOf<CalendarEvent>()
+//
+//                            if (date != null) {
+//                                for (x in date.indices){
+//                                    val item = UserManager.selectTime.value?.filter { dateEvent ->
+//                                        dateEvent.attendee == date[x]
+//                                    }
+//                                    if (!item.isNullOrEmpty()){
+//                                        list.add(item[0])}
+//                                }
+//                            }
+
                             adapter.submitList(UserManager.selectTime.value)
                         } else {
                             val x = UserManager.selectTime.value?.filter {
@@ -102,6 +121,7 @@ class CalendarFragment : Fragment() {
             androidx.lifecycle.Observer { select ->
 
                 if (select.isEmpty()) {
+
                     adapter.submitList(UserManager.selectTime.value)
                     val selectAllMark = UserManager.allEvent.value?.let { allEvent ->
                         allEvent.map {

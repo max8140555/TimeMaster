@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
         val menu = m.addSubMenu("時間管理").setIcon(R.drawable.ic_home_black_24dp)
 
 
-        menu.add("All").setIcon(R.drawable.ic_nav_profile).setOnMenuItemClickListener {
+        menu.add("All").setIcon(R.drawable.baseline_favorite_border_black_36).setOnMenuItemClickListener {
             Log.d("zxc", "All")
             viewModel.selectAttendee.value = ""
             binding.drawerLayout.closeDrawer(GravityCompat.START)
