@@ -14,7 +14,7 @@ import kotlinx.coroutines.Job
 
 class FavoriteViewModel(private val timeMasterRepository: TimeMasterRepository) : ViewModel() {
 
-    var fakerFavorite = MutableLiveData<List<DateFavorite>>()
+    var dateFavorite = MutableLiveData<List<DateFavorite>>()
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -40,7 +40,7 @@ class FavoriteViewModel(private val timeMasterRepository: TimeMasterRepository) 
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     fun getLiveDateCostResult() {
-        fakerFavorite = timeMasterRepository.getLiveDateFavorite()
+        dateFavorite = timeMasterRepository.getLiveDateFavorite()
         _status.value = LoadApiStatus.DONE
         _refreshStatus.value = false
     }

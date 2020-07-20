@@ -12,7 +12,7 @@ import kotlinx.coroutines.Job
 
 
 class CostViewModel(private val timeMasterRepository: TimeMasterRepository) : ViewModel() {
-    var fakerCost = MutableLiveData<List<DateCost>>()
+    var dateCost = MutableLiveData<List<DateCost>>()
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -57,7 +57,7 @@ class CostViewModel(private val timeMasterRepository: TimeMasterRepository) : Vi
 
 
     fun getLiveDateCostResult() {
-        fakerCost = timeMasterRepository.getLiveDateCost()
+        dateCost = timeMasterRepository.getLiveDateCost()
         _status.value = LoadApiStatus.DONE
         _refreshStatus.value = false
     }

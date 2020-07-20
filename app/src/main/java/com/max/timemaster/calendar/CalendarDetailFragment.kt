@@ -95,8 +95,8 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
             format("yyyy-MM-dd")
             var newMonth = format("%02d", month)
             var newDay = format("%02d", day)
-            binding.selectDate.text = "$year-${newMonth+1}-$newDay"
-            viewModel.editDate.value = "$year-${newMonth+1}-$newDay"
+            binding.selectDate.text = "$year-${newMonth.toInt()+1}-$newDay"
+            viewModel.editDate.value = "$year-${newMonth.toInt()+1}-$newDay"
         }
         val selectedDate = viewModel.selectDate.split("-")
         val year = selectedDate[0]

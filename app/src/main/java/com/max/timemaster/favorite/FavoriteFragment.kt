@@ -46,44 +46,49 @@ class FavoriteFragment : Fragment() {
         viewModel.getLiveDateCostResult()
 
 
-        binding.btnAdd.visibility = View.VISIBLE
+
         mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {
-            it?.let {attendee->
-                viewModel.fakerFavorite.observe(viewLifecycleOwner, Observer {
+            it?.let { attendee ->
+                viewModel.dateFavorite.observe(viewLifecycleOwner, Observer {
                     it?.let { dateFavorite ->
 
-
-                if (attendee.isNotEmpty()) {
-                    val selectAttendeeInfo = UserManager.myDate.value?.filter { attendeeInfo ->
-                        attendeeInfo.name == attendee
-                    }
-                    adapter.submitList(viewModel.fakerFavorite.value)
-                    selectAttendeeInfo?.let { list ->
-                        if (list.isNotEmpty()) {
-                            binding.textDateName.text = list[0].name
-                            binding.textDateBirthday.text =
-                                list[0].birthday?.let { birthday ->
-                                    stampToDateNoYear(
-                                        birthday,
-                                        Locale.TAIWAN
-                                    )
-                                }
-                           bindProfileImage(binding.imageProfileAvatar ,list[0].image)
-
-
-                            //還要加  adapter.submitList
-                        }else{
-
-
+                        val dateSelect = dateFavorite.filter { date ->
+                            date.attendeeName == attendee
                         }
-                }
+                        adapter.submitList(dateSelect)
 
-                    binding.btnAdd.visibility = VISIBLE
-                    binding.layoutFavoriteHeader.visibility = VISIBLE
 
-                }else{binding.btnAdd.visibility = GONE
-                    binding.layoutFavoriteHeader.visibility = GONE}
-                        adapter.submitList(viewModel.fakerFavorite.value)
+                        if (attendee.isNotEmpty()) {
+                            val selectAttendeeInfo =
+                                UserManager.myDate.value?.filter { attendeeInfo ->
+                                    attendeeInfo.name == attendee
+                                }
+
+                            selectAttendeeInfo?.let { list ->
+                                if (list.isNotEmpty()) {
+                                    binding.textDateName.text = list[0].name
+                                    binding.textDateBirthday.text =
+                                        list[0].birthday?.let { birthday ->
+                                            stampToDateNoYear(
+                                                birthday,
+                                                Locale.TAIWAN
+                                            )
+                                        }
+                                    bindProfileImage(binding.imageProfileAvatar, list[0].image)
+
+
+                                }
+                            }
+
+                            binding.btnAdd.visibility = VISIBLE
+                            binding.layoutFavoriteHeader.visibility = VISIBLE
+
+                        } else {
+                            binding.btnAdd.visibility = GONE
+                            binding.layoutFavoriteHeader.visibility = GONE
+                            adapter.submitList(viewModel.dateFavorite.value)
+                        }
+
                     }
                 })
 

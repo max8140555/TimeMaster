@@ -42,23 +42,27 @@ class CostFragment : Fragment() {
         viewModel.getLiveDateCostResult()
         val adapter = CostAdapter()
         binding.recyclerCost.adapter = adapter
-        viewModel.fakerCost.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                adapter.submitList(it)
-            }
-        })
-
-
-        mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {
-            it?.let {
 
 
 
-                if(it.isEmpty()){
-                    binding.btnAdd.visibility = GONE
-                }else{
-                    binding.btnAdd.visibility = VISIBLE
-                }
+        mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer { attendee ->
+            attendee?.let {
+                viewModel.dateCost.observe(viewLifecycleOwner, Observer {
+                    it?.let { dateCost ->
+                        val dateSelect = dateCost.filter { date ->
+                            date.attendeeName == attendee
+                        }
+
+
+                        if (attendee.isEmpty()) {
+                            adapter.submitList(it)
+                            binding.btnAdd.visibility = GONE
+                        } else {
+                            adapter.submitList(dateSelect)
+                            binding.btnAdd.visibility = VISIBLE
+                        }
+                    }
+                })
             }
         })
 
@@ -69,7 +73,6 @@ class CostFragment : Fragment() {
 
         return binding.root
     }
-
 
 
 }

@@ -44,7 +44,8 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         binding.layoutPublish.startAnimation(AnimationUtils.loadAnimation(context, R.anim.anim_slide_up))
-        var dataSet = mutableListOf("", "興趣", "飲料", "包包")
+
+        val dataSet = mutableListOf("", "興趣", "飲料", "包包")
         binding.niceSpinner.attachDataSource(dataSet)
         chipGroup = binding.chipGroup
 
