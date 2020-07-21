@@ -4,9 +4,9 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/black</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="colorPrimaryDark">@color/white</item>
-        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="colorPrimaryDark">@color/C_265D7C</item>
+        <item name="colorAccent">@color/C_265D7C</item>
     </style>
 
     <style name="ProgressThemeDark" parent="Widget.AppCompat.ProgressBar">

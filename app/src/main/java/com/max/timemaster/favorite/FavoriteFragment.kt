@@ -106,7 +106,7 @@ class FavoriteFragment : Fragment() {
                                         dateFavorite.attendeeName == date[x]
                                     }
                                     if (!item.isNullOrEmpty()){
-                                        list.add(item[0])}
+                                        list.addAll(item)}
                                 }
                             }
 

@@ -2,12 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
     <data>
 
         <variable
             name="viewModel"
-            type="com.max.timemaster.profile.detail.ProfileDetailViewModel" />
+            type="com.max.timemaster.profile.edit.ProfileEditViewModel" />
 
         <import type="com.max.timemaster.network.LoadApiStatus" />
 
@@ -28,8 +27,9 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             tools:context=".profile.detail.ProfileDetailDialog">
+
             <com.kyleduo.switchbutton.SwitchButton
-                android:layout_width="60dp"
+                android:layout_width="100dp"
                 android:layout_height="30dp"
                 app:layout_constraintBottom_toTopOf="@+id/editText"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -37,6 +37,7 @@
                 app:kswTintColor="@color/C_265D7C"
                 android:paddingVertical="4dp"
                 android:paddingHorizontal="10dp"/>
+
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="150dp"

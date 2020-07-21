@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.max.timemaster.MainViewModel
@@ -37,7 +38,7 @@ class CalendarFragment : Fragment() {
 
     lateinit var widget: MaterialCalendarView
     lateinit var binding: FragmentCalendarBinding
-
+    lateinit var mainViewModel: MainViewModel
     var previousDates = mutableListOf<Any?>()
 
 
@@ -45,7 +46,7 @@ class CalendarFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         binding = FragmentCalendarBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 //        binding.viewModel = viewModel
@@ -53,6 +54,9 @@ class CalendarFragment : Fragment() {
 
         viewModel.selectDate.value = LocalDate.now().toString()
         showTodayEvent()
+
+
+
 
 
         binding.btnAdd.setOnClickListener {
@@ -73,6 +77,7 @@ class CalendarFragment : Fragment() {
 
         viewModel.selectEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
+                mark()
                 mainViewModel.liveMyDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
 
 //                    adapter.submitList(viewModel.selectEvent.value)
@@ -80,7 +85,7 @@ class CalendarFragment : Fragment() {
 
                     mainViewModel.selectAttendee.value?.let { select ->
                         if (select.isEmpty()) {
-
+                            //驅除封存
 //                            val date = UserManager.myDate.value?.filter { myDate ->
 //                                myDate.active == true
 //                            }?.map {
@@ -100,8 +105,9 @@ class CalendarFragment : Fragment() {
 
                             adapter.submitList(UserManager.selectTime.value)
                         } else {
-                            val x = UserManager.selectTime.value?.filter {
-                                it.attendee == select
+
+                            val x = UserManager.selectTime.value?.filter {date ->
+                                date.attendee == select
                             }
                             Log.d("viewModel22", "${UserManager.selectTime.value}")
                             Log.d("viewModel2", "$x")
@@ -119,34 +125,34 @@ class CalendarFragment : Fragment() {
         mainViewModel.selectAttendee.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer { select ->
-
+                mark()
                 if (select.isEmpty()) {
 
                     adapter.submitList(UserManager.selectTime.value)
-                    val selectAllMark = UserManager.allEvent.value?.let { allEvent ->
-                        allEvent.map {
-                            it.dateStamp
-                        }
-                    }
-                    selectAllMark?.let {
-                        mark(it)
-                    }
+//                    val selectAllMark = UserManager.allEvent.value?.let { allEvent ->
+//                        allEvent.map {
+//                            it.dateStamp
+//                        }
+//                    }
+//                    selectAllMark?.let {
+//                        mark(it)
+//                    }
                     binding.btnAdd.visibility = View.GONE
                 } else {
                     val selectedPersonEvents = UserManager.selectTime.value?.filter {
                         it.attendee == select
                     }
                     adapter.submitList(selectedPersonEvents)
-                    val selectAllMark = UserManager.allEvent.value?.let { allEvent ->
-                        allEvent.filter { att ->
-                            att.attendee == select
-                        }.map {
-                            it.dateStamp
-                        }
-                    }
-                    selectAllMark?.let {
-                        mark(it)
-                    }
+//                    val selectAllMark = UserManager.allEvent.value?.let { allEvent ->
+//                        allEvent.filter { att ->
+//                            att.attendee == select
+//                        }.map {
+//                            it.dateStamp
+//                        }
+//                    }
+//                    selectAllMark?.let {
+//                        mark(it)
+//                    }
                     binding.btnAdd.visibility = View.VISIBLE
                 }
             })
@@ -172,17 +178,19 @@ class CalendarFragment : Fragment() {
 
         val calendar = LocalDate.now()
 
+
         widget = view?.findViewById(R.id.calendarView) as MaterialCalendarView
 
-//        viewModel.getAllEventTimeResult()
+        viewModel.getAllEventTimeResult()
 
         UserManager.allEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
-                addAllEventMark()
+                mark()
+                showSelectEvent()
             }
         })
 
-        showSelectEvent()
+//        showSelectEvent()
 
 
         if (viewModel.returnDate == null) {
@@ -194,68 +202,95 @@ class CalendarFragment : Fragment() {
             val date = selectedDate[2]
             widget.selectedDate = CalendarDay.from(year.toInt(), month.toInt(), date.toInt())
         }
-
     }
 
 
     // 把所有Event標示在calendar上
-    private fun addAllEventMark() {
+//    private fun addAllEventMark() {
+//        val allEventTime = UserManager.allEvent.value?.map {
+//            it.dateStamp
+//        }
+//
+//
+//        if (mainViewModel.selectAttendee.value?.isEmpty()!!){
+//            allEventTime?.let {
+//                mark(it)
+//            }
+//        }
+//
+//        showTodayEvent()
+//    }
+
+
+    private fun mark() {
         val allEventTime = UserManager.allEvent.value?.map {
             it.dateStamp
         }
-
-
-        allEventTime?.let {
-            mark(it)
+        val selectDateMark = UserManager.allEvent.value?.let { allEvent ->
+            allEvent.filter { att ->
+                att.attendee == mainViewModel.selectAttendee.value
+            }.map {
+                it.dateStamp
+            }
         }
-        showTodayEvent()
-    }
-
-
-    fun mark(events: List<Long?>) {
-
-//
-//        if (previousDates.isNotEmpty()) {
-//            for (day in previousDates) {
-//                widget.removeDecorator(
-//                    CurrentDayDecorator(
-//                        resources.getColor(R.color.black_3f3a3a),
-//                        day as CalendarDay
-//                    )
-//                )
-//                Log.e("dayday","$day")
-        widget.removeDecorators()
-        widget.invalidateDecorators()
-//            }
-//        }
-//        widget.invalidateDecorators()
-
-
         val list = mutableListOf<String>()
 
-        for (a in events) {
-            val selectedDate = stampToDate(a as Long, Locale.TAIWAN).split("-")
-            val year = selectedDate[0]
-            val month = selectedDate[1]
-            val date = selectedDate[2]
-            val calendarDay =
-                CalendarDay.from(year.toInt(), month.toInt(), date.toInt()) // year, month, date
+        widget.removeDecorators()
+        widget.invalidateDecorators()
 
 
+        if (mainViewModel.selectAttendee.value?.isEmpty()!!) {
 
-            widget.addDecorators(
-                CurrentDayDecorator(
-                    resources.getColor(R.color.black_3f3a3a),
-                    calendarDay
-                )
-            )
+            if (allEventTime != null) {
+                for (a in allEventTime) {
+                    val selectedDate = stampToDate(a as Long, Locale.TAIWAN).split("-")
+                    val year = selectedDate[0]
+                    val month = selectedDate[1]
+                    val date = selectedDate[2]
+                    val calendarDay = CalendarDay.from(
+                        year.toInt(),
+                        month.toInt(),
+                        date.toInt()
+                    ) // year, month, date
+                    widget.addDecorators(
+                        CurrentDayDecorator(
+                            resources.getColor(R.color.black),
+                            calendarDay
+                        )
+                    )
 
-            list.add(stampToDate(a, Locale.TAIWAN))
+                    list.add(stampToDate(a, Locale.TAIWAN))
 
-            previousDates.add(calendarDay)
+                    previousDates.add(calendarDay)
+                }
+            }
+            Log.e("Max", previousDates.toString())
+        } else {
+
+            if (selectDateMark != null) {
+                for (a in selectDateMark) {
+                    val selectedDate = stampToDate(a as Long, Locale.TAIWAN).split("-")
+                    val year = selectedDate[0]
+                    val month = selectedDate[1]
+                    val date = selectedDate[2]
+                    val calendarDay = CalendarDay.from(
+                        year.toInt(),
+                        month.toInt(),
+                        date.toInt()
+                    ) // year, month, date
+                    widget.addDecorators(
+                        CurrentDayDecorator(
+                            resources.getColor(R.color.black),
+                            calendarDay
+                        )
+                    )
+
+                    list.add(stampToDate(a, Locale.TAIWAN))
+
+                    previousDates.add(calendarDay)
+                }
+            }
         }
-        Log.e("Max", previousDates.toString())
-
     }
 
     // 顯示選擇日期的Event
@@ -295,6 +330,11 @@ class CalendarFragment : Fragment() {
 //        widget.invalidateDecorators()
 //        widget.removeDecorators()
 //    }
+
+    override fun onResume() {
+        super.onResume()
+        mark()
+    }
 }
 
 

@@ -83,7 +83,8 @@ class ProfileItemAdapter() :
     //2.綁定ViewHolder 畫布
     override fun onBindViewHolder(holder: ProductDetailedEvaluationViewHolder, position: Int) {
         val product =
-            getItem(position)  //告訴onCreateViewHolder 要生成幾個viewholderholder.itemView.setOnClickListener {
+            getItem(position)  //告訴onCreateViewHolder 要生成幾個viewholder
+
         holder.bind(product)
     }
 

@@ -69,11 +69,12 @@ class CostFragment : Fragment() {
                                     val item = viewModel.dateCost.value?.filter { dateCost ->
                                         dateCost.attendeeName == date[x]
                                     }
+                                    Log.d("987","$item")
                                     if (!item.isNullOrEmpty()){
-                                        list.add(item[0])}
+                                        list.addAll(item)}
                                 }
                             }
-
+                            Log.d("9987","$list")
                             adapter.submitList(list)
                             binding.btnAdd.visibility = GONE
                         } else {
