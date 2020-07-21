@@ -10,6 +10,7 @@ import com.max.timemaster.favorite.FavoriteDetailDialogViewModel
 import com.max.timemaster.favorite.FavoriteViewModel
 import com.max.timemaster.profile.ProfileViewModel
 import com.max.timemaster.profile.detail.ProfileDetailViewModel
+import com.max.timemaster.profile.edit.ProfileEditViewModel
 
 /**
  * Created by Wayne Chen in Jul. 2019.
@@ -38,6 +39,8 @@ class ViewModelFactory constructor(
                     ProfileDetailViewModel(timeMasterRepository)
                 isAssignableFrom(ProfileViewModel::class.java) ->
                     ProfileViewModel(timeMasterRepository)
+                isAssignableFrom(ProfileEditViewModel::class.java) ->
+                    ProfileEditViewModel(timeMasterRepository)
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

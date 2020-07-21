@@ -28,15 +28,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             tools:context=".profile.detail.ProfileDetailDialog">
-            <com.kyleduo.switchbutton.SwitchButton
-                android:layout_width="60dp"
-                android:layout_height="30dp"
-                app:layout_constraintBottom_toTopOf="@+id/editText"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:checked="false"
-                app:kswTintColor="@color/C_265D7C"
-                android:paddingVertical="4dp"
-                android:paddingHorizontal="10dp"/>
+
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="150dp"

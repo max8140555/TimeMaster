@@ -64,6 +64,8 @@
 
     <action android:id="@+id/navigate_to_profileDetailFragment"
         app:destination="@id/profileDetailFragment" />
+    <action android:id="@+id/navigate_to_profileEditDialog"
+        app:destination="@id/profileEditDialog"/>
 
     <dialog
         android:id="@+id/calendarDetailFragment"
@@ -90,6 +92,12 @@
         android:name="com.max.timemaster.profile.detail.ProfileDetailDialog"
         android:label="ProfileDetailFragment"
         tools:layout="@layout/dialog_profile_detail"/>
+    <dialog
+        android:id="@+id/profileEditDialog"
+        android:name="com.max.timemaster.profile.edit.ProfileEditDialog"
+        android:label="ProfileEditDialog"
+        tools:layout="@layout/dialog_profile_edit"/>
+
 
 
 </navigation>

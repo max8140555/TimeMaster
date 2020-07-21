@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import com.max.timemaster.NavigationDirections
 import com.max.timemaster.databinding.FragmentProfileItemBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.network.LoadApiStatus
@@ -34,7 +36,11 @@ class ProfileItemFragment(private val profileType: ProfileTypeFilter) : Fragment
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        val adapter = ProfileItemAdapter()
+        val adapter = ProfileItemAdapter(ProfileItemAdapter.OnClickListener{
+            let {
+                findNavController().navigate(NavigationDirections.navigateToProfileEditDialog())
+            }
+        })
 
 
         binding.recyclerProfileItem.adapter = adapter

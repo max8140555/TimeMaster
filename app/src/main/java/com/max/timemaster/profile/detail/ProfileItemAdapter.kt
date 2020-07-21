@@ -1,5 +1,6 @@
 package com.max.timemaster.profile.detail
 
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -13,7 +14,7 @@ import com.max.timemaster.util.TimeUtil.stampToDate
 import com.max.timemaster.util.TimeUtil.stampToDateTime
 import java.util.*
 
-class ProfileItemAdapter() :
+class ProfileItemAdapter(val onClickListener: OnClickListener) :
     ListAdapter<MyDate, ProfileItemAdapter.ProductDetailedEvaluationViewHolder>(
         DiffCallback
     ) {
@@ -84,8 +85,13 @@ class ProfileItemAdapter() :
     override fun onBindViewHolder(holder: ProductDetailedEvaluationViewHolder, position: Int) {
         val product =
             getItem(position)  //告訴onCreateViewHolder 要生成幾個viewholder
-
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick()
+        }
         holder.bind(product)
     }
+    class OnClickListener(val clickListener: () -> Unit) {
+        fun onClick() = clickListener()
 
+    }
 }
