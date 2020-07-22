@@ -21,6 +21,9 @@ class ProfileDetailViewModel(private val timeMasterRepository: TimeMasterReposit
     var edDateName = MutableLiveData<String>()
     var myDate = MutableLiveData<MyDate>()
     var edColor = MutableLiveData<String>()
+    var selectedPosition =MutableLiveData<Int>().apply {
+        value = -1
+    }
 
     var imagePhoto =MutableLiveData<String>().apply {
         value = "https://scontent.ftpe7-3.fna.fbcdn.net/v/t1.0-9/s960x960/35431412_2043916532349506_2460415922964267008_o.jpg?_nc_cat=102&_nc_sid=85a577&_nc_ohc=EBuFzo9IZ3IAX_pIYrJ&_nc_ht=scontent.ftpe7-3.fna&_nc_tp=7&oh=c395614d7ae115058ef3928720f2112a&oe=5F38D943"
@@ -54,7 +57,8 @@ class ProfileDetailViewModel(private val timeMasterRepository: TimeMasterReposit
            MyDate(
                name = it,
                birthday = editDate.value?.let { it1 -> dateToStamp(it1, Locale.TAIWAN) },
-               color = edColor.value
+               color = edColor.value,
+               position = selectedPosition.value
            )
        }
    }

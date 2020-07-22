@@ -17,6 +17,7 @@ data class MyDate(
     var birthday: Long? = 0,
     var loginDate: Long? = 0,
     var color: String? = "",
+    var position: Int? = 0,
     var active: Boolean? = true
 )
 

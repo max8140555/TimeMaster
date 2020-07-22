@@ -92,9 +92,9 @@
                     android:id="@+id/text_profile_exp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
                     android:letterSpacing="0.15"
                     android:maxLines="2"
-                    android:layout_marginStart="40dp"
                     android:text="經驗值"
                     android:textAlignment="center"
                     android:textColor="@color/black"
@@ -140,7 +140,6 @@
                     android:id="@+id/text_profile_now_exp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="50dp"
                     android:layout_marginBottom="4dp"
                     android:letterSpacing="0.15"
                     android:maxLines="1"
@@ -150,7 +149,7 @@
                     app:exp="@{UserManager.INSTANCE.user.exp}"
                     app:layout_constraintBottom_toTopOf="@+id/text_profile_exp"
                     app:layout_constraintEnd_toEndOf="@+id/text_profile_exp"
-                    app:layout_constraintStart_toEndOf="@+id/text_date_birthday"
+                    app:layout_constraintStart_toStartOf="@+id/text_profile_exp"
                     tools:text="15%" />
 
                 <ProgressBar

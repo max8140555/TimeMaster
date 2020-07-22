@@ -16,9 +16,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.databinding.ItemProfileColorBinding
+import com.max.timemaster.profile.edit.ProfileEditViewModel
 
-class ProfileColorAdapter(var viewModel: ProfileDetailViewModel) :
-    ListAdapter<String, ProfileColorAdapter.ProfileColorViewHolder>(
+class ProfileColorEditAdapter(var viewModel: ProfileEditViewModel) :
+    ListAdapter<String, ProfileColorEditAdapter.ProfileColorViewHolder>(
         DiffCallback
     ) {
 
@@ -32,7 +33,7 @@ class ProfileColorAdapter(var viewModel: ProfileDetailViewModel) :
     class ProfileColorViewHolder(private var binding: ItemProfileColorBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @RequiresApi(Build.VERSION_CODES.M)
-        fun bind(colorCode: String, selectedPosition: Int) {
+        fun bind(colorCode: String, selectedPosition: Int,viewModel: ProfileEditViewModel) {
             colorCode.let {
                 binding.imageDetailColor.setBackgroundColor(Color.parseColor("#$colorCode"))
 
@@ -108,13 +109,13 @@ class ProfileColorAdapter(var viewModel: ProfileDetailViewModel) :
         val product =
             getItem(position)  //告訴onCreateViewHolder 要生成幾個viewholder
         holder.itemView.setOnClickListener {
-            viewModel.selectedPosition.value = position
+            selectedPosition = position
             viewModel.edColor.value = product
-
-
+//            viewModel.selectedColor.value = color
+//            viewModel.setVariantsByColor(color)
             notifyDataSetChanged()
         }
-        viewModel.selectedPosition.value?.let { holder.bind(product, it) }
+        holder.bind(product,selectedPosition,viewModel)
     }
 
 }

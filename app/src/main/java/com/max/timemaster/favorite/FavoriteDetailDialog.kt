@@ -4,6 +4,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.max.timemaster.MainViewModel
 import com.max.timemaster.R
+import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.data.DateFavorite
 import com.max.timemaster.databinding.DialogFavoriteDetailBinding
 import com.max.timemaster.ext.getVmFactory
@@ -79,7 +81,13 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
                     val colors = intArrayOf(Color.parseColor("#$color"))
                     val colorsStateList = ColorStateList(states, colors)
                     chip.chipBackgroundColor = colorsStateList
+                    val paddingDp = TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        10f,
+                        TimeMasterApplication.instance.resources.displayMetrics
+                    ).toInt()
 
+                    chip.setPadding(40, paddingDp, paddingDp, paddingDp)
                 }
                 chip.text = content
                 chip.setTextColor(Color.BLACK)

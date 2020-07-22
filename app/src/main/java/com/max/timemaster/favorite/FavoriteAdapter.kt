@@ -3,7 +3,6 @@ package com.max.timemaster.favorite
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Build
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,13 +11,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
-import com.max.timemaster.data.CalendarEvent
+import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.data.DateFavorite
-import com.max.timemaster.databinding.ItemCalendarBinding
 import com.max.timemaster.databinding.ItemFavoriteBinding
-import com.max.timemaster.util.TimeUtil.stampToDateTime
 import com.max.timemaster.util.UserManager
-import java.util.*
 
 class FavoriteAdapter() :
     ListAdapter<DateFavorite, FavoriteAdapter.ProductDetailedEvaluationViewHolder>(
@@ -55,7 +51,13 @@ class FavoriteAdapter() :
                     chip.setTextColor(Color.BLACK)
                     chip.chipBackgroundColor = colorsStateList
                     chip.closeIconTint = ColorStateList(states, intArrayOf(Color.WHITE))
+                    val paddingDp = TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        10f,
+                        TimeMasterApplication.instance.resources.displayMetrics
+                    ).toInt()
 
+                    chip.setPadding(40, paddingDp, paddingDp, paddingDp)
 //                    chip.setOnClickListener {
 //                        chip.isCloseIconEnabled = !chip.isCloseIconEnabled
 //                        //Added click listener on close icon to remove tag from ChipGroup

@@ -19,6 +19,10 @@ import com.max.timemaster.R
 import com.max.timemaster.databinding.DialogProfileDetailBinding
 import com.max.timemaster.databinding.DialogProfileEditBinding
 import com.max.timemaster.ext.getVmFactory
+import com.max.timemaster.profile.detail.ProfileColorAdapter
+import com.max.timemaster.profile.detail.ProfileColorEditAdapter
+import com.max.timemaster.profile.detail.ProfileDetailViewModel
+import com.max.timemaster.profile.detail.ProfileItemAdapter
 import com.max.timemaster.util.UserManager
 import java.util.*
 
@@ -47,6 +51,18 @@ class ProfileEditDialog : AppCompatDialogFragment() {
                 R.anim.anim_slide_up
             )
         )
+        val adapter = ProfileColorEditAdapter(viewModel)
+        binding.recyclerProfileColor.adapter = adapter
+        val arrayList = this.resources.getStringArray(R.array.colorList)
+        val colorList = mutableListOf<String>()
+        for (x in 0..9) {
+            colorList.add(arrayList[x])
+        }
+        adapter.submitList(colorList)
+
+
+
+
         binding.editBirthday.setOnClickListener {
             datePicker()
         }

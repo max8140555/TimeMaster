@@ -35,7 +35,7 @@ class CostAdapter() :
         fun bind(dateCost: DateCost) {
             binding.title.text = dateCost.costTitle
             binding.time.text = "07/14"
-            binding.price.text = "${dateCost.costPrice} $"
+            binding.price.text = "${dateCost.costPrice} 元"
             val color = UserManager.myDate.value?.filter {
                 it.name == dateCost.attendeeName
             }!![0].color

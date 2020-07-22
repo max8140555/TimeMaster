@@ -53,6 +53,9 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         binding.editBirthday.setOnClickListener {
             datePicker()
         }
+
+
+
         binding.buttonPublish.setOnClickListener {
             viewModel.addDate()
             viewModel.myDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
