@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.max.timemaster.data.DateCost
 import com.max.timemaster.databinding.ItemCalendarBinding
 import com.max.timemaster.databinding.ItemCostBinding
+import com.max.timemaster.util.TimeUtil.stampToDateNoYear
 import com.max.timemaster.util.UserManager
 import kotlinx.android.synthetic.main.item_cost.view.*
+import java.util.*
 
 class CostAdapter() :
     ListAdapter<DateCost, CostAdapter.ProductDetailedEvaluationViewHolder>(
@@ -34,7 +36,7 @@ class CostAdapter() :
         @SuppressLint("SetTextI18n")
         fun bind(dateCost: DateCost) {
             binding.title.text = dateCost.costTitle
-            binding.time.text = "07/14"
+            binding.time.text = dateCost.time?.let { stampToDateNoYear(it, Locale.TAIWAN) }
             binding.price.text = "${dateCost.costPrice} 元"
             val color = UserManager.myDate.value?.filter {
                 it.name == dateCost.attendeeName

@@ -63,7 +63,8 @@ class CostFragment : Fragment() {
                             date.attendeeName == attendee
                         }
 
-
+                        val listMoney = mutableListOf<Long>()
+                        val listTime = mutableListOf<String>()
                         if (attendee.isEmpty()) {
 
                             val date =
@@ -74,20 +75,21 @@ class CostFragment : Fragment() {
                                 }
 
                             val list = mutableListOf<DateCost>()
-                            val listMoney = mutableListOf<Long>()
-                            val listTime = mutableListOf<String>()
+
                             if (date != null) {
                                 for (x in date.indices) {
                                     val item = viewModel.dateCost.value?.filter { dateCost ->
                                         dateCost.attendeeName == date[x]
                                     }
+                                    Log.d("9987item", "$item")
                                     val money = item?.map { cost ->
                                         cost.costPrice
                                     }
+                                    Log.d("9987money", "$money")
                                     val time = item?.map { timedate ->
                                         timedate.time
                                     }
-
+                                    Log.d("9987time", "$time")
                                     if (!money.isNullOrEmpty()) {
                                         for (addMoney in money) {
                                             if (addMoney != null) {
@@ -97,15 +99,20 @@ class CostFragment : Fragment() {
                                         if (time != null) {
                                             for (addTime in time) {
                                                 if (addTime != null) {
-                                                    listTime.add(stampToDateNoYear(addTime, Locale.TAIWAN))
+                                                    listTime.add(
+                                                        stampToDateNoYear(
+                                                            addTime,
+                                                            Locale.TAIWAN
+                                                        )
+                                                    )
                                                 }
                                             }
                                         }
-                                        setData(listMoney,listTime)
+                                        setData(listMoney, listTime)
                                     }
 
-
-                                    Log.d("987", "$item")
+                                    Log.d("9987listMoney", "$listMoney")
+                                    Log.d("9987listTime", "$listTime")
                                     if (!item.isNullOrEmpty()) {
                                         list.addAll(item)
                                     }
@@ -115,10 +122,37 @@ class CostFragment : Fragment() {
                             }
 
 
-                            Log.d("9987", "$list")
+//                            Log.d("9987", "$list")
                             adapter.submitList(list)
                             binding.btnAdd.visibility = GONE
                         } else {
+                            val money = dateSelect.map {
+                                it.costPrice
+                            }
+                            val time = dateSelect.map {
+                                it.time
+                            }
+                            if (!money.isNullOrEmpty()) {
+                                for (addMoney in money) {
+                                    if (addMoney != null) {
+                                        listMoney.add(addMoney)
+                                    }
+                                }
+                                    for (addTime in time) {
+                                        if (addTime != null) {
+                                            listTime.add(
+                                                stampToDateNoYear(
+                                                    addTime,
+                                                    Locale.TAIWAN
+                                                )
+                                            )
+                                        }
+                                    }
+                                Log.d("99987listMoney", "$listMoney")
+                                Log.d("99987listTime", "$listTime")
+                                setData(listMoney, listTime)
+                            }
+
                             adapter.submitList(dateSelect)
                             binding.btnAdd.visibility = VISIBLE
                         }
@@ -133,7 +167,7 @@ class CostFragment : Fragment() {
         return binding.root
     }
 
-    fun setData(money: List<Long?>,labels: List<String>) {
+    fun setData(money: List<Long?>, labels: List<String>) {
         val entries: MutableList<Entry> = ArrayList()
 //            viewModel.record.value?.fitDetail?.maxBy { it.weight }?.weight?.toFloat()?.let {
 //                Entry(
@@ -183,11 +217,8 @@ class CostFragment : Fragment() {
         // Controlling X axis
         val xAxis = binding.lineChartView.xAxis
         // Set the xAxis position to bottom. Default is top
-
+        xAxis.mAxisMaximum = 5f
         xAxis.position = XAxis.XAxisPosition.BOTTOM
-
-
-
 
 
         //Customizing x axis value
