@@ -1,5 +1,6 @@
 package com.max.timemaster.cost
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,15 +18,15 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.max.timemaster.MainViewModel
 import com.max.timemaster.R
 import com.max.timemaster.data.DateCost
 import com.max.timemaster.databinding.FragmentCostBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.TimeUtil.stampToDateNoYear
+import com.max.timemaster.util.UserManager
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -57,108 +58,44 @@ class CostFragment : Fragment() {
 
         mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer { attendee ->
             attendee?.let {
-                viewModel.dateCost.observe(viewLifecycleOwner, Observer {
-                    it?.let { dateCost ->
+                viewModel.dateCost.observe(viewLifecycleOwner, Observer { dataCosts ->
+                    dataCosts?.let { dateCost ->
                         val dateSelect = dateCost.filter { date ->
                             date.attendeeName == attendee
                         }
 
-                        val listMoney = mutableListOf<Long>()
-                        val listTime = mutableListOf<String>()
                         if (attendee.isEmpty()) {
 
-                            val date =
+                            // All date
+
+                            val dating =
                                 com.max.timemaster.util.UserManager.myDate.value?.filter { myDate ->
                                     myDate.active == true
-                                }?.map {
-                                    it.name
+                                }?.map { myDate2 ->
+                                    myDate2.name
                                 }
 
-                            val list = mutableListOf<DateCost>()
+                            val allDateCostList = mutableListOf<DateCost>()
 
-                            if (date != null) {
-                                for (x in date.indices) {
+                            if (dating != null) {
+                                for (x in dating.indices) {
                                     val item = viewModel.dateCost.value?.filter { dateCost ->
-                                        dateCost.attendeeName == date[x]
+                                        dateCost.attendeeName == dating[x]
                                     }
-                                    Log.d("9987item", "$item")
-                                    val money = item?.map { cost ->
-                                        cost.costPrice
-                                    }
-                                    Log.d("9987money", "$money")
-                                    val time = item?.map { timedate ->
-                                        timedate.time
-                                    }
-                                    Log.d("9987time", "$time")
-                                    if (!money.isNullOrEmpty()) {
-                                        var sum: Long = 0
-                                        for (addMoney in money) {
-                                            if (addMoney != null) {
-                                                sum += addMoney
-                                                listMoney.add(sum)
-                                                Log.d("9987listMoney", "$listMoney")
-                                            }
-                                        }
-                                        if (time != null) {
-                                            for (addTime in time) {
-                                                if (addTime != null) {
-                                                    listTime.add(
-                                                        stampToDateNoYear(
-                                                            addTime,
-                                                            Locale.TAIWAN
-                                                        )
-                                                    )
-                                                }
-                                            }
-                                        }
-                                        setData(listMoney, listTime)
-                                    }
-
-
-                                    Log.d("9987listTime", "$listTime")
                                     if (!item.isNullOrEmpty()) {
-                                        list.addAll(item)
+                                        allDateCostList.addAll(item)
                                     }
-
                                 }
-
                             }
 
-
-//                            Log.d("9987", "$list")
-                            adapter.submitList(list)
+                            setPluralData(allDateCostList)
+                            adapter.submitList(allDateCostList)
                             binding.btnAdd.visibility = GONE
-                        } else {
-                            val money = dateSelect.map {
-                                it.costPrice
-                            }
-                            val time = dateSelect.map {
-                                it.time
-                            }
-                            if (!money.isNullOrEmpty()) {
-                                var sum: Long = 0
-                                for (addMoney in money) {
-                                    if (addMoney != null) {
-                                        sum += addMoney
-                                        listMoney.add(sum)
-                                        Log.d("9987listMoney", "$listMoney")
-                                    }
-                                }
-                                for (addTime in time) {
-                                    if (addTime != null) {
-                                        listTime.add(
-                                            stampToDateNoYear(
-                                                addTime,
-                                                Locale.TAIWAN
-                                            )
-                                        )
-                                    }
-                                }
-                                Log.d("99987listMoney", "$listMoney")
-                                Log.d("99987listTime", "$listTime")
-                                setData(listMoney, listTime)
-                            }
 
+                        } else {
+
+                            // Selected Date
+                            setPluralData(dateSelect)
                             adapter.submitList(dateSelect)
                             binding.btnAdd.visibility = VISIBLE
                         }
@@ -167,91 +104,180 @@ class CostFragment : Fragment() {
             }
         })
 
-
-
-
         return binding.root
     }
 
-    fun setData(money: List<Long?>, labels: List<String>) {
+    private fun setSingleData(money: List<Long?>, labels: List<String>) {
         val entries: MutableList<Entry> = ArrayList()
-//            viewModel.record.value?.fitDetail?.maxBy { it.weight }?.weight?.toFloat()?.let {
-//                Entry(
-//                    it, simpleDateFormat.format(viewModel.record.value!!.createdTime).toFloat())
-//            }?.let { entries.add(it) }
+        val lineChart = binding.lineChartView
 
-//        val labels = arrayOf("","國文","數學","英文")
-        binding.lineChartView.xAxis.apply {
-            binding.lineChartView.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-            binding.lineChartView.xAxis.labelCount = 3
-            binding.lineChartView.xAxis.position = XAxis.XAxisPosition.BOTTOM
-            binding.lineChartView.xAxis.setDrawLabels(true)
-            binding.lineChartView.xAxis.setDrawGridLines(false)
+
+
+        lineChart.description.text = "時間"
+        lineChart.description.textSize = 10F
+        lineChart.xAxis.apply {
+            lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+            lineChart.xAxis.labelCount = 3
+            lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+            lineChart.xAxis.setDrawLabels(true)
+            lineChart.xAxis.setDrawGridLines(false)
         }
         Log.d("money", "$money")
+
+
+
 
         for (x in 0..money.size) {
             for (y in money.indices) {
                 if (x == y) {
                     entries.add(Entry(x.toFloat(), money[x]!!.toFloat()))
+
                 }
             }
         }
-
-//        for (x in floatList.indices) {
-//            for (y in money.indices) {
-//                if (x == y) {
-//                    entries.add(Entry(floatList[x], money[x]!!.toFloat()))
-//                }
-//            }
-//        }
-
-//        entries.add(Entry(2f, 80F))
-//        entries.add(Entry(3f, 9f))
-//        entries.add(Entry(4f, 16f))
-//        entries.add(Entry(5f, 25f))
-//        entries.add(Entry(7f, 36f))
-//        binding.lineChartView.
-        binding.lineChartView.description.text = "時間"
-        binding.lineChartView.description.textSize = 10F
-
-
         val dataSet = LineDataSet(entries, "$")
         dataSet.color = ContextCompat.getColor(requireContext(), R.color.A9A587)
         dataSet.valueTextColor = ContextCompat.getColor(requireContext(), R.color.black)
-        //****
+        dataSet.valueTextSize = 10F
+
+
         // Controlling X axis
-        val xAxis = binding.lineChartView.xAxis
-        // Set the xAxis position to bottom. Default is top
+        val xAxis = lineChart.xAxis
         xAxis.mAxisMaximum = 5f
         xAxis.position = XAxis.XAxisPosition.BOTTOM
 
-
-        //Customizing x axis value
-//        val months = arrayOf("M", "T", "W", "T", "F", "S", "S", "A", "A", "A")
-//        val formatter = IAxisValueFormatter { value, axis -> months[value.toInt()] }
-//        xAxis.granularity = 1f // minimum axis-step (interval) is 1
-//
-//
-//            xAxis.valueFormatter = formatter as ValueFormatter?
-        //***
-
-
         // Controlling right side of y axis
-        val yAxisRight = binding.lineChartView.axisRight
+        val yAxisRight = lineChart.axisRight
         yAxisRight.isEnabled = false
         //***
         // Controlling left side of y axis
-        val yAxisLeft = binding.lineChartView.axisLeft
+        val yAxisLeft = lineChart.axisLeft
         yAxisLeft.granularity = 1f
+
 
         // Setting Data
         val data = LineData(dataSet)
-        binding.lineChartView.data = data
-        binding.lineChartView.axisLeft.setStartAtZero(true)
-        binding.lineChartView.invalidate()
-        binding.lineChartView.notifyDataSetChanged()
-        binding.lineChartView.setTouchEnabled(false)
+        lineChart.data = data
+        lineChart.axisLeft.setStartAtZero(true)
+        lineChart.invalidate()
+        lineChart.notifyDataSetChanged()
+        lineChart.setTouchEnabled(false)
     }
 
+    private fun setPluralData(allListDateCost: List<DateCost>) {
+
+        val lineChart = binding.lineChartView
+
+        val labels: MutableList<String> = mutableListOf("07-19", "07-20", "07-21", "07-22", "07-23")
+
+
+        lineChart.description.text = "時間"
+        lineChart.description.textSize = 10F
+        lineChart.xAxis.apply {
+            lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+            lineChart.xAxis.labelCount = 3
+            lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+            lineChart.xAxis.setDrawLabels(true)
+            lineChart.xAxis.setDrawGridLines(false)
+        }
+
+        val dates = UserManager.myDate.value?.filter {
+            it.active == true
+        }?.map {
+            it.name
+        }
+
+        val dataSetGroup = mutableListOf<LineDataSet>()
+
+
+
+        dates?.let { dates ->
+
+            for (d in dates.indices) {
+                var daySum: Long = 0
+                var dayMoney = listOf<Long?>()
+                val dateDayPrice = mutableListOf<Long>()
+
+                val dateCost = allListDateCost.filter {
+                    it.attendeeName == dates[d]
+                }
+                val dateColor = UserManager.myDate.value?.filter {
+                    it.name == dates[d]
+                }?.map {
+                    it.color
+                }
+
+                for (l in labels.indices) {
+
+
+                    dayMoney = dateCost.filter {
+                        stampToDateNoYear(it.time ?: 0, Locale.TAIWAN) == labels[l]
+                    }.map {
+                        it.costPrice
+                    }
+
+                    if (dayMoney.isEmpty()) {
+                        dayMoney = listOf(0)
+                    }
+
+
+                    for (money in dayMoney) {
+                        if (money != null) {
+                            daySum += money
+
+                        }
+                    }
+
+                    Log.e("Max", "list = ${dates[d]} , ${labels[l]}, $dayMoney")
+                    dateDayPrice.add(daySum)
+                    Log.e("Max", "dayMonet = $dateDayPrice")
+
+
+                }
+                val entries: MutableList<Entry> = ArrayList()
+                for (x in 0..dateDayPrice.size) {
+                    for (y in dateDayPrice.indices) {
+                        if (x == y) {
+                            entries.add(Entry(x.toFloat(), dateDayPrice[x].toFloat()))
+                        }
+                    }
+                }
+                val dataSet = LineDataSet(entries, "$")
+                dataSet.color = Color.parseColor("#${dateColor?.get(0)}")
+                dataSet.valueTextColor =
+                    ContextCompat.getColor(requireContext(), R.color.black)
+                dataSet.valueTextSize = 10F
+                dataSetGroup.add(dataSet)
+                Log.e("Max", "dayMonet = ${dataSetGroup.size}")
+            }
+
+        }
+
+        // Controlling X axis
+        val xAxis = lineChart.xAxis
+        xAxis.mAxisMaximum = 5f
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        // Controlling right side of y axis
+        val yAxisRight = lineChart.axisRight
+        yAxisRight.isEnabled = false
+
+        //***
+        // Controlling left side of y axis
+        val yAxisLeft = lineChart.axisLeft
+        yAxisLeft.granularity = 1f
+        yAxisLeft.setDrawGridLines(false)
+
+
+//        // Setting Data
+        val data = LineData(dataSetGroup as List<ILineDataSet>?)
+        lineChart.data = data
+        lineChart.axisLeft.setStartAtZero(true)
+        lineChart.invalidate()
+        lineChart.notifyDataSetChanged()
+        lineChart.setTouchEnabled(false)
+    }
 }
+
+
+
