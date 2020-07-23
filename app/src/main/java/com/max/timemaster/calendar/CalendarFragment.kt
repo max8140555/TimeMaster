@@ -49,15 +49,8 @@ class CalendarFragment : Fragment() {
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         binding = FragmentCalendarBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-//        binding.viewModel = viewModel
-
 
         viewModel.selectDate.value = LocalDate.now().toString()
-        showTodayEvent()
-
-
-
-
 
         binding.btnAdd.setOnClickListener {
             viewModel.selectDate.value?.let { selectDate ->
@@ -69,11 +62,8 @@ class CalendarFragment : Fragment() {
             }
         }
 
-
         val adapter = CalendarAdapter()
         binding.recyclerCalendar.adapter = adapter
-
-
 
         viewModel.selectEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
@@ -129,30 +119,15 @@ class CalendarFragment : Fragment() {
                 if (select.isEmpty()) {
 
                     adapter.submitList(UserManager.selectTime.value)
-//                    val selectAllMark = UserManager.allEvent.value?.let { allEvent ->
-//                        allEvent.map {
-//                            it.dateStamp
-//                        }
-//                    }
-//                    selectAllMark?.let {
-//                        mark(it)
-//                    }
+
                     binding.btnAdd.visibility = View.GONE
                 } else {
+
                     val selectedPersonEvents = UserManager.selectTime.value?.filter {
                         it.attendee == select
                     }
                     adapter.submitList(selectedPersonEvents)
-//                    val selectAllMark = UserManager.allEvent.value?.let { allEvent ->
-//                        allEvent.filter { att ->
-//                            att.attendee == select
-//                        }.map {
-//                            it.dateStamp
-//                        }
-//                    }
-//                    selectAllMark?.let {
-//                        mark(it)
-//                    }
+
                     binding.btnAdd.visibility = View.VISIBLE
                 }
             })
@@ -190,7 +165,7 @@ class CalendarFragment : Fragment() {
             }
         })
 
-//        showSelectEvent()
+
 
 
         if (viewModel.returnDate == null) {
@@ -202,24 +177,14 @@ class CalendarFragment : Fragment() {
             val date = selectedDate[2]
             widget.selectedDate = CalendarDay.from(year.toInt(), month.toInt(), date.toInt())
         }
+        if (mainViewModel.selectAttendee.value.isNullOrEmpty()){
+            showTodayEvent()
+        }else{
+            showSelectEvent()
+            Log.d("XXXX","${viewModel.selectEvent.value}")
+        }
+
     }
-
-
-    // 把所有Event標示在calendar上
-//    private fun addAllEventMark() {
-//        val allEventTime = UserManager.allEvent.value?.map {
-//            it.dateStamp
-//        }
-//
-//
-//        if (mainViewModel.selectAttendee.value?.isEmpty()!!){
-//            allEventTime?.let {
-//                mark(it)
-//            }
-//        }
-//
-//        showTodayEvent()
-//    }
 
 
     private fun mark() {

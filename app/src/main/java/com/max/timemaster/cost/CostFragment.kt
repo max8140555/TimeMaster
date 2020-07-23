@@ -91,9 +91,12 @@ class CostFragment : Fragment() {
                                     }
                                     Log.d("9987time", "$time")
                                     if (!money.isNullOrEmpty()) {
+                                        var sum: Long = 0
                                         for (addMoney in money) {
                                             if (addMoney != null) {
-                                                listMoney.add(addMoney)
+                                                sum += addMoney
+                                                listMoney.add(sum)
+                                                Log.d("9987listMoney", "$listMoney")
                                             }
                                         }
                                         if (time != null) {
@@ -111,7 +114,7 @@ class CostFragment : Fragment() {
                                         setData(listMoney, listTime)
                                     }
 
-                                    Log.d("9987listMoney", "$listMoney")
+
                                     Log.d("9987listTime", "$listTime")
                                     if (!item.isNullOrEmpty()) {
                                         list.addAll(item)
@@ -133,21 +136,24 @@ class CostFragment : Fragment() {
                                 it.time
                             }
                             if (!money.isNullOrEmpty()) {
+                                var sum: Long = 0
                                 for (addMoney in money) {
                                     if (addMoney != null) {
-                                        listMoney.add(addMoney)
+                                        sum += addMoney
+                                        listMoney.add(sum)
+                                        Log.d("9987listMoney", "$listMoney")
                                     }
                                 }
-                                    for (addTime in time) {
-                                        if (addTime != null) {
-                                            listTime.add(
-                                                stampToDateNoYear(
-                                                    addTime,
-                                                    Locale.TAIWAN
-                                                )
+                                for (addTime in time) {
+                                    if (addTime != null) {
+                                        listTime.add(
+                                            stampToDateNoYear(
+                                                addTime,
+                                                Locale.TAIWAN
                                             )
-                                        }
+                                        )
                                     }
+                                }
                                 Log.d("99987listMoney", "$listMoney")
                                 Log.d("99987listTime", "$listTime")
                                 setData(listMoney, listTime)
