@@ -50,12 +50,12 @@ class FavoriteFragment : Fragment() {
 
 
 
-        mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {attendee ->
+        mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer { attendee ->
             attendee?.let {
 
                 viewModel.dateFavorite.observe(viewLifecycleOwner, Observer {
                     it?.let { dateFavorite ->
-
+                        UserManager.dateFavorite.value = viewModel.dateFavorite.value
                         val dateSelect = dateFavorite.filter { date ->
                             date.attendeeName == attendee
                         }
@@ -101,12 +101,14 @@ class FavoriteFragment : Fragment() {
                             val list = mutableListOf<DateFavorite>()
 
                             if (date != null) {
-                                for (x in date.indices){
-                                    val item = viewModel.dateFavorite.value?.filter { dateFavorite ->
-                                        dateFavorite.attendeeName == date[x]
+                                for (x in date.indices) {
+                                    val item =
+                                        viewModel.dateFavorite.value?.filter { dateFavorite ->
+                                            dateFavorite.attendeeName == date[x]
+                                        }
+                                    if (!item.isNullOrEmpty()) {
+                                        list.addAll(item)
                                     }
-                                    if (!item.isNullOrEmpty()){
-                                        list.addAll(item)}
                                 }
                             }
 

@@ -199,31 +199,72 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
             val document = UserManager.userEmail?.let { db.document(it) }
 
             UserManager.userEmail?.let {
-                db.document(it)
+                db.document(it).collection("dateFavorite")
+                    .whereEqualTo("attendeeName",dateFavorite.attendeeName)
+                    .whereEqualTo("favoriteTitle",dateFavorite.favoriteTitle)
                     .get()
                     .addOnSuccessListener { doc ->
-                        document?.collection("dateFavorite")?.add(dateFavorite)
-                            ?.addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    Logger.i("postdateFavorite: $dateFavorite")
 
-                                    continuation.resume(Result.Success(true))
-                                } else {
-                                    task.exception?.let {
+                        if (doc.isEmpty){
+                            document?.collection("dateFavorite")?.add(dateFavorite)
+                                ?.addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Logger.i("postdateFavorite: $dateFavorite")
 
-                                        Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
-                                        continuation.resume(Result.Error(it))
-                                        return@addOnCompleteListener
-                                    }
-                                    continuation.resume(
-                                        Result.Fail(
-                                            TimeMasterApplication.instance.getString(
-                                                R.string.you_know_nothing
+                                        continuation.resume(Result.Success(true))
+                                    } else {
+                                        task.exception?.let {
+
+                                            Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                                            continuation.resume(Result.Error(it))
+                                            return@addOnCompleteListener
+                                        }
+                                        continuation.resume(
+                                            Result.Fail(
+                                                TimeMasterApplication.instance.getString(
+                                                    R.string.you_know_nothing
+                                                )
                                             )
                                         )
-                                    )
+                                    }
                                 }
+                        }else{
+
+                            for (i in doc){
+                                val list = i["favoriteContent"] as MutableList<String>
+
+                                dateFavorite.favoriteContent?.let { it1 -> list.addAll(it1) }
+
+                                i["favoriteTitle"]
+                                Log.e("Max","$list")
+                                Log.e("Max","${i["favoriteContent"]}")
+                                document
+                                    ?.collection("dateFavorite")
+                                    ?.document(i.id)
+                                    ?.update("favoriteContent",list)
+                                    ?.addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            Logger.i("postdateFavorite: $dateFavorite")
+
+                                            continuation.resume(Result.Success(true))
+                                        } else {
+                                            task.exception?.let {
+
+                                                Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                                                continuation.resume(Result.Error(it))
+                                                return@addOnCompleteListener
+                                            }
+                                            continuation.resume(
+                                                Result.Fail(
+                                                    TimeMasterApplication.instance.getString(
+                                                        R.string.you_know_nothing
+                                                    )
+                                                )
+                                            )
+                                        }
+                                    }
                             }
+                        }
                     }
             }
         }

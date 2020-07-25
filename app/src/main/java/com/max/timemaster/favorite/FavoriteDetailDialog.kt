@@ -3,12 +3,14 @@ package com.max.timemaster.favorite
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -47,8 +49,40 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
         binding.viewModel = viewModel
         binding.layoutPublish.startAnimation(AnimationUtils.loadAnimation(context, R.anim.anim_slide_up))
 
-        val dataSet = mutableListOf("", "興趣", "飲料", "包包")
-        binding.niceSpinner.attachDataSource(dataSet)
+
+        mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {selectDate ->
+
+            viewModel.edAttendee.value = selectDate
+
+            val listTitle = UserManager.dateFavorite.value?.filter {
+                it.attendeeName == selectDate
+            }?.map {
+                it.favoriteTitle
+            }?.toMutableList()
+
+            listTitle?.add(0,"")
+            binding.niceSpinner.attachDataSource(listTitle)
+            binding.niceSpinner.setOnItemSelectedListener( object:
+                AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    listTitle?.let {
+                        viewModel.edTitle.value = it[position]
+                    }
+
+                }
+
+            })
+        })
+
         chipGroup = binding.chipGroup
 
 
@@ -106,12 +140,6 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
         binding.buttonPublish.setOnClickListener {
             viewModel.postAddDateFavorite(addDateFavorite())
         }
-
-        mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                viewModel.edAttendee.value = it
-            }
-        })
 
 
 
