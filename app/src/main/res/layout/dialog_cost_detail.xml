@@ -108,12 +108,12 @@
                 style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="0dp"
                 android:layout_height="45dp"
-                android:background="@drawable/ripple_button_article_tag"
+                android:background="@color/black_3f3a3a"
                 android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                 android:gravity="center"
-                android:text='@{viewModel.status != LoadApiStatus.LOADING ? "Publish" : ""}'
+                android:text='@{viewModel.status != LoadApiStatus.LOADING ? "Save" : ""}'
                 android:textAllCaps="false"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="14sp"
                 android:letterSpacing="0.1"
                 app:layout_constraintBottom_toBottomOf="parent"

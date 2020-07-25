@@ -93,7 +93,7 @@
                 android:clickable="@{viewModel.status == LoadApiStatus.LOADING ? false : true}"
                 android:gravity="center"
                 android:letterSpacing="0.1"
-                android:text='@{viewModel.status != LoadApiStatus.LOADING ? "Publish" : ""}'
+                android:text='@{viewModel.status != LoadApiStatus.LOADING ? "Save" : ""}'
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="14sp"

@@ -148,18 +148,18 @@ class MainActivity : AppCompatActivity() {
         }
         val s = UserManager.myDate.value?.filter {
             it.active == true
-        }?.map {
-            it.name
         }
-
+//            ?.map {
+//                it.name
+//            }
 
 
         if (s != null ) {
             for (i in s) {
-                menu.add(i).setIcon(R.drawable.baseline_favorite_border_black_36)
+                menu.add(i.name).setIcon(R.drawable.baseline_favorite_border_black_36)
                     .setOnMenuItemClickListener {
-                        Log.d("zxc", i)
-                        viewModel.selectAttendee.value = i
+                        Log.d("zxc", i.name)
+                        viewModel.selectAttendee.value = i.name
                         binding.drawerLayout.closeDrawer(GravityCompat.START)
                         return@setOnMenuItemClickListener true
                     }

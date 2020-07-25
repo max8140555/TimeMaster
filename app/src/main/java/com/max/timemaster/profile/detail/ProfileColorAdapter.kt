@@ -1,5 +1,6 @@
 package com.max.timemaster.profile.detail
 
+import android.content.res.ColorStateList
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -8,6 +9,7 @@ import android.graphics.drawable.shapes.Shape
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
@@ -34,26 +36,15 @@ class ProfileColorAdapter(var viewModel: ProfileDetailViewModel) :
         @RequiresApi(Build.VERSION_CODES.M)
         fun bind(colorCode: String, selectedPosition: Int) {
             colorCode.let {
-                binding.imageDetailColor.setBackgroundColor(Color.parseColor("#$colorCode"))
+                val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
+                val colors = intArrayOf(Color.parseColor("#$colorCode"))
+                val colorsStateList = ColorStateList(states, colors)
+                binding.imageDetailColor.backgroundTintList = colorsStateList
 
                 if (adapterPosition == selectedPosition) {
-                    binding.root.foreground = ShapeDrawable(object : Shape() {
-                        override fun draw(canvas: Canvas, paint: Paint) {
-                            paint.color = Color.WHITE
-                            paint.style = Paint.Style.STROKE
-                            paint.strokeWidth = TimeMasterApplication.instance.resources
-                                .getDimensionPixelSize(R.dimen.edge_add2cart_select_inside)
-                                .toFloat()
-                            canvas.drawRect(0f, 0f, this.width, this.height, paint)
-                            paint.color = Color.BLACK
-                            paint.style = Paint.Style.STROKE
-                            paint.strokeWidth = TimeMasterApplication.instance.resources
-                                .getDimensionPixelSize(R.dimen.edge_add2cart_select).toFloat()
-                            canvas.drawRect(0f, 0f, this.width, this.height, paint)
-                        }
-                    })
+                    binding.imageCorrect.visibility = View.VISIBLE
                 } else {
-                    binding.root.foreground = null
+                    binding.imageCorrect.visibility = View.GONE
                 }
 
                 binding.executePendingBindings()
