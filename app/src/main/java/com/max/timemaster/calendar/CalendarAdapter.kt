@@ -73,7 +73,7 @@ class CalendarAdapter() :
             oldItem: CalendarEvent,
             newItem: CalendarEvent
         ): Boolean {
-            return oldItem.dateStamp == newItem.dateStamp
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(

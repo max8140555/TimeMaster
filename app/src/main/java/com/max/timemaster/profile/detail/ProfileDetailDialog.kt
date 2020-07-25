@@ -1,26 +1,30 @@
 package com.max.timemaster.profile.detail
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
-
+import com.google.firebase.storage.FirebaseStorage
 import com.max.timemaster.R
+import com.max.timemaster.TimeMasterApplication
+import com.max.timemaster.bindProfileImage
 import com.max.timemaster.databinding.DialogProfileDetailBinding
-
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.UserManager
 import java.util.*
@@ -28,6 +32,12 @@ import java.util.*
 class ProfileDetailDialog : AppCompatDialogFragment() {
     private val viewModel by viewModels<ProfileDetailViewModel> { getVmFactory() }
     lateinit var binding: DialogProfileDetailBinding
+    var saveUri: Uri? = null
+    private var imageUri = ""
+
+    private companion object {
+        val PHOTO_FROM_GALLERY = 0
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +54,7 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         binding = DialogProfileDetailBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        permission()
         binding.layoutPublish.startAnimation(
             AnimationUtils.loadAnimation(
                 context,
@@ -53,11 +64,14 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         binding.editBirthday.setOnClickListener {
             datePicker()
         }
+        binding.imageView.setOnClickListener {
 
+            toAlbum()
+        }
 
 
         binding.buttonPublish.setOnClickListener {
-            viewModel.addDate()
+            viewModel.addDate(imageUri)
             viewModel.myDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
                 it?.let {
                     viewModel.myDate.value?.let { it1 -> viewModel.postAddDate(it1) }
@@ -80,7 +94,6 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
 
         viewModel.edColor.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
-//                binding.editBirthday.background.colorFilter = Color.parseColor("#$it"
                 binding.editBirthday.background.setTint(Color.parseColor("#$it"))
                 binding.editBirthday.setTextColor(Color.parseColor("#$it"))
             }
@@ -113,4 +126,79 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         }
     }
 
+    fun toAlbum() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        startActivityForResult(intent, PHOTO_FROM_GALLERY)
+    }
+
+    private fun permission() {
+        val permissionList = arrayListOf(
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            android.Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+        var size = permissionList.size
+        var i = 0
+        while (i < size) {
+            if (ActivityCompat.checkSelfPermission(
+                    TimeMasterApplication.instance.applicationContext,
+                    permissionList[i]
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionList.removeAt(i)
+                i -= 1
+                size -= 1
+            }
+            i += 1
+        }
+        val array = arrayOfNulls<String>(permissionList.size)
+        if (permissionList.isNotEmpty()) ActivityCompat.requestPermissions(
+            (activity as AppCompatActivity),
+            permissionList.toArray(array),
+            0
+        )
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            PHOTO_FROM_GALLERY -> {
+                when (resultCode) {
+                    Activity.RESULT_OK -> {
+                        val uri = data!!.data
+                        saveUri = uri
+                        uploadImage()
+
+//                        binding.imageView.setImageURI(uri)
+                    }
+                    Activity.RESULT_CANCELED -> {
+                        Log.wtf("getImageResult", resultCode.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (saveUri != null) {
+            val uriString = saveUri.toString()
+            outState.putString("saveUri", uriString)
+        }
+    }
+
+    private fun uploadImage() {
+        val filename = UUID.randomUUID().toString()
+        val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
+        saveUri?.let {
+            ref.putFile(it)
+                .addOnSuccessListener {
+                    ref.downloadUrl.addOnSuccessListener {
+//                        newRecord.recordImage = it.toString()
+                        imageUri = it.toString()
+                        bindProfileImage(binding.imageView,imageUri)
+                    }
+                }
+        }
+    }
 }

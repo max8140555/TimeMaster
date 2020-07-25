@@ -5,6 +5,9 @@
 
     <data>
         <variable
+            name="date"
+            type="com.max.timemaster.data.MyDate" />
+        <variable
             name="imageString"
             type="String" />
     </data>
@@ -50,15 +53,18 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:ellipsize="end"
+            android:gravity="center"
             android:letterSpacing="0.15"
             android:lines="1"
             android:textColor="@color/gray_999999"
-            android:gravity="center"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/text_profile_name"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/text_profile_name"
             app:layout_constraintTop_toBottomOf="@+id/text_profile_name"
+            app:layout_constraintVertical_bias="0.0"
+            app:timestamp="@{date.birthday}"
             tools:text="1993/04/04" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,25 +10,38 @@ import com.max.timemaster.data.MyDate
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.network.LoadApiStatus
 import com.max.timemaster.util.TimeUtil.dateToStamp
+import com.max.timemaster.util.TimeUtil.stampToDateNoYear
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.*
 
-class ProfileEditViewModel(private val timeMasterRepository: TimeMasterRepository) : ViewModel() {
-    var editDate = MutableLiveData<String>()
-    var edDateName = MutableLiveData<String>()
+class ProfileEditViewModel(
+    private val timeMasterRepository: TimeMasterRepository,
+    private val selectDate: MyDate
+) : ViewModel() {
+    var editDate = MutableLiveData<Long>().apply {
+        value = selectDate.birthday
+    }
+    var edDateName = MutableLiveData<String>().apply {
+        value = selectDate.name
+    }
     var myDate = MutableLiveData<MyDate>()
-    var edColor = MutableLiveData<String>()
-
-    var imagePhoto =MutableLiveData<String>().apply {
-        value = "https://scontent.ftpe7-3.fna.fbcdn.net/v/t1.0-9/s960x960/35431412_2043916532349506_2460415922964267008_o.jpg?_nc_cat=102&_nc_sid=85a577&_nc_ohc=EBuFzo9IZ3IAX_pIYrJ&_nc_ht=scontent.ftpe7-3.fna&_nc_tp=7&oh=c395614d7ae115058ef3928720f2112a&oe=5F38D943"
+    var edColor = MutableLiveData<String>().apply {
+        value = selectDate.color
     }
 
+    var imagePhoto = MutableLiveData<String>().apply {
+        value = selectDate.image
+    }
+    var edActive = MutableLiveData<Boolean>().apply {
+        value = selectDate.active
+    }
 
-    // status: The internal MutableLiveData that stores the status of the most recent request
-    private val _status = MutableLiveData<LoadApiStatus>()
+        // status: The internal MutableLiveData that stores the status of the most recent request
+        private
+    val _status = MutableLiveData<LoadApiStatus>()
 
     val status: LiveData<LoadApiStatus>
         get() = _status
@@ -43,28 +56,32 @@ class ProfileEditViewModel(private val timeMasterRepository: TimeMasterRepositor
 
     val leave: LiveData<Boolean>
         get() = _leave
+
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-   fun addDate() {
-       myDate.value = edDateName.value?.let {
-           MyDate(
-               name = it,
-               birthday = editDate.value?.let { it1 -> dateToStamp(it1, Locale.TAIWAN) },
-               color = edColor.value
-           )
-       }
-   }
-    fun postAddDate(myDate: MyDate) {
+    fun addDate() {
+        myDate.value = edDateName.value?.let {
+            MyDate(
+                name = it,
+                birthday = editDate.value,
+                color = edColor.value,
+                active = edActive.value,
+                image = imagePhoto.value
+            )
+        }
+    }
+
+    fun updateDate(myDate: MyDate) {
 
         coroutineScope.launch {
 
             _status.value = LoadApiStatus.LOADING
 
-            when (val result = timeMasterRepository.postDate(myDate)) {
+            when (val result = timeMasterRepository.updateDate(myDate)) {
                 is com.max.timemaster.data.Result.Success -> {
                     _error.value = null
                     _status.value = LoadApiStatus.DONE
@@ -79,7 +96,8 @@ class ProfileEditViewModel(private val timeMasterRepository: TimeMasterRepositor
                     _status.value = LoadApiStatus.ERROR
                 }
                 else -> {
-                    _error.value = TimeMasterApplication.instance.getString(R.string.you_know_nothing)
+                    _error.value =
+                        TimeMasterApplication.instance.getString(R.string.you_know_nothing)
                     _status.value = LoadApiStatus.ERROR
                 }
             }

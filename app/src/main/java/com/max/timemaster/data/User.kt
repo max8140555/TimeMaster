@@ -1,5 +1,8 @@
 package com.max.timemaster.data
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 
 data class User(
     var email: String = "",
@@ -10,7 +13,7 @@ data class User(
     var titleName: String = "小釣手",
     var firstLoginTime: Long = 0
 )
-
+@Parcelize
 data class MyDate(
     var name: String = "",
     var image: String? = "",
@@ -19,7 +22,7 @@ data class MyDate(
     var color: String? = "",
     var position: Int? = 0,
     var active: Boolean? = true
-)
+): Parcelable
 
 data class CalendarEvent(
     var calendarTitle: String? = "",

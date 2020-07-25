@@ -92,12 +92,12 @@ class CalendarFragment : Fragment() {
                                         dateEvent.attendee == date[x]
                                     }
                                     if (!item.isNullOrEmpty()) {
-                                        list.add(item[0])
+                                        list.addAll(item)
                                     }
                                 }
                             }
 
-                            adapter.submitList(list)
+                            adapter.submitList(list.sortedBy { it.dateStamp })
                         } else {
 
                             val x = UserManager.selectTime.value?.filter { date ->
@@ -121,8 +121,24 @@ class CalendarFragment : Fragment() {
                     mark()
                 })
                 if (select.isEmpty()) {
+                    val date = UserManager.myDate.value?.filter { myDate ->
+                        myDate.active == true
+                    }?.map {
+                        it.name
+                    }
+                    val list = mutableListOf<CalendarEvent>()
 
-                    adapter.submitList(UserManager.selectTime.value)
+                    if (date != null) {
+                        for (x in date.indices) {
+                            val item = UserManager.selectTime.value?.filter { dateEvent ->
+                                dateEvent.attendee == date[x]
+                            }
+                            if (!item.isNullOrEmpty()) {
+                                list.addAll(item)
+                            }
+                        }
+                    }
+                    adapter.submitList(list.sortedBy { it.dateStamp })
 
                     binding.btnAdd.visibility = View.GONE
                 } else {
@@ -180,8 +196,8 @@ class CalendarFragment : Fragment() {
             val selectedDate = viewModel.returnDate!!.split("-")
             val year = selectedDate[0]
             val month = selectedDate[1]
-            val date = selectedDate[2]
-            widget.selectedDate = CalendarDay.from(year.toInt(), month.toInt(), date.toInt())
+            val day = selectedDate[2]
+            widget.selectedDate = CalendarDay.from(year.toInt(), month.toInt(), day.toInt())
         }
 
         showTodayEvent()
@@ -198,24 +214,25 @@ class CalendarFragment : Fragment() {
             it.name
         }
 
-        var listAllEvent = listOf<Long?>()
+        val listAllEvent = mutableListOf<Long?>()
         Log.d("XXXXXXX", "$date")
         date?.let {
+
             for (x in date) {
-                var event = UserManager.allEvent.value?.filter {
+                val event = UserManager.allEvent.value?.filter {
                     it.attendee == x
                 }?.map {
                     it.dateStamp
                 }
-                event?.let{event->
-                listAllEvent = event
-            }}
+                if (event != null) {
+                    for (i in event){
+                        listAllEvent.add(i)
+                    }
+                }
+
+            }
         }
 
-
-        val allEventTime = UserManager.allEvent.value?.map {
-            it.dateStamp
-        }
         val selectDateMark = UserManager.allEvent.value?.let { allEvent ->
             allEvent.filter { att ->
                 att.attendee == mainViewModel.selectAttendee.value
@@ -235,11 +252,11 @@ class CalendarFragment : Fragment() {
                 val selectedDate = stampToDate(a as Long, Locale.TAIWAN).split("-")
                 val year = selectedDate[0]
                 val month = selectedDate[1]
-                val date = selectedDate[2]
+                val day = selectedDate[2]
                 val calendarDay = CalendarDay.from(
                     year.toInt(),
                     month.toInt(),
-                    date.toInt()
+                    day.toInt()
                 ) // year, month, date
                 widget.addDecorators(
                     CurrentDayDecorator(
@@ -305,19 +322,6 @@ class CalendarFragment : Fragment() {
 
         }
     }
-//    fun remove(){
-//
-//        if(previousDates.isNotEmpty()){
-//            for(day in previousDates)
-//            widget.removeDecorator(CurrentDayDecorator(
-//                resources.getColor(R.color.black_3f3a3a),
-//                day
-//            ))
-//
-//        }
-//        widget.invalidateDecorators()
-//        widget.removeDecorators()
-//    }
 
     override fun onResume() {
         super.onResume()

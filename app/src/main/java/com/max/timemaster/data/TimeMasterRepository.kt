@@ -17,6 +17,8 @@ interface TimeMasterRepository {
 
     suspend fun postCost(dateCost: DateCost): Result<Boolean>
 
+    suspend fun updateDate(myDate: MyDate): Result<Boolean>
+
     fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>>
 
     fun getLiveAllEventTime(): MutableLiveData<List<Long>>

@@ -106,16 +106,14 @@ class ProfileColorEditAdapter(var viewModel: ProfileEditViewModel) :
     //2.綁定ViewHolder 畫布
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: ProfileColorViewHolder, position: Int) {
-        val product =
+        val colorCode =
             getItem(position)  //告訴onCreateViewHolder 要生成幾個viewholder
         holder.itemView.setOnClickListener {
             selectedPosition = position
-            viewModel.edColor.value = product
-//            viewModel.selectedColor.value = color
-//            viewModel.setVariantsByColor(color)
+            viewModel.edColor.value = colorCode
             notifyDataSetChanged()
         }
-        holder.bind(product,selectedPosition,viewModel)
+        holder.bind(colorCode,selectedPosition,viewModel)
     }
 
 }

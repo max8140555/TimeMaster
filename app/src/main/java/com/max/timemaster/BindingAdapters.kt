@@ -25,7 +25,7 @@ fun bindDate(textView: TextView, timestamp: Long?) {
     timestamp?.let {
         val cal = Calendar.getInstance(Locale.TAIWAN)
         cal.timeInMillis = it
-        val date: String = DateFormat.format("yyyy-MM-dd", cal).toString()
+        val date: String = DateFormat.format("MM-dd", cal).toString()
         textView.text = date
     }
 }
@@ -123,3 +123,4 @@ fun bindLoginTime(textView: TextView, timestamp: Long?) {
         textView.text = day.toString()
     }
 }
+

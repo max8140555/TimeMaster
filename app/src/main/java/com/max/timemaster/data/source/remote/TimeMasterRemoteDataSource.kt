@@ -79,7 +79,9 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                 event.document(it)
                     .get()
                     .addOnSuccessListener { doc ->
-                        document?.collection("calendar")?.add(calendarEvent)
+                        document
+                            ?.collection("calendar")
+                            ?.add(calendarEvent)
                             ?.addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     Logger.i("postEvent: $calendarEvent")
@@ -259,6 +261,42 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                     )
                                 }
                             }
+                    }
+            }
+        }
+
+    override suspend fun updateDate(myDate: MyDate): Result<Boolean> =
+        suspendCoroutine { continuation ->
+            val db = FirebaseFirestore.getInstance().collection("users")
+            UserManager.userEmail?.let {
+                db
+                    .document(it)
+                    .collection("date")
+                    .whereEqualTo("name", myDate.name)
+                    .get()
+                    .addOnSuccessListener { docs ->
+
+                        for (doc in docs) {
+                            db.document(it).collection("date").document(doc.id).update(
+                                "active",
+                                myDate.active
+                                ,
+                                "birthday",
+                                myDate.birthday,
+                                "color",
+                                myDate.color,
+                                "image",
+                                myDate.image
+                            )
+                        }
+
+                        Logger.i("updateDate: $myDate")
+
+                        continuation.resume(Result.Success(true))
+                    }
+                    .addOnFailureListener { exception ->
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${exception.message}")
+                        continuation.resume(Result.Error(exception))
                     }
             }
         }

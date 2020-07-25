@@ -35,6 +35,9 @@ class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSo
         return remoteDataSource.postCost(dateCost)
     }
 
+    override suspend fun updateDate(myDate: MyDate): Result<Boolean> {
+        return remoteDataSource.updateDate(myDate)
+    }
 
     override fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>> {
         return remoteDataSource.getLiveAllEvent()
@@ -45,7 +48,8 @@ class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSo
     }
 
     override fun getLiveUser(): MutableLiveData<User> {
-        return remoteDataSource.getLiveUser()    }
+        return remoteDataSource.getLiveUser()
+    }
     override fun getLiveMyDate(): MutableLiveData<List<MyDate>> {
         return remoteDataSource.getLiveMyDate()
     }

@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import com.max.timemaster.NavigationDirections
 import com.max.timemaster.databinding.FragmentProfileItemBinding
 import com.max.timemaster.ext.getVmFactory
-import com.max.timemaster.network.LoadApiStatus
 import com.max.timemaster.profile.ProfileTypeFilter
 import com.max.timemaster.util.UserManager
 
@@ -36,9 +35,9 @@ class ProfileItemFragment(private val profileType: ProfileTypeFilter) : Fragment
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        val adapter = ProfileItemAdapter(ProfileItemAdapter.OnClickListener{
+        val adapter = ProfileItemAdapter(ProfileItemAdapter.OnClickListener{ myDate->
             let {
-                findNavController().navigate(NavigationDirections.navigateToProfileEditDialog())
+                findNavController().navigate(NavigationDirections.navigateToProfileEditDialog(myDate))
             }
         })
 

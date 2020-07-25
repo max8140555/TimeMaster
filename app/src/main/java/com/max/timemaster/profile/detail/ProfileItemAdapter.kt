@@ -30,11 +30,7 @@ class ProfileItemAdapter(val onClickListener: OnClickListener) :
         fun bind(myDate: MyDate) {
             binding.textProfileName.text = myDate.name
             binding.imageString = myDate.image
-            val selectedDate = myDate.birthday?.let { stampToDate(it, Locale.TAIWAN) }
-            val splitTime = selectedDate?.split("-")
-            val month = splitTime?.get(1)
-            val day = splitTime?.get(2)
-            binding.textProfileBirthday.text = "$month/$day"
+            binding.date = myDate
 
             binding.executePendingBindings()
         }
@@ -83,15 +79,15 @@ class ProfileItemAdapter(val onClickListener: OnClickListener) :
      */
     //2.綁定ViewHolder 畫布
     override fun onBindViewHolder(holder: ProductDetailedEvaluationViewHolder, position: Int) {
-        val product =
+        val myDate =
             getItem(position)  //告訴onCreateViewHolder 要生成幾個viewholder
         holder.itemView.setOnClickListener {
-            onClickListener.onClick()
+            onClickListener.onClick(myDate)
         }
-        holder.bind(product)
+        holder.bind(myDate)
     }
-    class OnClickListener(val clickListener: () -> Unit) {
-        fun onClick() = clickListener()
+    class OnClickListener(val clickListener: (myDate: MyDate) -> Unit) {
+        fun onClick(myDate: MyDate) = clickListener(myDate)
 
     }
 }

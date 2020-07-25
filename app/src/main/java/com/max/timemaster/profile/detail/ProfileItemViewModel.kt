@@ -16,8 +16,8 @@ import kotlinx.coroutines.Job
  * The [ViewModel] that is attached to the [CatalogItemFragment].
  */
 class ProfileItemViewModel(
-    private val timeMasterRepository: TimeMasterRepository,
-    profileType: ProfileTypeFilter // Handle the type for each catalog item
+    private val timeMasterRepository:TimeMasterRepository,
+    private val profileType: ProfileTypeFilter // Handle the type for each catalog item, myDate: com.max.timemaster.data.MyDate){}, myDate: com.max.timemaster.data.MyDate){}
 ) : ViewModel() {
 
 //    private val sourceFactory = PagingDataSourceFactory(catalogType)

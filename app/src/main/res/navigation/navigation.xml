@@ -96,7 +96,11 @@
         android:id="@+id/profileEditDialog"
         android:name="com.max.timemaster.profile.edit.ProfileEditDialog"
         android:label="ProfileEditDialog"
-        tools:layout="@layout/dialog_profile_edit"/>
+        tools:layout="@layout/dialog_profile_edit">
+        <argument
+            android:name="selectedDateKey"
+            app:argType="com.max.timemaster.data.MyDate" />
+    </dialog>
 
 
 

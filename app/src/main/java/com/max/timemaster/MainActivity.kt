@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -166,35 +167,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             Log.d("zxcERR", "有問題")
         }
-
-
-//        // Set up header of drawer ui using data binding
-//        val bindingNavHeader = NavHeaderDrawerBinding.inflate(
-//            LayoutInflater.from(this), binding.drawerNavView, false)
-//
-//        bindingNavHeader.lifecycleOwner = this
-//        bindingNavHeader.viewModel = viewModel
-//        binding.drawerNavView.addHeaderView(bindingNavHeader.root)
-
-//        // Observe current drawer toggle to set the navigation icon and behavior
-//        viewModel.currentDrawerToggleType.observe(this, Observer { type ->
-//
-//            actionBarDrawerToggle?.isDrawerIndicatorEnabled = type.indicatorEnabled
-//            supportActionBar?.setDisplayHomeAsUpEnabled(!type.indicatorEnabled)
-//            binding.toolbar.setNavigationIcon(
-//                when (type) {
-//                    DrawerToggleType.BACK -> R.drawable.toolbar_back
-//                    else -> R.drawable.toolbar_menu
-//                }
-//            )
-//            actionBarDrawerToggle?.setToolbarNavigationClickListener {
-//                when (type) {
-//                    DrawerToggleType.BACK -> onBackPressed()
-//                    else -> {}
-//                }
-//            }
-//        })
-
     }
 
 
@@ -209,6 +181,8 @@ class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
+
+
 }
 
 

@@ -52,13 +52,15 @@ class ProfileDetailViewModel(private val timeMasterRepository: TimeMasterReposit
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-   fun addDate() {
+   fun addDate(image: String?) {
        myDate.value = edDateName.value?.let {
            MyDate(
                name = it,
                birthday = editDate.value?.let { it1 -> dateToStamp(it1, Locale.TAIWAN) },
                color = edColor.value,
-               position = selectedPosition.value
+               position = selectedPosition.value,
+               image = image
+
            )
        }
    }
