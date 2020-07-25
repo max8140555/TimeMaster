@@ -77,7 +77,11 @@ class MainActivity : AppCompatActivity() {
         viewModel.liveUser.observe(this, Observer {
             it?.let {
                 UserManager.user = viewModel.liveUser.value!!
+                UserManager.exp.value = UserManager.user.exp
             }
+        })
+        UserManager.exp.observe(this, Observer {
+            viewModel.updateExp(it)
         })
         viewModel.liveMyDate.observe(this, Observer {
             it?.let {
@@ -85,8 +89,6 @@ class MainActivity : AppCompatActivity() {
                         UserManager.myDate.value = viewModel.liveMyDate.value
                         setupDrawer()
                 }
-
-
             }
         })
         viewModel.liveAllEvent.observe(this, Observer {

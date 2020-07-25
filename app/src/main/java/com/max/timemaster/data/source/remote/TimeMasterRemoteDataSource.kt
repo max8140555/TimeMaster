@@ -85,7 +85,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                             ?.addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     Logger.i("postEvent: $calendarEvent")
-
+                                    UserManager.exp.value = UserManager.exp.value?.plus(10)
                                     continuation.resume(Result.Success(true))
                                 } else {
                                     task.exception?.let {
@@ -168,7 +168,10 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                     if (task.isSuccessful) {
                                         Logger.i("postMyDate: $myDate")
 
+                                        UserManager.exp.value = UserManager.exp.value?.plus(10)
+
                                         continuation.resume(Result.Success(true))
+
                                     } else {
                                         task.exception?.let {
 
@@ -210,7 +213,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                 ?.addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
                                         Logger.i("postdateFavorite: $dateFavorite")
-
+                                        UserManager.exp.value = UserManager.exp.value?.plus(10)
                                         continuation.resume(Result.Success(true))
                                     } else {
                                         task.exception?.let {
@@ -245,7 +248,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                     ?.addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
                                             Logger.i("postdateFavorite: $dateFavorite")
-
+                                            UserManager.exp.value = UserManager.exp.value?.plus(10)
                                             continuation.resume(Result.Success(true))
                                         } else {
                                             task.exception?.let {
@@ -284,7 +287,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                             ?.addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     Logger.i("postEvent: $dateCost")
-
+                                    UserManager.exp.value = UserManager.exp.value?.plus(10)
                                     continuation.resume(Result.Success(true))
                                 } else {
                                     task.exception?.let {
@@ -342,6 +345,36 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
             }
         }
 
+    override suspend fun updateExp(exp: Long): Result<Boolean>  =
+        suspendCoroutine { continuation ->
+            val db = FirebaseFirestore.getInstance().collection("users")
+            UserManager.userEmail?.let {
+                db
+                    .document(it)
+                    .update("exp",exp)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Logger.i("updateExp: $exp")
+
+                            continuation.resume(Result.Success(true))
+                        } else {
+                            task.exception?.let {
+
+                                Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                                continuation.resume(Result.Error(it))
+                                return@addOnCompleteListener
+                            }
+                            continuation.resume(
+                                Result.Fail(
+                                    TimeMasterApplication.instance.getString(
+                                        R.string.you_know_nothing
+                                    )
+                                )
+                            )
+                        }
+                    }
+            }
+        }
 
     override fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>> {
         val liveData = MutableLiveData<List<CalendarEvent>>()

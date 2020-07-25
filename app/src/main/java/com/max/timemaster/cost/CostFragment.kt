@@ -1,6 +1,8 @@
 package com.max.timemaster.cost
 
 import android.graphics.Color
+import android.icu.util.Calendar
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +10,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -27,6 +30,7 @@ import com.max.timemaster.databinding.FragmentCostBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.TimeUtil.stampToDateNoYear
 import com.max.timemaster.util.UserManager
+import org.threeten.bp.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -37,6 +41,7 @@ class CostFragment : Fragment() {
         getVmFactory()
     }
     lateinit var binding: FragmentCostBinding
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -164,16 +169,25 @@ class CostFragment : Fragment() {
         lineChart.setTouchEnabled(false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun setPluralData(allListDateCost: List<DateCost>) {
 
         val lineChart = binding.lineChartView
 
-        val labels: MutableList<String> = mutableListOf("07-19", "07-20", "07-21", "07-22", "07-23")
+        val cal = Calendar.getInstance().timeInMillis
+        Log.e("Max","$cal")
+
+        val labels: MutableList<String>
+                = mutableListOf(stampToDateNoYear(cal-86400000*5, Locale.TAIWAN)
+            , stampToDateNoYear(cal-86400000*4, Locale.TAIWAN)
+            , stampToDateNoYear(cal-86400000*3, Locale.TAIWAN)
+            , stampToDateNoYear(cal-86400000*2, Locale.TAIWAN)
+            , stampToDateNoYear(cal, Locale.TAIWAN))
 
 
         lineChart.description.text = "時間"
         lineChart.description.textSize = 10F
-        lineChart.xAxis.apply {
+        lineChart.xAxis.apply { 
             lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
             lineChart.xAxis.labelCount = 3
             lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM

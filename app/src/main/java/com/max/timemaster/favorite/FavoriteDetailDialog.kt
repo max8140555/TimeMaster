@@ -139,6 +139,7 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
 
         binding.buttonPublish.setOnClickListener {
             viewModel.postAddDateFavorite(addDateFavorite())
+
         }
 
 

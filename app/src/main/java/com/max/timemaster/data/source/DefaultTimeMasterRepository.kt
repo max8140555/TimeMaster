@@ -39,6 +39,10 @@ class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSo
         return remoteDataSource.updateDate(myDate)
     }
 
+    override suspend fun updateExp(exp: Long): Result<Boolean> {
+        return remoteDataSource.updateExp(exp)
+    }
+
     override fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>> {
         return remoteDataSource.getLiveAllEvent()
     }

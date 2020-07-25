@@ -17,6 +17,7 @@ import com.max.timemaster.R
 import com.max.timemaster.data.DateCost
 import com.max.timemaster.databinding.DialogCostDetailBinding
 import com.max.timemaster.ext.getVmFactory
+import com.max.timemaster.util.UserManager
 
 
 class CostDetailDialog : AppCompatDialogFragment() {

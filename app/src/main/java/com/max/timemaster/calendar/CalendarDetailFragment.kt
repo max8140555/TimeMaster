@@ -20,6 +20,7 @@ import com.max.timemaster.R
 import com.max.timemaster.databinding.FragmentCalendarDetailBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.TimeUtil.dateToStampTime
+import com.max.timemaster.util.UserManager
 import java.lang.String.format
 import java.util.*
 
@@ -65,6 +66,7 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
             val stamp = "${viewModel.editDate.value} ${viewModel.editTime.value}"
             val event = viewModel.insertCalendar(dateToStampTime(stamp, Locale.TAIWAN))
             viewModel.postEvent(event)
+
             findNavController().navigate(NavigationDirections.navigateToCalendarFragment(returnDate = viewModel.editDate.value as String))
             viewModel.onLeft()
         }

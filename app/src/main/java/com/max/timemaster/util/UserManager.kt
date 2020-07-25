@@ -12,7 +12,10 @@ object UserManager {
     var user = User()
     var myDate = MutableLiveData<List<MyDate>>()
 
+    var exp = MutableLiveData<Long>()
+
     var addDate = MutableLiveData<String>().apply { value = "" }
+
     var allEvent = MutableLiveData<List<CalendarEvent>>()
 
     var selectTime = MutableLiveData<List<CalendarEvent>>()

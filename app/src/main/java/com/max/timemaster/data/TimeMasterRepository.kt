@@ -19,6 +19,8 @@ interface TimeMasterRepository {
 
     suspend fun updateDate(myDate: MyDate): Result<Boolean>
 
+    suspend fun updateExp(exp: Long): Result<Boolean>
+
     fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>>
 
     fun getLiveAllEventTime(): MutableLiveData<List<Long>>

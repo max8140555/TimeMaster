@@ -23,6 +23,8 @@ class MainViewModel(
     var liveMyDate = MutableLiveData<List<MyDate>>()
     var liveAllEvent = MutableLiveData<List<CalendarEvent>>()
 
+
+
     var selectAttendee = MutableLiveData<String>().apply {
         value = ""
     }
@@ -68,7 +70,34 @@ class MainViewModel(
 
 
 
+    fun updateExp(exp: Long) {
 
+        coroutineScope.launch {
+
+            _status.value = LoadApiStatus.LOADING
+
+            when (val result = timeMasterRepository.updateExp(exp)) {
+                is com.max.timemaster.data.Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadApiStatus.DONE
+                    leave(true)
+                }
+                is com.max.timemaster.data.Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadApiStatus.ERROR
+                }
+                is com.max.timemaster.data.Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadApiStatus.ERROR
+                }
+                else -> {
+                    _error.value =
+                        TimeMasterApplication.instance.getString(R.string.you_know_nothing)
+                    _status.value = LoadApiStatus.ERROR
+                }
+            }
+        }
+    }
 
 
 
