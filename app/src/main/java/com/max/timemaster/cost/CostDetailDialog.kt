@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -47,9 +48,42 @@ class CostDetailDialog : AppCompatDialogFragment() {
         }
 
         mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                viewModel.edAttendee.value = it
-                Log.d("addCost", it)
+            it?.let { attendee ->
+                viewModel.edAttendee.value = attendee
+
+                val listTitle = UserManager.dateCost.value?.filter {
+                    it.attendeeName == attendee
+                }?.map { title ->
+                    title.costTitle
+                }?.toMutableList()
+
+                listTitle?.add(0,"")
+                binding.niceSpinner.attachDataSource(listTitle)
+                binding.niceSpinner.setOnItemSelectedListener( object:
+                    AdapterView.OnItemSelectedListener {
+                    override fun onNothingSelected(parent: AdapterView<*>?) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        listTitle?.let { titleString ->
+                            viewModel.edTitle.value = titleString[position]
+                        }
+
+                    }
+
+                })
+
+
+
+
+
+
             }
         })
 

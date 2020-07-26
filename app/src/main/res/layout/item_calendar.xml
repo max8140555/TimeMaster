@@ -11,9 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="8dp"
-        android:background="#FCFCFC"
-        android:foreground="@drawable/black_frame"
-        android:foregroundTint="#EEEEEE">
+        android:background="#FCFCFC">
 
         <TextView
             android:id="@+id/view"

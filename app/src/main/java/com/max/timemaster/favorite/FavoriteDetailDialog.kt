@@ -128,8 +128,6 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
 
                 chipGroup.addView(chip)
             }
-
-
             viewModel.edContent.value = null
         }
 

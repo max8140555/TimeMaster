@@ -65,6 +65,7 @@ class CostFragment : Fragment() {
             attendee?.let {
                 viewModel.dateCost.observe(viewLifecycleOwner, Observer { dataCosts ->
                     dataCosts?.let { dateCost ->
+                        UserManager.dateCost.value = dataCosts
                         val dateSelect = dateCost.filter { date ->
                             date.attendeeName == attendee
                         }
@@ -112,62 +113,6 @@ class CostFragment : Fragment() {
         return binding.root
     }
 
-    private fun setSingleData(money: List<Long?>, labels: List<String>) {
-        val entries: MutableList<Entry> = ArrayList()
-        val lineChart = binding.lineChartView
-
-
-
-        lineChart.description.text = "時間"
-        lineChart.description.textSize = 10F
-        lineChart.xAxis.apply {
-            lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-            lineChart.xAxis.labelCount = 3
-            lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-            lineChart.xAxis.setDrawLabels(true)
-            lineChart.xAxis.setDrawGridLines(false)
-        }
-        Log.d("money", "$money")
-
-
-
-
-        for (x in 0..money.size) {
-            for (y in money.indices) {
-                if (x == y) {
-                    entries.add(Entry(x.toFloat(), money[x]!!.toFloat()))
-
-                }
-            }
-        }
-        val dataSet = LineDataSet(entries, "$")
-        dataSet.color = ContextCompat.getColor(requireContext(), R.color.A9A587)
-        dataSet.valueTextColor = ContextCompat.getColor(requireContext(), R.color.black)
-        dataSet.valueTextSize = 10F
-
-
-        // Controlling X axis
-        val xAxis = lineChart.xAxis
-        xAxis.mAxisMaximum = 5f
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-
-        // Controlling right side of y axis
-        val yAxisRight = lineChart.axisRight
-        yAxisRight.isEnabled = false
-        //***
-        // Controlling left side of y axis
-        val yAxisLeft = lineChart.axisLeft
-        yAxisLeft.granularity = 1f
-
-
-        // Setting Data
-        val data = LineData(dataSet)
-        lineChart.data = data
-        lineChart.axisLeft.setStartAtZero(true)
-        lineChart.invalidate()
-        lineChart.notifyDataSetChanged()
-        lineChart.setTouchEnabled(false)
-    }
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun setPluralData(allListDateCost: List<DateCost>) {
@@ -187,7 +132,7 @@ class CostFragment : Fragment() {
 
         lineChart.description.text = "時間"
         lineChart.description.textSize = 10F
-        lineChart.xAxis.apply { 
+        lineChart.xAxis.apply {
             lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
             lineChart.xAxis.labelCount = 3
             lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM

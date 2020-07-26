@@ -2,15 +2,16 @@ package com.max.timemaster.calendar
 
 import android.os.Bundle
 import android.util.Log
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.max.timemaster.MainViewModel
 import com.max.timemaster.NavigationDirections
 import com.max.timemaster.R
@@ -18,12 +19,13 @@ import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.databinding.FragmentCalendarBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.CurrentDayDecorator
+import com.max.timemaster.util.Logger
 import com.max.timemaster.util.TimeUtil.dateToStampTime
 import com.max.timemaster.util.TimeUtil.stampToDate
 import com.max.timemaster.util.UserManager
-
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
+import kotlinx.android.synthetic.main.fragment_calendar.*
 import org.threeten.bp.LocalDate
 import java.util.*
 
@@ -40,7 +42,7 @@ class CalendarFragment : Fragment() {
     lateinit var binding: FragmentCalendarBinding
     lateinit var mainViewModel: MainViewModel
     var previousDates = mutableListOf<Any?>()
-
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<NestedScrollView>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -153,6 +155,8 @@ class CalendarFragment : Fragment() {
             })
 
 
+
+
         // LiveData .. 取得所有Event
         /*
          viewModel.getAllEventResult()
@@ -163,12 +167,73 @@ class CalendarFragment : Fragment() {
          })
          */
 
+//
+//        binding.btnAdd.setOnClickListener {
+//            val view = binding.nestedView
+//            val operate = !view.isSelected
+//            if (operate) {
+//                behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+//
+//                Log.e("Max","open $operate")
+//            } else {
+//                behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+//                Log.e("Max","close $operate")
+//            }
+//            view.isSelected = operate
+//        }
+
+
+//        behavior = BottomSheetBehavior.from(NestedScrollView)()
+
+
 
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
+
+
+        // Identify BottomSheetBehavior to present different calendar layout
+
+        bottomSheetBehavior = BottomSheetBehavior.from<NestedScrollView>(nested_view)
+
+        bottomSheetBehavior.setBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(p0: View, p1: Float) {
+            }
+
+            override fun onStateChanged(bottomSheet: View, state: Int) {
+                print(state)
+                when (state) {
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+//                        Handler().postDelayed({changeToMonth()},200)
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+
+                    }
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                    }
+                    BottomSheetBehavior.STATE_SETTLING -> {
+                    }
+                }
+            }
+        })
+
+
+
+
+
+
+
+
+
+
 
 
         val calendar = LocalDate.now()
@@ -329,6 +394,9 @@ class CalendarFragment : Fragment() {
             mark()
         })
     }
+
+
+
 }
 
 

@@ -103,5 +103,10 @@ dependencies {
     //switch button
     implementation 'com.kyleduo.switchbutton:library:2.0.0'
 
+    //折線圖
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    //Bottom sheet
+    implementation 'com.flipboard:bottomsheet-core:1.5.3'
+    implementation 'com.flipboard:bottomsheet-commons:1.5.3' // optional
 }

@@ -3,10 +3,7 @@ package com.max.timemaster.util
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.max.timemaster.TimeMasterApplication
-import com.max.timemaster.data.CalendarEvent
-import com.max.timemaster.data.DateFavorite
-import com.max.timemaster.data.MyDate
-import com.max.timemaster.data.User
+import com.max.timemaster.data.*
 
 object UserManager {
     var user = User()
@@ -22,6 +19,7 @@ object UserManager {
 
     var dateFavorite = MutableLiveData<List<DateFavorite>>()
 
+    var dateCost = MutableLiveData<List<DateCost>>()
 
     val pref = TimeMasterApplication.instance.getSharedPreferences("FbUseEmail", Context.MODE_PRIVATE)
 
