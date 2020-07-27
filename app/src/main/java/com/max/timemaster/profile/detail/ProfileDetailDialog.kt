@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
@@ -72,14 +73,24 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
 
 
         binding.buttonPublish.setOnClickListener {
-            viewModel.addDate(imageUri)
-            viewModel.myDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-                it?.let {
-                    viewModel.myDate.value?.let { it1 -> viewModel.postAddDate(it1) }
-                    UserManager.addDate.value = viewModel.edDateName.value
-                    Log.d(" UserManager.addDate.value", "${UserManager.addDate.value}")
-                }
-            })
+
+            if (!viewModel.edDateName.value.isNullOrEmpty() && !viewModel.editDate.value.isNullOrEmpty() && !viewModel.edColor.value.isNullOrEmpty()){
+                viewModel.addDate(imageUri)
+                viewModel.myDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+                    it?.let {
+                        viewModel.myDate.value?.let { it1 -> viewModel.postAddDate(it1) }
+                        UserManager.addDate.value = viewModel.edDateName.value
+                        Log.d(" UserManager.addDate.value", "${UserManager.addDate.value}")
+                    }
+                })
+
+            }else{
+                Toast.makeText(TimeMasterApplication.instance,"請輸入完整", Toast.LENGTH_SHORT).show()
+            }
+
+
+
+
         }
 
         val adapter = ProfileColorAdapter(viewModel)

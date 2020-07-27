@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -134,7 +135,12 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
 
 
         binding.buttonPublish.setOnClickListener {
-            viewModel.postAddDateFavorite(addDateFavorite())
+            if (!viewModel.edTitle.value.isNullOrEmpty() && !viewModel.edListContent.isNullOrEmpty()){
+                viewModel.postAddDateFavorite(addDateFavorite())
+            }else{
+                Toast.makeText(TimeMasterApplication.instance,"請輸入完整", Toast.LENGTH_SHORT).show()
+            }
+
 
         }
 

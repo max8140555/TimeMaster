@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.max.timemaster.MainViewModel
 import com.max.timemaster.R
+import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.data.DateCost
 import com.max.timemaster.databinding.DialogCostDetailBinding
 import com.max.timemaster.ext.getVmFactory
@@ -44,9 +46,12 @@ class CostDetailDialog : AppCompatDialogFragment() {
         binding.viewModel = viewModel
         binding.layoutPublish.startAnimation(AnimationUtils.loadAnimation(context, R.anim.anim_slide_up))
         binding.buttonPublish.setOnClickListener {
-            addCost()?.let { it1 -> viewModel.postAddCost(it1) }
-            Log.d("addCost","${addCost()}")
+            if (!viewModel.edTitle.value.isNullOrEmpty() && !viewModel.edMoney.value.isNullOrEmpty()){
+                addCost()?.let { it1 -> viewModel.postAddCost(it1) }
 
+            }else{
+                Toast.makeText(TimeMasterApplication.instance,"請輸入完整",Toast.LENGTH_SHORT).show()
+            }
         }
         viewModel.leave.observe(viewLifecycleOwner, Observer {
             it?.let {

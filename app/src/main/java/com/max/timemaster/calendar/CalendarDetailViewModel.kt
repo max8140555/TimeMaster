@@ -171,7 +171,7 @@ class CalendarDetailViewModel(
         end: List<Long?>?
     ) {
 
-        if (start != null && end != null) {
+        if (!start.isNullOrEmpty() && !end.isNullOrEmpty()) {
 
             loop@ for (x in start.indices) {
                 for (y in end.indices) {
@@ -187,6 +187,8 @@ class CalendarDetailViewModel(
                     }
                 }
             }
+        }else{
+            isConflict.value = false
         }
     }
 
