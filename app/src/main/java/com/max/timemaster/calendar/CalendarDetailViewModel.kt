@@ -47,7 +47,13 @@ class CalendarDetailViewModel(
     var editTitle = MutableLiveData<String>()
     var editAttendee = MutableLiveData<String>()
     var editDate = MutableLiveData<String>()
-    var editTime = MutableLiveData<String>()
+    var editTime = MutableLiveData<String>().apply {
+         value = "00:00"
+    }
+
+    var editEndTime = MutableLiveData<String>().apply {
+        value = "00:00"
+    }
     var editContent = MutableLiveData<String>()
 
     override fun onCleared() {
@@ -98,12 +104,13 @@ class CalendarDetailViewModel(
 
 
 
-    fun insertCalendar(stamp: Long): CalendarEvent {
+    fun insertCalendar(stamp: Long, stampEnd: Long): CalendarEvent {
         return CalendarEvent(
             editTitle.value,
             editAttendee.value,
             editContent.value,
-            stamp
+            stamp,
+            stampEnd
         )
     }
 

@@ -19,7 +19,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutPublish"
             android:layout_width="match_parent"
-            android:layout_height="520dp"
+            android:layout_height="400dp"
             android:background="@drawable/top_circle_frame"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -48,8 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
-                android:textSize="14sp"
+                android:textSize="20sp"
                 app:layout_constraintBottom_toTopOf="@+id/select_time"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -60,43 +59,41 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:text="Time"
+                android:text="@={viewModel.editEndTime}"
+                android:textColor="@color/gray_999999"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@+id/select_time"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/select_time" />
+                app:layout_constraintStart_toEndOf="@+id/tv_end_time"
+                app:layout_constraintTop_toTopOf="@+id/select_time" />
 
             <Button
                 android:id="@+id/select_time"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="Time"
+                android:text="@={viewModel.editTime}"
+                android:textColor="@color/gray_999999"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toTopOf="@+id/title_calendar_detail"
-                app:layout_constraintEnd_toStartOf="@+id/select_end_time"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toEndOf="@+id/tv_start_time" />
 
             <com.kyleduo.switchbutton.SwitchButton
-                android:id="@+id/btn_active"
+                android:id="@+id/btn_all_day"
                 android:layout_width="60dp"
                 android:layout_height="30dp"
+                android:layout_marginEnd="16dp"
                 android:checked="false"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
                 app:kswTintColor="@color/C_265D7C"
-                app:layout_constraintTop_toTopOf="@+id/select_date"
-                tools:layout_editor_absoluteX="327dp" />
+                app:layout_constraintBottom_toBottomOf="@+id/select_end_time"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/select_end_time" />
+
             <EditText
                 android:id="@+id/content_calendar_detail"
                 android:layout_width="0dp"
-                android:layout_height="300dp"
+                android:layout_height="200dp"
                 android:background="@color/white"
                 android:gravity="top|start"
                 android:hint="Content"
@@ -126,6 +123,45 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="開始"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/select_time"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/select_time" />
+
+            <TextView
+                android:id="@+id/tv_end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="結束"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/select_time"
+                app:layout_constraintStart_toEndOf="@+id/select_time"
+                app:layout_constraintTop_toTopOf="@+id/select_time" />
+
+            <TextView
+                android:id="@+id/tv_all_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="整天"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/select_time"
+                app:layout_constraintEnd_toStartOf="@+id/btn_all_day"
+                app:layout_constraintTop_toTopOf="@+id/select_time"
+                app:layout_constraintVertical_bias="0.482" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

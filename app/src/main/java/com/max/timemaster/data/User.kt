@@ -28,7 +28,8 @@ data class CalendarEvent(
     var calendarTitle: String? = "",
     var attendee: String? = "",
     var calendarContent: String? = "",
-    var dateStamp: Long? = 0
+    var dateStamp: Long? = 0,
+    var dateEndStamp: Long? = 0
 )
 
 data class DateCost(

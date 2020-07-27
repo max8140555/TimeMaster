@@ -1,14 +1,18 @@
 package com.max.timemaster.calendar
 
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -17,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import com.max.timemaster.MainViewModel
 import com.max.timemaster.NavigationDirections
 import com.max.timemaster.R
+import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.databinding.FragmentCalendarDetailBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.TimeUtil.dateToStampTime
@@ -36,6 +41,7 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
         setStyle(DialogFragment.STYLE_NO_FRAME, R.style.PublishDialog)
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,16 +50,23 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
         binding = FragmentCalendarDetailBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-        binding.layoutPublish.startAnimation(AnimationUtils.loadAnimation(context, R.anim.anim_slide_up))
+        binding.layoutPublish.startAnimation(
+            AnimationUtils.loadAnimation(
+                context,
+                R.anim.anim_slide_up
+            )
+        )
         viewModel.editDate.value = viewModel.selectDate
 
         binding.selectDate.setOnClickListener {
             datePicker()
         }
         binding.selectTime.setOnClickListener {
-            selectTime()
+            selectTime(0)
         }
-
+        binding.selectEndTime.setOnClickListener {
+            selectTime(1)
+        }
         binding.selectDate.text = viewModel.selectDate
 
         mainViewModel.selectAttendee.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -64,19 +77,56 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
 
         binding.save.setOnClickListener {
             val stamp = "${viewModel.editDate.value} ${viewModel.editTime.value}"
-            val event = viewModel.insertCalendar(dateToStampTime(stamp, Locale.TAIWAN))
-            viewModel.postEvent(event)
+            val stampEnd = "${viewModel.editDate.value} ${viewModel.editEndTime.value}"
+            if (dateToStampTime(stamp, Locale.TAIWAN) + 1000 >= dateToStampTime(
+                    stampEnd,
+                    Locale.TAIWAN
+                ) + 1000
+            ) {
+                Toast.makeText(TimeMasterApplication.instance, "時間設定錯誤,請重新設定", Toast.LENGTH_SHORT)
+                    .show()
+            } else if (viewModel.editTitle.value.isNullOrEmpty()) {
+                Toast.makeText(TimeMasterApplication.instance, "請填入Title", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                val event = viewModel.insertCalendar(
+                    dateToStampTime(stamp, Locale.TAIWAN) + 1000,
+                    dateToStampTime(stampEnd, Locale.TAIWAN) + 1000
+                )
+                viewModel.postEvent(event)
+                findNavController().navigate(
+                    NavigationDirections.navigateToCalendarFragment(
+                        returnDate = viewModel.editDate.value as String
+                    )
+                )
+                viewModel.onLeft()
+            }
 
-            findNavController().navigate(NavigationDirections.navigateToCalendarFragment(returnDate = viewModel.editDate.value as String))
-            viewModel.onLeft()
         }
 
-
+        binding.btnAllDay.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (buttonView.isChecked) {
+                viewModel.editTime.value = "00:00"
+                viewModel.editEndTime.value = "23:59"
+                binding.selectTime.isEnabled = false
+                binding.selectEndTime.isEnabled = false
+                binding.selectTime.setBackgroundColor(Color.parseColor("#e7e7e7"))
+                binding.selectEndTime.setBackgroundColor(Color.parseColor("#e7e7e7"))
+                Log.d("edActive", "${viewModel.editTime.value}")
+                Log.d("edActive", "${viewModel.editEndTime.value}")
+            } else {
+                Log.d("edActive", "非整天")
+                binding.selectTime.isEnabled = true
+                binding.selectEndTime.isEnabled = true
+                binding.selectTime.setBackgroundColor(Color.parseColor("#FFFFFF"))
+                binding.selectEndTime.setBackgroundColor(Color.parseColor("#FFFFFF"))
+            }
+        }
 
         return binding.root
     }
 
-    fun selectTime() {
+    fun selectTime(number: Int) {
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
@@ -84,8 +134,16 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
         TimePickerDialog(activity, { _, hour, minute ->
             val newhour = format("%02d", hour)
             val newminute = format("%02d", minute)
-            binding.selectTime.text = "$newhour:$newminute"
-            viewModel.editTime.value = "$newhour:$newminute"
+            if (number == 0) {
+                binding.selectTime.text = "$newhour:$newminute"
+                viewModel.editTime.value = "$newhour:$newminute"
+                Log.e("Max", "${viewModel.editTime.value}")
+            } else {
+                binding.selectEndTime.text = "$newhour:$newminute"
+                viewModel.editEndTime.value = "$newhour:$newminute"
+                Log.e("Max", "${viewModel.editEndTime.value}")
+            }
+
         }, hour, minute, true).show()
     }
 
@@ -95,10 +153,10 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
         val dateListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
             calender.set(year, month, day)
             format("yyyy-MM-dd")
-            var newMonth = format("%02d", month)
-            var newDay = format("%02d", day)
-            binding.selectDate.text = "$year-${newMonth.toInt()+1}-$newDay"
-            viewModel.editDate.value = "$year-${newMonth.toInt()+1}-$newDay"
+            val newMonth = format("%02d", month)
+            val newDay = format("%02d", day)
+            binding.selectDate.text = "$year-${newMonth.toInt() + 1}-$newDay"
+            viewModel.editDate.value = "$year-${newMonth.toInt() + 1}-$newDay"
         }
         val selectedDate = viewModel.selectDate.split("-")
         val year = selectedDate[0]

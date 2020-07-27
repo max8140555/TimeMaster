@@ -46,7 +46,7 @@
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nested_view"
             android:layout_width="match_parent"
-            android:layout_height="540dp"
+            android:layout_height="500dp"
             android:orientation="vertical"
             app:behavior_hideable="false"
             app:behavior_peekHeight="232dp"
@@ -59,9 +59,8 @@
                 android:layout_height="0dp">
 
                 <TextView
-
                     android:layout_width="match_parent"
-                    android:layout_height="20dp"
+                    android:layout_height="30dp"
                     android:background="@drawable/black_half_top_frame"
                     android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toTopOf="@+id/recycler_calendar"
