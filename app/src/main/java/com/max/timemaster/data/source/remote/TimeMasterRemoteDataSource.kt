@@ -405,35 +405,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
         return liveData
     }
 
-    override fun getLiveAllEventTime(): MutableLiveData<List<Long>> {
-        val liveData = MutableLiveData<List<Long>>()
-
-        FirebaseFirestore.getInstance()
-            .collection(PATH_ARTICLES)
-            .whereGreaterThan("dateStamp", 0)
-            .addSnapshotListener { snapshot, exception ->
-
-                Logger.i("addSnapshotListener detect")
-
-                exception?.let {
-                    Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
-                }
-
-                val list = mutableListOf<Long>()
-
-                for (document in snapshot!!) {
-                    Logger.d(document.id + " => " + document.data)
-
-                    val stamp = document.getLong("dateStamp")
-                    if (stamp != null) {
-                        list.add(stamp)
-                    }
-                }
-
-                liveData.value = list
-            }
-        return liveData
-    }
 
     override fun getLiveUser(): MutableLiveData<User> {
         val liveData = MutableLiveData<User>()

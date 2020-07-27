@@ -27,7 +27,7 @@ interface TimeMasterDataSource {
 
     fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>>
 
-    fun getLiveAllEventTime(): MutableLiveData<List<Long>>
+
 
     fun getLiveUser(): MutableLiveData<User>
 

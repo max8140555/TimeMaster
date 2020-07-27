@@ -1,5 +1,6 @@
 package com.max.timemaster.calendar
 
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,8 @@ import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.network.LoadApiStatus
 import com.max.timemaster.util.Logger
 import com.max.timemaster.util.ServiceLocator.timeMasterRepository
+import com.max.timemaster.util.TimeUtil
+import com.max.timemaster.util.UserManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -21,6 +24,10 @@ class CalendarDetailViewModel(
     private val timeMasterRepository: TimeMasterRepository,
     val selectDate: String
 ) : ViewModel() {
+
+    val isConflict = MutableLiveData<Boolean>().apply {
+        value = null
+    }
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -38,6 +45,7 @@ class CalendarDetailViewModel(
 
     val leave: LiveData<Boolean>
         get() = _leave
+
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
@@ -48,7 +56,7 @@ class CalendarDetailViewModel(
     var editAttendee = MutableLiveData<String>()
     var editDate = MutableLiveData<String>()
     var editTime = MutableLiveData<String>().apply {
-         value = "00:00"
+        value = "00:00"
     }
 
     var editEndTime = MutableLiveData<String>().apply {
@@ -88,12 +96,14 @@ class CalendarDetailViewModel(
                     _status.value = LoadApiStatus.ERROR
                 }
                 else -> {
-                    _error.value = TimeMasterApplication.instance.getString(R.string.you_know_nothing)
+                    _error.value =
+                        TimeMasterApplication.instance.getString(R.string.you_know_nothing)
                     _status.value = LoadApiStatus.ERROR
                 }
             }
         }
     }
+
     fun leave(needRefresh: Boolean = false) {
         _leave.value = needRefresh
     }
@@ -101,7 +111,6 @@ class CalendarDetailViewModel(
     fun onLeft() {
         _leave.value = null
     }
-
 
 
     fun insertCalendar(stamp: Long, stampEnd: Long): CalendarEvent {
@@ -128,7 +137,58 @@ class CalendarDetailViewModel(
 //        document.set(data)
 //    }
 
+    fun checkInputData() {
 
+        val start = UserManager.allEvent.value?.map { it.dateStamp }
+        val end = UserManager.allEvent.value?.map { it.dateEndStamp }
+
+        val stampStart = TimeUtil.dateToStampTime(
+            "${editDate.value} ${editTime.value}",
+            Locale.TAIWAN
+        ) + 1000
+        val stampEnd = TimeUtil.dateToStampTime(
+            "${editDate.value} ${editEndTime.value}",
+            Locale.TAIWAN
+        ) + 1000
+
+        when {
+            stampStart >= stampEnd -> {
+                Toast.makeText(TimeMasterApplication.instance, "時間設定錯誤,請重新設定", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            editTitle.value.isNullOrEmpty() -> {
+                Toast.makeText(TimeMasterApplication.instance, "請填入Title", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            else -> checkIfConflict(stampStart, stampEnd, start, end)
+        }
+    }
+
+    private fun checkIfConflict(
+        stampStart: Long,
+        stampEnd: Long,
+        start: List<Long?>?,
+        end: List<Long?>?
+    ) {
+
+        if (start != null && end != null) {
+
+            loop@ for (x in start.indices) {
+                for (y in end.indices) {
+                    if (x == y) {
+                        if (stampEnd <= start[x]!! || stampStart >= end[y]!!) {
+                            if (x == start.size - 1) {
+                                isConflict.value = false
+                            }
+                        } else {
+                            isConflict.value = true
+                            break@loop
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
 }

@@ -16,6 +16,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.max.timemaster.MainViewModel
@@ -132,15 +133,18 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
         }
 
 
-
-
-
         binding.buttonPublish.setOnClickListener {
             viewModel.postAddDateFavorite(addDateFavorite())
 
         }
 
+        viewModel.leave.observe(viewLifecycleOwner, Observer {
+            it?.let {
 
+                findNavController().navigateUp()
+                viewModel.onLeft()
+            }
+        })
 
 
         return binding.root

@@ -37,7 +37,7 @@ class CostAdapter() :
         fun bind(dateCost: DateCost) {
             binding.title.text = dateCost.costTitle
             binding.time.text = dateCost.time?.let { stampToDateNoYear(it, Locale.TAIWAN) }
-            binding.price.text = "${dateCost.costPrice} 元"
+            binding.price.text = "${dateCost.costPrice}元"
             val color = UserManager.myDate.value?.filter {
                 it.name == dateCost.attendeeName
             }!![0].color

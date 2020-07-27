@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.storage.FirebaseStorage
 import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
@@ -98,7 +99,13 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
                 binding.editBirthday.setTextColor(Color.parseColor("#$it"))
             }
         })
+        viewModel.leave.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            it?.let {
 
+                findNavController().navigateUp()
+                viewModel.onLeft()
+            }
+        })
 
         return binding.root
     }

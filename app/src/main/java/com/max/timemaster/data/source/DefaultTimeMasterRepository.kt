@@ -47,9 +47,7 @@ class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSo
         return remoteDataSource.getLiveAllEvent()
     }
 
-    override fun getLiveAllEventTime(): MutableLiveData<List<Long>> {
-        return remoteDataSource.getLiveAllEventTime()
-    }
+
 
     override fun getLiveUser(): MutableLiveData<User> {
         return remoteDataSource.getLiveUser()

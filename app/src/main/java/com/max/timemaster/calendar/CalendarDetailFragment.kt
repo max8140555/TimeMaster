@@ -24,6 +24,7 @@ import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.databinding.FragmentCalendarDetailBinding
 import com.max.timemaster.ext.getVmFactory
+import com.max.timemaster.util.TimeUtil
 import com.max.timemaster.util.TimeUtil.dateToStampTime
 import com.max.timemaster.util.UserManager
 import java.lang.String.format
@@ -76,31 +77,9 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
         })
 
         binding.save.setOnClickListener {
-            val stamp = "${viewModel.editDate.value} ${viewModel.editTime.value}"
-            val stampEnd = "${viewModel.editDate.value} ${viewModel.editEndTime.value}"
-            if (dateToStampTime(stamp, Locale.TAIWAN) + 1000 >= dateToStampTime(
-                    stampEnd,
-                    Locale.TAIWAN
-                ) + 1000
-            ) {
-                Toast.makeText(TimeMasterApplication.instance, "時間設定錯誤,請重新設定", Toast.LENGTH_SHORT)
-                    .show()
-            } else if (viewModel.editTitle.value.isNullOrEmpty()) {
-                Toast.makeText(TimeMasterApplication.instance, "請填入Title", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                val event = viewModel.insertCalendar(
-                    dateToStampTime(stamp, Locale.TAIWAN) + 1000,
-                    dateToStampTime(stampEnd, Locale.TAIWAN) + 1000
-                )
-                viewModel.postEvent(event)
-                findNavController().navigate(
-                    NavigationDirections.navigateToCalendarFragment(
-                        returnDate = viewModel.editDate.value as String
-                    )
-                )
-                viewModel.onLeft()
-            }
+
+
+            viewModel.checkInputData()
 
         }
 
@@ -122,6 +101,44 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
                 binding.selectEndTime.setBackgroundColor(Color.parseColor("#FFFFFF"))
             }
         }
+
+        viewModel.isConflict.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            it?.let { isConflict ->
+                Log.e("Max","$isConflict")
+                if (isConflict == true) {
+                    Toast.makeText(
+                        TimeMasterApplication.instance,
+                        "想成為時間大師，你還太嫩了！！",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    val stampStart = dateToStampTime(
+                        "${viewModel.editDate.value} ${viewModel.editTime.value}",
+                        Locale.TAIWAN
+                    ) + 1000
+                    val stampEnd = dateToStampTime(
+                        "${viewModel.editDate.value} ${viewModel.editEndTime.value}",
+                        Locale.TAIWAN
+                    ) + 1000
+                    val event = viewModel.insertCalendar(
+                        stampStart,
+                        stampEnd
+                    )
+                    viewModel.postEvent(event)
+                }
+            }
+        })
+
+        viewModel.leave.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            it?.let {
+                findNavController().navigate(
+                    NavigationDirections.navigateToCalendarFragment(
+                        returnDate = viewModel.editDate.value as String
+                    )
+                )
+                viewModel.onLeft()
+            }
+        })
 
         return binding.root
     }

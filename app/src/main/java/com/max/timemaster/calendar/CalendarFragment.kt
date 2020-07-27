@@ -167,23 +167,6 @@ class CalendarFragment : Fragment() {
          })
          */
 
-//
-//        binding.btnAdd.setOnClickListener {
-//            val view = binding.nestedView
-//            val operate = !view.isSelected
-//            if (operate) {
-//                behavior?.state = BottomSheetBehavior.STATE_EXPANDED
-//
-//                Log.e("Max","open $operate")
-//            } else {
-//                behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
-//                Log.e("Max","close $operate")
-//            }
-//            view.isSelected = operate
-//        }
-
-
-//        behavior = BottomSheetBehavior.from(NestedScrollView)()
 
 
 
@@ -241,7 +224,7 @@ class CalendarFragment : Fragment() {
 
         widget = view?.findViewById(R.id.calendarView) as MaterialCalendarView
 
-        viewModel.getAllEventTimeResult()
+//        viewModel.getAllEventTimeResult()
 
         UserManager.allEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {

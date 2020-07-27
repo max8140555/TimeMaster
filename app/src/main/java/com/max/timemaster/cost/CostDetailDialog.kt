@@ -13,6 +13,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.max.timemaster.MainViewModel
 import com.max.timemaster.R
 import com.max.timemaster.data.DateCost
@@ -45,39 +46,47 @@ class CostDetailDialog : AppCompatDialogFragment() {
         binding.buttonPublish.setOnClickListener {
             addCost()?.let { it1 -> viewModel.postAddCost(it1) }
             Log.d("addCost","${addCost()}")
+
         }
+        viewModel.leave.observe(viewLifecycleOwner, Observer {
+            it?.let {
+
+                findNavController().navigateUp()
+                viewModel.onLeft()
+            }
+        })
 
         mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {
             it?.let { attendee ->
                 viewModel.edAttendee.value = attendee
 
-                val listTitle = UserManager.dateCost.value?.filter {
-                    it.attendeeName == attendee
-                }?.map { title ->
-                    title.costTitle
-                }?.toMutableList()
-
-                listTitle?.add(0,"")
-                binding.niceSpinner.attachDataSource(listTitle)
-                binding.niceSpinner.setOnItemSelectedListener( object:
-                    AdapterView.OnItemSelectedListener {
-                    override fun onNothingSelected(parent: AdapterView<*>?) {
-                        TODO("Not yet implemented")
-                    }
-
-                    override fun onItemSelected(
-                        parent: AdapterView<*>?,
-                        view: View?,
-                        position: Int,
-                        id: Long
-                    ) {
-                        listTitle?.let { titleString ->
-                            viewModel.edTitle.value = titleString[position]
-                        }
-
-                    }
-
-                })
+//                val listTitle = UserManager.dateCost.value?.filter {
+//                    it.attendeeName == attendee
+//                }?.map { title ->
+//                    title.costTitle
+//                }?.toMutableList()
+//
+//                listTitle?.add(0,"")
+//                binding.niceSpinner.attachDataSource(listTitle)
+//                binding.niceSpinner.setOnItemSelectedListener( object:
+//                    AdapterView.OnItemSelectedListener {
+//                    override fun onNothingSelected(parent: AdapterView<*>?) {
+//                        TODO("Not yet implemented")
+//                    }
+//
+//                    override fun onItemSelected(
+//                        parent: AdapterView<*>?,
+//                        view: View?,
+//                        position: Int,
+//                        id: Long
+//                    ) {
+//                        listTitle?.let { titleString ->
+//                            viewModel.edTitle.value = titleString[position]
+//                        }
+//
+//                    }
+//
+//                })
 
 
 

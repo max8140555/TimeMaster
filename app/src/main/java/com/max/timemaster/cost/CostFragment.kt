@@ -95,7 +95,9 @@ class CostFragment : Fragment() {
                             }
 
                             setPluralData(allDateCostList)
-                            adapter.submitList(allDateCostList)
+                            adapter.submitList(allDateCostList.sortedByDescending {
+                                it.time
+                            })
                             binding.btnAdd.visibility = GONE
 
                         } else {
@@ -123,10 +125,10 @@ class CostFragment : Fragment() {
         Log.e("Max","$cal")
 
         val labels: MutableList<String>
-                = mutableListOf(stampToDateNoYear(cal-86400000*5, Locale.TAIWAN)
-            , stampToDateNoYear(cal-86400000*4, Locale.TAIWAN)
+                = mutableListOf(stampToDateNoYear(cal-86400000*4, Locale.TAIWAN)
             , stampToDateNoYear(cal-86400000*3, Locale.TAIWAN)
             , stampToDateNoYear(cal-86400000*2, Locale.TAIWAN)
+            , stampToDateNoYear(cal-86400000, Locale.TAIWAN)
             , stampToDateNoYear(cal, Locale.TAIWAN))
 
 

@@ -54,9 +54,16 @@ class CalendarAdapter() :
 
             val selectedDate = calendarEvent.dateStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
             val splitTime = selectedDate?.split(" ")
-            val date = splitTime?.get(0)  // 年/月/日
+
             val time = splitTime?.get(1)  // 時:分+
             binding.time.text = time.toString()
+
+            val selectedEndDate = calendarEvent.dateEndStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
+            val splitEndTime = selectedEndDate?.split(" ")
+
+            val endTime = splitEndTime?.get(1)  // 時:分+
+            binding.time.text = time.toString()
+            binding.endTime.text = endTime.toString()
             binding.content.text = calendarEvent.calendarContent
 
 

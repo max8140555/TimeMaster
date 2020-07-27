@@ -46,3 +46,5 @@ data class DateFavorite(
     var favoriteTitle: String? = "",
     var favoriteContent: List<String>? = listOf()
 )
+
+

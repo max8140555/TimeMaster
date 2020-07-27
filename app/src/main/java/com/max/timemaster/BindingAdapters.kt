@@ -98,14 +98,16 @@ fun bindLevel(textView: TextView, exp: Long?) {
 fun bindTitle(textView: TextView, exp: Long?) {
     exp?.let {
         when {
-            exp / 100 + 1 >= 3 -> {
+            exp / 100 + 1 in 3..6 -> {
                 textView.text = TimeMasterApplication.instance.getString(R.string.level3_6)
             }
             exp / 100 + 1 >= 7 -> {
                 textView.text = TimeMasterApplication.instance.getString(R.string.level7_up)
+                textView.textSize = 12F
             }
             else -> {
                 textView.text = TimeMasterApplication.instance.getString(R.string.level1_2)
+
             }
         }
 

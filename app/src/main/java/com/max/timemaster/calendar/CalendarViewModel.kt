@@ -1,12 +1,13 @@
 package com.max.timemaster.calendar
 
-import android.util.Log
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.data.CalendarEvent
+
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.data.User
 import com.max.timemaster.network.LoadApiStatus
@@ -27,7 +28,8 @@ class CalendarViewModel(
         get() = _selectEvent
 
     var liveAllEvent = MutableLiveData<List<CalendarEvent>>()
-    var liveAllEventTime = MutableLiveData<List<Long>>()
+
+
 
     var selectAttendee = MutableLiveData<String>().apply {
         selectAttendeeArg?.let { value = it }
@@ -116,10 +118,6 @@ class CalendarViewModel(
     }
 
 
-    fun getAllEventTimeResult() {
-        liveAllEventTime = timeMasterRepository.getLiveAllEventTime()
-        _status.value = LoadApiStatus.DONE
-        _refreshStatus.value = false
-    }
+
 
 }

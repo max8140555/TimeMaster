@@ -95,5 +95,7 @@ class ProfileDetailViewModel(private val timeMasterRepository: TimeMasterReposit
     fun leave(needRefresh: Boolean = false) {
         _leave.value = needRefresh
     }
-
+    fun onLeft() {
+        _leave.value = null
+    }
 }

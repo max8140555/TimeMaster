@@ -73,4 +73,8 @@ class CostDetailDialogViewModel( private val timeMasterRepository: TimeMasterRep
         _leave.value = needRefresh
     }
 
+    fun onLeft() {
+        _leave.value = null
+    }
+
 }
