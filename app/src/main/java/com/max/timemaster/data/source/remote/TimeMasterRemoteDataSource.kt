@@ -4,6 +4,7 @@ package com.max.timemaster.data.source.remote
 import android.icu.util.Calendar
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
@@ -86,6 +87,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                 if (task.isSuccessful) {
                                     Logger.i("postEvent: $calendarEvent")
                                     UserManager.exp.value = UserManager.exp.value?.plus(10)
+                                    Toast.makeText(TimeMasterApplication.instance,"Exp +10",Toast.LENGTH_SHORT).show()
                                     continuation.resume(Result.Success(true))
                                 } else {
                                     task.exception?.let {
@@ -169,6 +171,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                         Logger.i("postMyDate: $myDate")
 
                                         UserManager.exp.value = UserManager.exp.value?.plus(10)
+                                        Toast.makeText(TimeMasterApplication.instance,"Exp +10",Toast.LENGTH_SHORT).show()
 
                                         continuation.resume(Result.Success(true))
 
@@ -214,6 +217,8 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                     if (task.isSuccessful) {
                                         Logger.i("postdateFavorite: $dateFavorite")
                                         UserManager.exp.value = UserManager.exp.value?.plus(10)
+                                        Toast.makeText(TimeMasterApplication.instance,"Exp +10",Toast.LENGTH_SHORT).show()
+
                                         continuation.resume(Result.Success(true))
                                     } else {
                                         task.exception?.let {
@@ -249,6 +254,8 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                         if (task.isSuccessful) {
                                             Logger.i("postdateFavorite: $dateFavorite")
                                             UserManager.exp.value = UserManager.exp.value?.plus(10)
+                                            Toast.makeText(TimeMasterApplication.instance,"Exp +10",Toast.LENGTH_SHORT).show()
+
                                             continuation.resume(Result.Success(true))
                                         } else {
                                             task.exception?.let {
@@ -288,6 +295,8 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                 if (task.isSuccessful) {
                                     Logger.i("postEvent: $dateCost")
                                     UserManager.exp.value = UserManager.exp.value?.plus(10)
+                                    Toast.makeText(TimeMasterApplication.instance,"Exp +10",Toast.LENGTH_SHORT).show()
+
                                     continuation.resume(Result.Success(true))
                                 } else {
                                     task.exception?.let {

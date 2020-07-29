@@ -107,7 +107,7 @@
                 android:id="@+id/prompt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="請先到個人頁面，增加對象喔！"
+                android:text=""
                 android:layout_marginBottom="8dp"
                 android:textSize="14sp"
                 android:visibility="gone"

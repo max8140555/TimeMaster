@@ -80,6 +80,7 @@ class CalendarFragment : Fragment() {
 
                     if (listDate.isNullOrEmpty()){
                         binding.prompt.visibility = View.VISIBLE
+                        binding.prompt.text = " 請先到個人頁面，增加對象喔！"
                         binding.imagePrompt.visibility = View.VISIBLE
                         binding.imagePrompt.setImageResource(R.drawable.icon_profile)
                     }else{
@@ -92,9 +93,8 @@ class CalendarFragment : Fragment() {
                             binding.prompt.visibility = View.GONE
                             binding.imagePrompt.visibility =View.GONE
                         }
-
-
                     }
+
 //                    adapter.submitList(viewModel.selectEvent.value)
                     UserManager.selectTime.value = viewModel.selectEvent.value
 
@@ -119,11 +119,18 @@ class CalendarFragment : Fragment() {
                                 }
                             }
 
+
                             adapter.submitList(list.sortedBy { it.dateStamp })
                         } else {
 
                             val x = UserManager.selectTime.value?.filter { date ->
                                 date.attendee == select
+                            }
+                            if (x.isNullOrEmpty()){
+                                binding.imagePrompt.visibility = View.VISIBLE
+                                binding.prompt.visibility = View.VISIBLE
+                                binding.imagePrompt.setImageResource(R.drawable.icon_add)
+                                binding.prompt.text = "點選按鈕，新增行程吧！"
                             }
                             Log.d("viewModel22", "${UserManager.selectTime.value}")
                             Log.d("viewModel2", "$x")
@@ -160,6 +167,7 @@ class CalendarFragment : Fragment() {
                             }
                         }
                     }
+
                     adapter.submitList(list.sortedBy { it.dateStamp })
 
                     binding.btnAdd.visibility = View.GONE
@@ -168,6 +176,12 @@ class CalendarFragment : Fragment() {
                     val selectedPersonEvents = UserManager.selectTime.value?.filter {
                         it.attendee == select
                     }
+                    if (selectedPersonEvents.isNullOrEmpty()){
+                        binding.imagePrompt.visibility = View.VISIBLE
+                        binding.imagePrompt.setImageResource(R.drawable.icon_add)
+                        binding.prompt.text = "點選按鈕，新增行程吧！"
+                    }
+
                     adapter.submitList(selectedPersonEvents)
 
                     binding.btnAdd.visibility = View.VISIBLE
