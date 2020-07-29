@@ -75,7 +75,7 @@ class FavoriteDetailDialogViewModel(private var timeMasterRepository: TimeMaster
         }
     }
 
-    private fun leave(needRefresh: Boolean = false) {
+     fun leave(needRefresh: Boolean = false) {
         _leave.value = needRefresh
     }
     fun onLeft() {

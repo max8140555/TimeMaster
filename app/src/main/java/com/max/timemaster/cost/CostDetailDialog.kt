@@ -44,6 +44,7 @@ class CostDetailDialog : AppCompatDialogFragment() {
         binding = DialogCostDetailBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+
         binding.layoutPublish.startAnimation(AnimationUtils.loadAnimation(context, R.anim.anim_slide_up))
         binding.buttonPublish.setOnClickListener {
             if (!viewModel.edTitle.value.isNullOrEmpty() && !viewModel.edMoney.value.isNullOrEmpty()){

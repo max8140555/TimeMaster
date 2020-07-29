@@ -32,6 +32,9 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+
+
         btn_login.setOnClickListener {
             facebookLogin()
         }
@@ -54,6 +57,19 @@ class LoginActivity : AppCompatActivity() {
                 override fun onSuccess(result: LoginResult?) {
                     //Second step
                     handleFacebookAccessToken(result?.accessToken)
+//                    try {
+//                        val info = packageManager.getPackageInfo(
+//                            "com.max.timemaster", PackageManager.GET_SIGNATURES
+//                        )
+//                        for (signature in info.signatures) {
+//                            val md: MessageDigest = MessageDigest.getInstance("SHA")
+//                            md.update(signature.toByteArray())
+//                            Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+//                        }
+//                    } catch (e: PackageManager.NameNotFoundException) {
+//                    } catch (e: NoSuchAlgorithmException) {
+//                    }
+
                 }
 
                 override fun onCancel() {
