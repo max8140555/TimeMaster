@@ -127,4 +127,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx:17.4.4'
 
     implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
+
+    //Lottie 動畫
+    implementation 'com.airbnb.android:lottie:3.4.1'
 }

@@ -53,6 +53,7 @@
                 android:foregroundTint="#EEEEEE"
                 android:gravity="center"
                 android:hint="Name"
+                android:textColorHint="@color/gray_999999"
                 android:text="@={viewModel.edDateName}"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toTopOf="@+id/edit_birthday"

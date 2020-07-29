@@ -1,6 +1,7 @@
 package com.max.timemaster.calendar
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,7 @@ import com.max.timemaster.R
 import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.databinding.FragmentCalendarBinding
 import com.max.timemaster.ext.getVmFactory
+import com.max.timemaster.network.LoadApiStatus
 import com.max.timemaster.util.CurrentDayDecorator
 import com.max.timemaster.util.Logger
 import com.max.timemaster.util.TimeUtil.dateToStampTime
@@ -52,7 +54,7 @@ class CalendarFragment : Fragment() {
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         binding = FragmentCalendarBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-
+        binding.viewModel = viewModel
         viewModel.selectDate.value = LocalDate.now().toString()
 
         binding.btnAdd.setOnClickListener {
@@ -156,8 +158,6 @@ class CalendarFragment : Fragment() {
             })
 
 
-
-
         // LiveData .. 取得所有Event
         /*
          viewModel.getAllEventResult()
@@ -167,7 +167,19 @@ class CalendarFragment : Fragment() {
              }
          })
          */
+        viewModel.status.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            it?.let{
+                if (viewModel.status.value == LoadApiStatus.LOADING){
+                    binding.lottieLoading.visibility = View.VISIBLE
+                }else{
+                    Handler().postDelayed({
+                        binding.lottieLoading.visibility = View.GONE
+                    },1000)
 
+
+                }
+            }
+        })
 
 
 
@@ -208,16 +220,6 @@ class CalendarFragment : Fragment() {
                 }
             }
         })
-
-
-
-
-
-
-
-
-
-
 
 
         val calendar = LocalDate.now()
@@ -274,7 +276,7 @@ class CalendarFragment : Fragment() {
                     it.dateStamp
                 }
                 if (event != null) {
-                    for (i in event){
+                    for (i in event) {
                         listAllEvent.add(i)
                     }
                 }
