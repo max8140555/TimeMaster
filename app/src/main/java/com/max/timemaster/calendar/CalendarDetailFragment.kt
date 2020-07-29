@@ -89,8 +89,8 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
                 viewModel.editEndTime.value = "23:59"
                 binding.selectTime.isEnabled = false
                 binding.selectEndTime.isEnabled = false
-                binding.selectTime.setBackgroundColor(Color.parseColor("#e7e7e7"))
-                binding.selectEndTime.setBackgroundColor(Color.parseColor("#e7e7e7"))
+                binding.selectTime.setBackgroundResource(R.drawable.bg_publish)
+                binding.selectEndTime.setBackgroundResource(R.drawable.bg_publish)
                 Log.d("edActive", "${viewModel.editTime.value}")
                 Log.d("edActive", "${viewModel.editEndTime.value}")
             } else {
