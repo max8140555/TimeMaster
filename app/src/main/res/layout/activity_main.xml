@@ -4,7 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="com.max.timemaster.util.CurrentFragmentType"/>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.max.timemaster.MainViewModel" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -20,18 +24,27 @@
             android:layout_height="match_parent"
             tools:context=".MainActivity">
 
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@color/white"
                 android:elevation="@dimen/elevation_all"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:navigationIcon="@drawable/toolbar_menu">
+                app:navigationIcon="@drawable/toolbar_menu" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/black"
+                android:text="@{viewModel.currentFragmentType.value}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/toolbar"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="MaxxXXXX" />
 
-            </androidx.appcompat.widget.Toolbar>
 
             <fragment
                 android:id="@+id/myNavHostFragment"

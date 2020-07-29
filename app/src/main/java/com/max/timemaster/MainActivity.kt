@@ -12,12 +12,14 @@ import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import app.appworks.school.stylish.ext.getVmFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.max.timemaster.databinding.ActivityMainBinding
+import com.max.timemaster.util.CurrentFragmentType
 import com.max.timemaster.util.UserManager
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -63,13 +65,24 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomNav() {
         binding.bottomNavView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
     }
+    private fun setupNavController() {
+        findNavController(R.id.myNavHostFragment).addOnDestinationChangedListener { navController: NavController, _: NavDestination, _: Bundle? ->
+            viewModel.currentFragmentType.value = when (navController.currentDestination?.id) {
+                R.id.calendarFragment -> CurrentFragmentType.CALENDAR
+                R.id.favoriteFragment -> CurrentFragmentType.FAVORITE
+                R.id.costFragment -> CurrentFragmentType.COST
+                R.id.profileFragment -> CurrentFragmentType.PROFILE
 
+                else -> viewModel.currentFragmentType.value
+            }
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         navController = findNavController(R.id.myNavHostFragment)
         binding.lifecycleOwner = this
-
+        binding.viewModel = viewModel
 
 
 
@@ -92,8 +105,8 @@ class MainActivity : AppCompatActivity() {
         viewModel.liveMyDate.observe(this, Observer {
             it?.let {
                 UserManager.addDate.value?.let { savedDate ->
-                        UserManager.myDate.value = viewModel.liveMyDate.value
-                        setupDrawer()
+                    UserManager.myDate.value = viewModel.liveMyDate.value
+                    setupDrawer()
                 }
             }
         })
@@ -109,6 +122,7 @@ class MainActivity : AppCompatActivity() {
 
 
         setupBottomNav()
+        setupNavController()
     }
 
     /**
@@ -148,12 +162,13 @@ class MainActivity : AppCompatActivity() {
         val menu = m.addSubMenu("時間管理").setIcon(R.drawable.ic_home_black_24dp)
 
 
-        menu.add("All").setIcon(R.drawable.baseline_favorite_border_black_36).setOnMenuItemClickListener {
-            Log.d("zxc", "All")
-            viewModel.selectAttendee.value = ""
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-            return@setOnMenuItemClickListener true
-        }
+        menu.add("All").setIcon(R.drawable.baseline_favorite_border_black_36)
+            .setOnMenuItemClickListener {
+                Log.d("zxc", "All")
+                viewModel.selectAttendee.value = ""
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+                return@setOnMenuItemClickListener true
+            }
         val s = UserManager.myDate.value?.filter {
             it.active == true
         }
@@ -162,7 +177,7 @@ class MainActivity : AppCompatActivity() {
 //            }
 
 
-        if (s != null ) {
+        if (s != null) {
             for (i in s) {
                 menu.add(i.name).setIcon(R.drawable.baseline_favorite_border_black_36)
                     .setOnMenuItemClickListener {

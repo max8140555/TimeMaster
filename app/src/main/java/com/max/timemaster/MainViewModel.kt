@@ -9,6 +9,7 @@ import com.max.timemaster.data.MyDate
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.data.User
 import com.max.timemaster.network.LoadApiStatus
+import com.max.timemaster.util.CurrentFragmentType
 import com.max.timemaster.util.ServiceLocator.timeMasterRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +29,9 @@ class MainViewModel(
     var selectAttendee = MutableLiveData<String>().apply {
         value = ""
     }
+
+    // Record current fragment to support data binding
+    val currentFragmentType = MutableLiveData<CurrentFragmentType>()
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
