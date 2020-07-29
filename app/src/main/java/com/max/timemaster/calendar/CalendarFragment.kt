@@ -76,8 +76,25 @@ class CalendarFragment : Fragment() {
                     mark()
                 })
 
-                mainViewModel.liveMyDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+                mainViewModel.liveMyDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer { listDate ->
 
+                    if (listDate.isNullOrEmpty()){
+                        binding.prompt.visibility = View.VISIBLE
+                        binding.imagePrompt.visibility = View.VISIBLE
+                        binding.imagePrompt.setImageResource(R.drawable.icon_profile)
+                    }else{
+                        if (viewModel.selectEvent.value.isNullOrEmpty()){
+                            binding.prompt.visibility = View.VISIBLE
+                            binding.imagePrompt.visibility = View.VISIBLE
+                            binding.prompt.text = "點左上角按鈕，選擇對象新增行程吧！"
+                            binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
+                        }else{
+                            binding.prompt.visibility = View.GONE
+                            binding.imagePrompt.visibility =View.GONE
+                        }
+
+
+                    }
 //                    adapter.submitList(viewModel.selectEvent.value)
                     UserManager.selectTime.value = viewModel.selectEvent.value
 
@@ -175,8 +192,6 @@ class CalendarFragment : Fragment() {
                     Handler().postDelayed({
                         binding.lottieLoading.visibility = View.GONE
                     },1000)
-
-
                 }
             }
         })
