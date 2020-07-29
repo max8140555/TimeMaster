@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
@@ -82,9 +83,12 @@ class ProfileEditDialog : AppCompatDialogFragment() {
         binding.btnActive.setOnCheckedChangeListener { buttonView, isChecked ->
             if (buttonView.isChecked){
                 viewModel.edActive.value = true
+                Toast.makeText(TimeMasterApplication.instance,"對象追蹤中",Toast.LENGTH_SHORT).show()
                 Log.d("edActive", "${viewModel.edActive.value}")
             }else{
                 viewModel.edActive.value = false
+                Toast.makeText(TimeMasterApplication.instance,"對象加入封存",Toast.LENGTH_SHORT).show()
+
                 Log.d("edActive", "${viewModel.edActive.value}")
             }
         }
