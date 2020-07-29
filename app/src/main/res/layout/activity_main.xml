@@ -30,6 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:elevation="@dimen/elevation_all"
+                app:layout_constraintBottom_toTopOf="@+id/myNavHostFragment"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:navigationIcon="@drawable/toolbar_menu" />
@@ -40,11 +41,24 @@
                 android:layout_marginTop="16dp"
                 android:textColor="@color/black"
                 android:text="@{viewModel.currentFragmentType.value}"
+                android:textStyle="bold"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/toolbar"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="MaxxXXXX" />
+                tools:text="項目" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@={viewModel.selectAttendee}"
+                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.PROFILE || viewModel.currentFragmentType == CurrentFragmentType.FAVORITE ? View.GONE : View.VISIBLE}"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Max" />
 
             <fragment
                 android:id="@+id/myNavHostFragment"

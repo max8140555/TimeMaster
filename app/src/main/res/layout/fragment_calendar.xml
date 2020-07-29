@@ -46,10 +46,10 @@
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nested_view"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             app:behavior_hideable="false"
-            app:behavior_peekHeight="232dp"
+            app:behavior_peekHeight="148dp"
             android:background="@color/white"
 
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -85,6 +85,8 @@
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             tools:context=".calendar.CalendarFragment"
             tools:ignore="MissingDefaultResource">
 
