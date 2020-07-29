@@ -42,30 +42,42 @@
 
     <action
         android:id="@+id/navigate_to_favoriteFragment"
-        app:destination="@id/favoriteFragment" />
+        app:destination="@id/favoriteFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true"/>
     <action
         android:id="@+id/navigate_to_costFragment"
-        app:destination="@id/costFragment" />
+        app:destination="@id/costFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true"/>
     <action
         android:id="@+id/navigate_to_profileFragment"
-        app:destination="@id/profileFragment" />
+        app:destination="@id/profileFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true"/>
     <action
         android:id="@+id/navigate_to_calendarDetailFragment"
         app:destination="@id/calendarDetailFragment" />
     <action
         android:id="@+id/navigate_to_calendarFragment"
-        app:destination="@id/calendarFragment" />
+        app:destination="@id/calendarFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true"/>
 
     <action android:id="@+id/navigate_to_favoriteDetailDialog"
-        app:destination="@id/favoriteDetailDialog" />
+        app:destination="@id/favoriteDetailDialog"
+        />
 
     <action android:id="@+id/navigate_to_costDetailDialog"
-        app:destination="@id/costDetailDialog" />
+        app:destination="@id/costDetailDialog"
+        />
 
     <action android:id="@+id/navigate_to_profileDetailFragment"
-        app:destination="@id/profileDetailFragment" />
+        app:destination="@id/profileDetailFragment"
+        />
     <action android:id="@+id/navigate_to_profileEditDialog"
-        app:destination="@id/profileEditDialog"/>
+        app:destination="@id/profileEditDialog"
+      />
 
     <dialog
         android:id="@+id/calendarDetailFragment"
