@@ -60,7 +60,15 @@ class FavoriteFragment : Fragment() {
                             date.attendeeName == attendee
                         }
 
-
+                        if (dateSelect.isNullOrEmpty()){
+                            binding.imagePrompt.setImageResource(R.drawable.icon_add)
+                            binding.prompt.text = "點擊按鈕紀錄對象喜歡什麼吧！"
+                            binding.imagePrompt.visibility = VISIBLE
+                            binding.prompt.visibility = VISIBLE
+                        }else{
+                            binding.imagePrompt.visibility = GONE
+                            binding.prompt.visibility = GONE
+                        }
 
                         if (attendee.isNotEmpty()) {
 
@@ -81,6 +89,7 @@ class FavoriteFragment : Fragment() {
                                                 Locale.TAIWAN
                                             )
                                         }
+
                                     bindProfileImage(binding.imageProfileAvatar, list[0].image)
                                 }
                             }
@@ -111,7 +120,15 @@ class FavoriteFragment : Fragment() {
                                     }
                                 }
                             }
-
+                            if (list.isNullOrEmpty()){
+                                binding.prompt.text = "點左上角按鈕，選擇對象紀錄他喜歡什麼吧！"
+                                binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
+                                binding.imagePrompt.visibility = VISIBLE
+                                binding.prompt.visibility = VISIBLE
+                            }else{
+                                binding.imagePrompt.visibility = GONE
+                                binding.prompt.visibility = GONE
+                            }
                             adapter.submitList(list)
                             adapter.notifyDataSetChanged()
 

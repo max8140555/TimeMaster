@@ -57,6 +57,7 @@ class LoginActivity : AppCompatActivity() {
                 override fun onSuccess(result: LoginResult?) {
                     //Second step
                     handleFacebookAccessToken(result?.accessToken)
+
 //                    try {
 //                        val info = packageManager.getPackageInfo(
 //                            "com.max.timemaster", PackageManager.GET_SIGNATURES
@@ -95,7 +96,10 @@ class LoginActivity : AppCompatActivity() {
                     UserManager.user.image = "https://graph.facebook.com/$userId/picture?height=500"
                     moveMainPage(task.result?.user)
                     UserManager.userEmail = task.result?.user?.email.toString()
-
+Log.e("Max","${UserManager.userEmail} \n ${task.result?.user?.email.toString()}\n" +
+        " ${task.result?.user}\n" +
+        " ${task.result}\n" +
+        " ${task}")
                     UserManager.user.email = task.result?.user?.email.toString()
                     UserManager.user.name = task.result?.user?.displayName.toString()
 

@@ -93,6 +93,15 @@ class CostFragment : Fragment() {
                                     }
                                 }
                             }
+                            if (allDateCostList.isNullOrEmpty()){
+                                binding.prompt.text = "點左上角按鈕，選擇對象新增花費吧！"
+                                binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
+                                binding.imagePrompt.visibility = VISIBLE
+                                binding.prompt.visibility = VISIBLE
+                            }else{
+                                binding.imagePrompt.visibility = GONE
+                                binding.prompt.visibility = GONE
+                            }
 
                             setPluralData(allDateCostList)
                             adapter.submitList(allDateCostList.sortedByDescending {
@@ -103,6 +112,15 @@ class CostFragment : Fragment() {
                         } else {
 
                             // Selected Date
+                            if (dateSelect.isNullOrEmpty()){
+                                binding.imagePrompt.setImageResource(R.drawable.icon_add)
+                                binding.prompt.text = "點擊按鈕紀錄你為他花多錢吧！"
+                                binding.imagePrompt.visibility = VISIBLE
+                                binding.prompt.visibility = VISIBLE
+                            }else{
+                                binding.imagePrompt.visibility = GONE
+                                binding.prompt.visibility = GONE
+                            }
                             setPluralData(dateSelect)
                             adapter.submitList(dateSelect)
                             binding.btnAdd.visibility = VISIBLE
