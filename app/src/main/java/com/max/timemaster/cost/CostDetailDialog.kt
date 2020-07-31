@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.max.timemaster.MainViewModel
+import com.max.timemaster.NavigationDirections
 import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.data.DateCost
@@ -51,7 +52,8 @@ class CostDetailDialog : AppCompatDialogFragment() {
                 addCost()?.let { it1 -> viewModel.postAddCost(it1) }
 
             }else{
-                Toast.makeText(TimeMasterApplication.instance,"請輸入完整",Toast.LENGTH_SHORT).show()
+
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog("allNull"))
             }
         }
         viewModel.leave.observe(viewLifecycleOwner, Observer {

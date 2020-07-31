@@ -170,9 +170,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                     if (task.isSuccessful) {
                                         Logger.i("postMyDate: $myDate")
 
-                                        UserManager.exp.value = UserManager.exp.value?.plus(10)
-                                        Toast.makeText(TimeMasterApplication.instance,"Exp +10",Toast.LENGTH_SHORT).show()
-
                                         continuation.resume(Result.Success(true))
 
                                     } else {

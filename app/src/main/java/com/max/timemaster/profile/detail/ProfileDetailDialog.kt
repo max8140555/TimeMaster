@@ -23,6 +23,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.storage.FirebaseStorage
+import com.max.timemaster.NavigationDirections
 import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.bindProfileImage
@@ -85,7 +86,7 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
                 })
 
             }else{
-                Toast.makeText(TimeMasterApplication.instance,"請輸入完整", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog("allNull"))
             }
 
 
@@ -187,7 +188,6 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
                         saveUri = uri
                         uploadImage()
 
-//                        binding.imageView.setImageURI(uri)
                     }
                     Activity.RESULT_CANCELED -> {
                         Log.wtf("getImageResult", resultCode.toString())

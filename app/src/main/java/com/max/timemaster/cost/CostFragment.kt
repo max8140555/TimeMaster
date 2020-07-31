@@ -156,6 +156,7 @@ class CostFragment : Fragment() {
             lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
             lineChart.xAxis.labelCount = 3
             lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+            lineChart.xAxis.textSize = 12f
             lineChart.xAxis.setDrawLabels(true)
             lineChart.xAxis.setDrawGridLines(false)
         }
@@ -225,7 +226,7 @@ class CostFragment : Fragment() {
                 dataSet.color = Color.parseColor("#${dateColor?.get(0)}")
                 dataSet.valueTextColor =
                     ContextCompat.getColor(requireContext(), R.color.black)
-                dataSet.valueTextSize = 10F
+                dataSet.valueTextSize = 12F
                 dataSetGroup.add(dataSet)
                 Log.e("Max", "dayMonet = ${dataSetGroup.size}")
             }

@@ -1,11 +1,14 @@
 package com.max.timemaster
 
-import android.content.pm.PackageManager
+import android.annotation.SuppressLint
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -16,13 +19,11 @@ import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import app.appworks.school.stylish.ext.getVmFactory
+import com.max.timemaster.ext.getVmFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.max.timemaster.databinding.ActivityMainBinding
 import com.max.timemaster.util.CurrentFragmentType
 import com.max.timemaster.util.UserManager
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 
 
 class MainActivity : AppCompatActivity() {
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -128,6 +130,8 @@ class MainActivity : AppCompatActivity() {
     /**
      * Set up [androidx.drawerlayout.widget.DrawerLayout] with [androidx.appcompat.widget.Toolbar]
      */
+    @SuppressLint("ResourceType")
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupDrawer() {
 
         // set up toolbar
@@ -140,7 +144,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.drawerLayout.fitsSystemWindows = true
         binding.drawerLayout.clipToPadding = false
-
+        binding.drawerNavView.itemIconTintList = null
         actionBarDrawerToggle = object : ActionBarDrawerToggle(
             this,
             binding.drawerLayout,
@@ -159,11 +163,13 @@ class MainActivity : AppCompatActivity() {
 
         val m = binding.drawerNavView.menu
         m.clear()
-        val menu = m.addSubMenu("時間管理").setIcon(R.drawable.ic_home_black_24dp)
+        val menu = m.addSubMenu("時間管理")
 
+        val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
 
-        menu.add("All").setIcon(R.drawable.baseline_favorite_border_black_36)
-            .setOnMenuItemClickListener {
+        val myColor = intArrayOf(Color.parseColor("#265D7C"))
+        val myColorStateList = ColorStateList(states, myColor)
+        menu.add("所有對象").setIcon(R.drawable.bg_publish).setIconTintList(myColorStateList).setOnMenuItemClickListener {
                 Log.d("zxc", "All")
                 viewModel.selectAttendee.value = ""
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
@@ -179,9 +185,13 @@ class MainActivity : AppCompatActivity() {
 
         if (s != null) {
             for (i in s) {
-                menu.add(i.name).setIcon(R.drawable.baseline_favorite_border_black_36)
-                    .setOnMenuItemClickListener {
-                        Log.d("zxc", i.name)
+
+                val colors = intArrayOf(Color.parseColor("#${i.color}"))
+                val colorsStateList = ColorStateList(states, colors)
+                Log.d("zxc", i.color)
+
+                menu.add(i.name).setIcon(R.drawable.bg_publish).setIconTintList(colorsStateList).setOnMenuItemClickListener {
+                    Log.d("zxc", i.color)
                         viewModel.selectAttendee.value = i.name
                         binding.drawerLayout.closeDrawer(GravityCompat.START)
                         return@setOnMenuItemClickListener true

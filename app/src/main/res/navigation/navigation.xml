@@ -78,7 +78,8 @@
     <action android:id="@+id/navigate_to_profileEditDialog"
         app:destination="@id/profileEditDialog"
       />
-
+    <action android:id="@+id/navigate_to_messengerDialog"
+        app:destination="@id/messengerDialog"/>
     <dialog
         android:id="@+id/calendarDetailFragment"
         android:name="com.max.timemaster.calendar.CalendarDetailFragment"
@@ -112,6 +113,15 @@
         <argument
             android:name="selectedDateKey"
             app:argType="com.max.timemaster.data.MyDate" />
+    </dialog>
+    <dialog
+        android:id="@+id/messengerDialog"
+        android:name="com.max.timemaster.calendar.MessengerDialog"
+        android:label="fragment_calendar_dialog"
+        tools:layout="@layout/dialog_messenger" >
+        <argument
+            android:name="messengerKey"
+            app:argType="string" />
     </dialog>
 
 

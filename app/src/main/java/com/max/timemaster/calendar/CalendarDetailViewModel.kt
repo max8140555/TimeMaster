@@ -4,7 +4,10 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FirebaseFirestore
+import com.max.timemaster.NavigationDirections
 import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.data.CalendarEvent
@@ -137,34 +140,34 @@ class CalendarDetailViewModel(
 //        document.set(data)
 //    }
 
-    fun checkInputData() {
+//    fun checkInputData() {
+//
+//        val start = UserManager.allEvent.value?.map { it.dateStamp }
+//        val end = UserManager.allEvent.value?.map { it.dateEndStamp }
+//
+//        val stampStart = TimeUtil.dateToStampTime(
+//            "${editDate.value} ${editTime.value}",
+//            Locale.TAIWAN
+//        ) + 1000
+//        val stampEnd = TimeUtil.dateToStampTime(
+//            "${editDate.value} ${editEndTime.value}",
+//            Locale.TAIWAN
+//        ) + 1000
+//
+//        when {
+//            stampStart >= stampEnd -> {
+//                Toast.makeText(TimeMasterApplication.instance, "時間設定錯誤,請重新設定", Toast.LENGTH_SHORT)
+//                    .show()
+//            }
+//            editTitle.value.isNullOrEmpty() -> {
+//                Toast.makeText(TimeMasterApplication.instance, "請填入Title", Toast.LENGTH_SHORT)
+//                    .show()
+//            }
+//            else -> checkIfConflict(stampStart, stampEnd, start, end)
+//        }
+//    }
 
-        val start = UserManager.allEvent.value?.map { it.dateStamp }
-        val end = UserManager.allEvent.value?.map { it.dateEndStamp }
-
-        val stampStart = TimeUtil.dateToStampTime(
-            "${editDate.value} ${editTime.value}",
-            Locale.TAIWAN
-        ) + 1000
-        val stampEnd = TimeUtil.dateToStampTime(
-            "${editDate.value} ${editEndTime.value}",
-            Locale.TAIWAN
-        ) + 1000
-
-        when {
-            stampStart >= stampEnd -> {
-                Toast.makeText(TimeMasterApplication.instance, "時間設定錯誤,請重新設定", Toast.LENGTH_SHORT)
-                    .show()
-            }
-            editTitle.value.isNullOrEmpty() -> {
-                Toast.makeText(TimeMasterApplication.instance, "請填入Title", Toast.LENGTH_SHORT)
-                    .show()
-            }
-            else -> checkIfConflict(stampStart, stampEnd, start, end)
-        }
-    }
-
-    private fun checkIfConflict(
+    fun checkIfConflict(
         stampStart: Long,
         stampEnd: Long,
         start: List<Long?>?,
@@ -187,7 +190,7 @@ class CalendarDetailViewModel(
                     }
                 }
             }
-        }else{
+        } else {
             isConflict.value = false
         }
     }

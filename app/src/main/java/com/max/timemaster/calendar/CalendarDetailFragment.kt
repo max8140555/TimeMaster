@@ -79,7 +79,7 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
         binding.save.setOnClickListener {
 
 
-            viewModel.checkInputData()
+           checkInputData()
 
         }
 
@@ -106,11 +106,9 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
             it?.let { isConflict ->
                 Log.e("Max","$isConflict")
                 if (isConflict == true) {
-                    Toast.makeText(
-                        TimeMasterApplication.instance,
-                        "想成為時間大師，你還太嫩了！！",
-                        Toast.LENGTH_SHORT
-                    ).show()
+
+                    findNavController().navigate(NavigationDirections.navigateToMessengerDialog("conflict"))
+
                 } else {
                     val stampStart = dateToStampTime(
                         "${viewModel.editDate.value} ${viewModel.editTime.value}",
@@ -191,5 +189,30 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
         }
     }
 
+    fun checkInputData() {
 
+        val start = UserManager.allEvent.value?.map { it.dateStamp }
+        val end = UserManager.allEvent.value?.map { it.dateEndStamp }
+
+        val stampStart = TimeUtil.dateToStampTime(
+            "${viewModel.editDate.value} ${viewModel.editTime.value}",
+            Locale.TAIWAN
+        ) + 1000
+        val stampEnd = TimeUtil.dateToStampTime(
+            "${viewModel.editDate.value} ${viewModel.editEndTime.value}",
+            Locale.TAIWAN
+        ) + 1000
+
+        when {
+            stampStart >= stampEnd -> {
+
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog("timeError"))
+            }
+            viewModel.editTitle.value.isNullOrEmpty() -> {
+
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog("null"))
+            }
+            else -> viewModel.checkIfConflict(stampStart, stampEnd, start, end)
+        }
+    }
 }

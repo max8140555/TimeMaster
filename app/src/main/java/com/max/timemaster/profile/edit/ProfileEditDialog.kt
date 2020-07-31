@@ -23,6 +23,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.storage.FirebaseStorage
+import com.max.timemaster.NavigationDirections
 
 import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
@@ -84,11 +85,12 @@ class ProfileEditDialog : AppCompatDialogFragment() {
             if (buttonView.isChecked){
                 viewModel.edActive.value = true
                 Toast.makeText(TimeMasterApplication.instance,"對象追蹤中",Toast.LENGTH_SHORT).show()
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog("active"))
                 Log.d("edActive", "${viewModel.edActive.value}")
             }else{
                 viewModel.edActive.value = false
                 Toast.makeText(TimeMasterApplication.instance,"對象加入封存",Toast.LENGTH_SHORT).show()
-
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog("!Active"))
                 Log.d("edActive", "${viewModel.edActive.value}")
             }
         }

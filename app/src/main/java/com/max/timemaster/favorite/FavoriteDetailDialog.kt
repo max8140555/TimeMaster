@@ -21,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.max.timemaster.MainViewModel
+import com.max.timemaster.NavigationDirections
 import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.data.DateFavorite
@@ -138,7 +139,7 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
             if (!viewModel.edTitle.value.isNullOrEmpty() && !viewModel.edListContent.isNullOrEmpty()){
                 viewModel.postAddDateFavorite(addDateFavorite())
             }else{
-                Toast.makeText(TimeMasterApplication.instance,"請輸入完整", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog("allNull"))
             }
 
 
