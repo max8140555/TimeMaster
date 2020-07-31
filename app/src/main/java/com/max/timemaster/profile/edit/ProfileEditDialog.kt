@@ -80,18 +80,19 @@ class ProfileEditDialog : AppCompatDialogFragment() {
         }
         adapter.submitList(colorList)
 
+        binding.btnActive.setOnClickListener {
+            if (viewModel.edActive.value != true){
 
-        binding.btnActive.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (buttonView.isChecked){
-                viewModel.edActive.value = true
-                Toast.makeText(TimeMasterApplication.instance,"對象追蹤中",Toast.LENGTH_SHORT).show()
+
                 findNavController().navigate(NavigationDirections.navigateToMessengerDialog("active"))
                 Log.d("edActive", "${viewModel.edActive.value}")
+                viewModel.edActive.value = true
             }else{
-                viewModel.edActive.value = false
-                Toast.makeText(TimeMasterApplication.instance,"對象加入封存",Toast.LENGTH_SHORT).show()
+
+
                 findNavController().navigate(NavigationDirections.navigateToMessengerDialog("!Active"))
                 Log.d("edActive", "${viewModel.edActive.value}")
+                viewModel.edActive.value = false
             }
         }
         Log.e("Max","${binding.btnActive.isChecked}")

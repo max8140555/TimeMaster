@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -58,6 +59,7 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         permission()
+
         binding.layoutPublish.startAnimation(
             AnimationUtils.loadAnimation(
                 context,
