@@ -1,4 +1,4 @@
-package com.max.timemaster.calendar
+package com.max.timemaster
 
 import android.widget.Toast
 import androidx.lifecycle.LiveData

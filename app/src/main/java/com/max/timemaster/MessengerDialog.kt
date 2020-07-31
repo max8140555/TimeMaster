@@ -1,4 +1,4 @@
-package com.max.timemaster.calendar
+package com.max.timemaster
 
 import android.os.Bundle
 import android.os.Handler
@@ -10,10 +10,9 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 
-import com.max.timemaster.R
+
 import com.max.timemaster.databinding.DialogMessengerBinding
 import com.max.timemaster.ext.getVmFactory
-import kotlinx.android.synthetic.main.dialog_messenger.*
 
 /**
  * A simple [Fragment] subclass.
@@ -21,7 +20,9 @@ import kotlinx.android.synthetic.main.dialog_messenger.*
 class MessengerDialog : AppCompatDialogFragment() {
     private val viewModel by viewModels<MessengerViewModel> {
         getVmFactory(
-            MessengerDialogArgs.fromBundle(requireArguments()).messengerKey
+            MessengerDialogArgs.fromBundle(
+                requireArguments()
+            ).messengerKey
         )
     }
     lateinit var binding: DialogMessengerBinding
@@ -35,12 +36,12 @@ class MessengerDialog : AppCompatDialogFragment() {
     ): View? {
         binding = DialogMessengerBinding.inflate(inflater, container, false)
         when(viewModel.messenger){
-            "conflict" -> binding.message.text = "時間衝突囉！"
-            "timeError" -> binding.message.text = "時間設定有誤！"
-            "null" -> binding.message.text = "請填寫行程！"
-            "allNull" -> binding.message.text = "請輸入完整！"
-            "active"-> binding.message.text = "對象追蹤中！"
-            "!Active"-> binding.message.text = "對象加入封存！"
+            "conflict" -> binding.message.text = "　時間衝突囉！"
+            "timeError" -> binding.message.text = "　時間設定有誤！"
+            "null" -> binding.message.text = "　請填寫行程！"
+            "allNull" -> binding.message.text = "　請輸入完整！"
+            "active"-> binding.message.text = "追蹤中"
+            "!Active"-> binding.message.text = "已封存對象"
         }
 
             Handler().postDelayed({

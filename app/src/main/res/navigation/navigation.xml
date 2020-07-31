@@ -116,7 +116,7 @@
     </dialog>
     <dialog
         android:id="@+id/messengerDialog"
-        android:name="com.max.timemaster.calendar.MessengerDialog"
+        android:name="com.max.timemaster.MessengerDialog"
         android:label="fragment_calendar_dialog"
         tools:layout="@layout/dialog_messenger" >
         <argument

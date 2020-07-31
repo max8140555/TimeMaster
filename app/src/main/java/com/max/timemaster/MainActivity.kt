@@ -178,10 +178,6 @@ class MainActivity : AppCompatActivity() {
         val s = UserManager.myDate.value?.filter {
             it.active == true
         }
-//            ?.map {
-//                it.name
-//            }
-
 
         if (s != null) {
             for (i in s) {

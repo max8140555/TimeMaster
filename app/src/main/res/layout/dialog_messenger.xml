@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".calendar.MessengerDialog">
+        tools:context=".MessengerDialog">
 
         <TextView
             android:id="@+id/view"
@@ -35,9 +35,8 @@
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/view"
             app:layout_constraintEnd_toEndOf="@+id/view"
-            app:layout_constraintHorizontal_bias="0.86"
             app:layout_constraintStart_toStartOf="@+id/view"
-            tools:text="時間衝突囉！" />
+            tools:text="時間衝突囉" />
 
         <ImageView
             android:id="@+id/message_image"

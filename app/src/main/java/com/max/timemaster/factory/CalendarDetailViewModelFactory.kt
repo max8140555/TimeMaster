@@ -3,8 +3,7 @@ package com.max.timemaster.factory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.max.timemaster.calendar.CalendarDetailViewModel
-import com.max.timemaster.calendar.CalendarViewModel
-import com.max.timemaster.calendar.MessengerViewModel
+import com.max.timemaster.MessengerViewModel
 import com.max.timemaster.data.TimeMasterRepository
 
 /**
@@ -24,7 +23,10 @@ class CalendarDetailViewModelFactory constructor(
                 isAssignableFrom(CalendarDetailViewModel::class.java) ->
                     CalendarDetailViewModel(timeMasterRepository,string)
                 isAssignableFrom(MessengerViewModel::class.java) ->
-                    MessengerViewModel(timeMasterRepository,string)
+                    MessengerViewModel(
+                        timeMasterRepository,
+                        string
+                    )
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

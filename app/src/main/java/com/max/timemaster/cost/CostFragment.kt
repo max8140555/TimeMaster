@@ -41,6 +41,7 @@ class CostFragment : Fragment() {
         getVmFactory()
     }
     lateinit var binding: FragmentCostBinding
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -93,12 +94,12 @@ class CostFragment : Fragment() {
                                     }
                                 }
                             }
-                            if (allDateCostList.isNullOrEmpty()){
+                            if (allDateCostList.isNullOrEmpty()) {
                                 binding.prompt.text = "點左上角按鈕，選擇對象新增花費吧！"
                                 binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
                                 binding.imagePrompt.visibility = VISIBLE
                                 binding.prompt.visibility = VISIBLE
-                            }else{
+                            } else {
                                 binding.imagePrompt.visibility = GONE
                                 binding.prompt.visibility = GONE
                             }
@@ -112,12 +113,12 @@ class CostFragment : Fragment() {
                         } else {
 
                             // Selected Date
-                            if (dateSelect.isNullOrEmpty()){
+                            if (dateSelect.isNullOrEmpty()) {
                                 binding.imagePrompt.setImageResource(R.drawable.icon_add)
                                 binding.prompt.text = "點擊按鈕紀錄你為他花多錢吧！"
                                 binding.imagePrompt.visibility = VISIBLE
                                 binding.prompt.visibility = VISIBLE
-                            }else{
+                            } else {
                                 binding.imagePrompt.visibility = GONE
                                 binding.prompt.visibility = GONE
                             }
@@ -140,21 +141,22 @@ class CostFragment : Fragment() {
         val lineChart = binding.lineChartView
 
         val cal = Calendar.getInstance().timeInMillis
-        Log.e("Max","$cal")
+        Log.e("Max", "$cal")
 
-        val labels: MutableList<String>
-                = mutableListOf(stampToDateNoYear(cal-86400000*4, Locale.TAIWAN)
-            , stampToDateNoYear(cal-86400000*3, Locale.TAIWAN)
-            , stampToDateNoYear(cal-86400000*2, Locale.TAIWAN)
-            , stampToDateNoYear(cal-86400000, Locale.TAIWAN)
-            , stampToDateNoYear(cal, Locale.TAIWAN))
+        val labels: MutableList<String> = mutableListOf("...",
+            stampToDateNoYear(cal - 86400000 * 4, Locale.TAIWAN)
+            , stampToDateNoYear(cal - 86400000 * 3, Locale.TAIWAN)
+            , stampToDateNoYear(cal - 86400000 * 2, Locale.TAIWAN)
+            , stampToDateNoYear(cal - 86400000, Locale.TAIWAN)
+            , stampToDateNoYear(cal, Locale.TAIWAN)
+        )
 
 
         lineChart.description.text = "時間"
         lineChart.description.textSize = 10F
         lineChart.xAxis.apply {
             lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-            lineChart.xAxis.labelCount = 3
+
             lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
             lineChart.xAxis.textSize = 12f
             lineChart.xAxis.setDrawLabels(true)
@@ -176,10 +178,15 @@ class CostFragment : Fragment() {
             for (d in dates.indices) {
                 var daySum: Long = 0
                 var dayMoney = listOf<Long?>()
-                val dateDayPrice = mutableListOf<Long>()
+                val dateDayPrice = mutableListOf<Long>(0)
 
                 val dateCost = allListDateCost.filter {
                     it.attendeeName == dates[d]
+                }
+                val dateName =UserManager.myDate.value?.filter {
+                    it.name == dates[d]
+                }?.map{
+                    it.name
                 }
                 val dateColor = UserManager.myDate.value?.filter {
                     it.name == dates[d]
@@ -187,8 +194,20 @@ class CostFragment : Fragment() {
                     it.color
                 }
 
-                for (l in labels.indices) {
+                val allMoney = dateCost.filter {
+                    it.time!! < cal - 86400000 * 4
+                }.map {
+                    it.costPrice
+                }
 
+
+                for (mon in allMoney) {
+                    if (mon != null) {
+                        daySum += mon
+                    }
+                }
+
+                for (l in labels.indices) {
 
                     dayMoney = dateCost.filter {
                         stampToDateNoYear(it.time ?: 0, Locale.TAIWAN) == labels[l]
@@ -201,6 +220,8 @@ class CostFragment : Fragment() {
                     }
 
 
+
+
                     for (money in dayMoney) {
                         if (money != null) {
                             daySum += money
@@ -210,11 +231,13 @@ class CostFragment : Fragment() {
 
                     Log.e("Max", "list = ${dates[d]} , ${labels[l]}, $dayMoney")
                     dateDayPrice.add(daySum)
+
                     Log.e("Max", "dayMonet = $dateDayPrice")
 
 
                 }
                 val entries: MutableList<Entry> = ArrayList()
+
                 for (x in 0..dateDayPrice.size) {
                     for (y in dateDayPrice.indices) {
                         if (x == y) {
@@ -222,7 +245,7 @@ class CostFragment : Fragment() {
                         }
                     }
                 }
-                val dataSet = LineDataSet(entries, "$")
+                val dataSet = LineDataSet(entries, dateName?.get(0))
                 dataSet.color = Color.parseColor("#${dateColor?.get(0)}")
                 dataSet.valueTextColor =
                     ContextCompat.getColor(requireContext(), R.color.black)
@@ -255,7 +278,6 @@ class CostFragment : Fragment() {
         lineChart.axisLeft.setStartAtZero(true)
         lineChart.invalidate()
         lineChart.notifyDataSetChanged()
-        lineChart.setTouchEnabled(false)
     }
 }
 
