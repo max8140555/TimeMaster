@@ -115,7 +115,7 @@ class CostFragment : Fragment() {
                             // Selected Date
                             if (dateSelect.isNullOrEmpty()) {
                                 binding.imagePrompt.setImageResource(R.drawable.icon_add)
-                                binding.prompt.text = "點擊按鈕紀錄你為他花多錢吧！"
+                                binding.prompt.text = "點擊按鈕紀錄你的花費吧！"
                                 binding.imagePrompt.visibility = VISIBLE
                                 binding.prompt.visibility = VISIBLE
                             } else {
@@ -143,9 +143,8 @@ class CostFragment : Fragment() {
         val cal = Calendar.getInstance().timeInMillis
         Log.e("Max", "$cal")
 
-        val labels: MutableList<String> = mutableListOf("...",
-            stampToDateNoYear(cal - 86400000 * 4, Locale.TAIWAN)
-            , stampToDateNoYear(cal - 86400000 * 3, Locale.TAIWAN)
+        val labels: MutableList<String> = mutableListOf(
+            stampToDateNoYear(cal - 86400000 * 3, Locale.TAIWAN)
             , stampToDateNoYear(cal - 86400000 * 2, Locale.TAIWAN)
             , stampToDateNoYear(cal - 86400000, Locale.TAIWAN)
             , stampToDateNoYear(cal, Locale.TAIWAN)
@@ -156,7 +155,6 @@ class CostFragment : Fragment() {
         lineChart.description.textSize = 10F
         lineChart.xAxis.apply {
             lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-
             lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
             lineChart.xAxis.textSize = 12f
             lineChart.xAxis.setDrawLabels(true)
@@ -178,14 +176,14 @@ class CostFragment : Fragment() {
             for (d in dates.indices) {
                 var daySum: Long = 0
                 var dayMoney = listOf<Long?>()
-                val dateDayPrice = mutableListOf<Long>(0)
+                val dateDayPrice = mutableListOf<Long>()
 
                 val dateCost = allListDateCost.filter {
                     it.attendeeName == dates[d]
                 }
-                val dateName =UserManager.myDate.value?.filter {
+                val dateName = UserManager.myDate.value?.filter {
                     it.name == dates[d]
-                }?.map{
+                }?.map {
                     it.name
                 }
                 val dateColor = UserManager.myDate.value?.filter {
@@ -195,7 +193,7 @@ class CostFragment : Fragment() {
                 }
 
                 val allMoney = dateCost.filter {
-                    it.time!! < cal - 86400000 * 4
+                    it.time!! < cal - 86400000 * 3
                 }.map {
                     it.costPrice
                 }
@@ -214,20 +212,20 @@ class CostFragment : Fragment() {
                     }.map {
                         it.costPrice
                     }
-
+                    Log.e("Max111","$dayMoney")
                     if (dayMoney.isEmpty()) {
-                        dayMoney = listOf(0)
+                        dayMoney = emptyList()
                     }
 
 
 
 
-                    for (money in dayMoney) {
-                        if (money != null) {
-                            daySum += money
 
+                        for (money in dayMoney.indices) {
+
+                                daySum += dayMoney[money]!!
                         }
-                    }
+
 
                     Log.e("Max", "list = ${dates[d]} , ${labels[l]}, $dayMoney")
                     dateDayPrice.add(daySum)
@@ -250,7 +248,12 @@ class CostFragment : Fragment() {
                 dataSet.valueTextColor =
                     ContextCompat.getColor(requireContext(), R.color.black)
                 dataSet.valueTextSize = 12F
-                dataSetGroup.add(dataSet)
+                dataSet.getEntriesForXValue(0F)
+
+                if (!dayMoney.isNullOrEmpty()) {
+                    dataSetGroup.add(dataSet)
+                }
+
                 Log.e("Max", "dayMonet = ${dataSetGroup.size}")
             }
 
@@ -268,13 +271,14 @@ class CostFragment : Fragment() {
         //***
         // Controlling left side of y axis
         val yAxisLeft = lineChart.axisLeft
-        yAxisLeft.granularity = 1f
+        yAxisLeft.setDrawLabels(false)
         yAxisLeft.setDrawGridLines(false)
 
 
 //        // Setting Data
         val data = LineData(dataSetGroup as List<ILineDataSet>?)
         lineChart.data = data
+
         lineChart.axisLeft.setStartAtZero(true)
         lineChart.invalidate()
         lineChart.notifyDataSetChanged()
