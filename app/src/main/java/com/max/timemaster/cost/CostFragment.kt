@@ -278,7 +278,7 @@ class CostFragment : Fragment() {
 //        // Setting Data
         val data = LineData(dataSetGroup as List<ILineDataSet>?)
         lineChart.data = data
-
+        lineChart.setTouchEnabled(true)
         lineChart.axisLeft.setStartAtZero(true)
         lineChart.invalidate()
         lineChart.notifyDataSetChanged()

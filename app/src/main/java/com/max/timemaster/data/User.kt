@@ -8,9 +8,7 @@ data class User(
     var email: String = "",
     var name: String = "",
     var image: String = "",
-    var lv: Long = 1,
     var exp: Long = 0,
-    var titleName: String = "小釣手",
     var firstLoginTime: Long = 0
 )
 @Parcelize

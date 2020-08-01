@@ -27,8 +27,8 @@ import java.security.NoSuchAlgorithmException
 import java.util.*
 
 class LoginActivity : AppCompatActivity() {
-    var auth : FirebaseAuth? = null
-    var callbackManager : CallbackManager? = null
+    var auth: FirebaseAuth? = null
+    var callbackManager: CallbackManager? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -48,9 +48,9 @@ class LoginActivity : AppCompatActivity() {
         moveMainPage(auth?.currentUser)
     }
 
-    private fun facebookLogin(){
+    private fun facebookLogin() {
         LoginManager.getInstance()
-            .logInWithReadPermissions(this, listOf("public_profile","email"))
+            .logInWithReadPermissions(this, listOf("public_profile", "email"))
 
         LoginManager.getInstance()
             .registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
@@ -58,19 +58,8 @@ class LoginActivity : AppCompatActivity() {
                     //Second step
                     handleFacebookAccessToken(result?.accessToken)
 
-//                    try {
-//                        val info = packageManager.getPackageInfo(
-//                            "com.max.timemaster", PackageManager.GET_SIGNATURES
-//                        )
-//                        for (signature in info.signatures) {
-//                            val md: MessageDigest = MessageDigest.getInstance("SHA")
-//                            md.update(signature.toByteArray())
-//                            Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
-//                        }
-//                    } catch (e: PackageManager.NameNotFoundException) {
-//                    } catch (e: NoSuchAlgorithmException) {
-//                    }
 
+//
                 }
 
                 override fun onCancel() {
@@ -79,16 +68,18 @@ class LoginActivity : AppCompatActivity() {
 
                 override fun onError(error: FacebookException?) {
 
+                    Log.e("Max", error.toString())
+
                 }
 
             })
     }
-    fun handleFacebookAccessToken(token : AccessToken?){
+
+    fun handleFacebookAccessToken(token: AccessToken?) {
         var credential = FacebookAuthProvider.getCredential(token?.token!!)
         auth?.signInWithCredential(credential)
-            ?.addOnCompleteListener {
-                    task ->
-                if(task.isSuccessful){
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
 
                     //Third step
                     //Login
@@ -96,31 +87,33 @@ class LoginActivity : AppCompatActivity() {
                     UserManager.user.image = "https://graph.facebook.com/$userId/picture?height=500"
                     moveMainPage(task.result?.user)
                     UserManager.userEmail = task.result?.user?.email.toString()
-Log.e("Max","${UserManager.userEmail} \n ${task.result?.user?.email.toString()}\n" +
-        " ${task.result?.user}\n" +
-        " ${task.result}\n" +
-        " ${task}")
+                    Log.e(
+                        "Max",
+                        "${UserManager.userEmail} \n ${task.result?.user?.email.toString()}\n" +
+                                " ${task.result?.user}\n" +
+                                " ${task.result}\n" +
+                                " ${task}"
+                    )
                     UserManager.user.email = task.result?.user?.email.toString()
                     UserManager.user.name = task.result?.user?.displayName.toString()
 
 
-
-                }else{
+                } else {
                     //Show the error message
-                    Toast.makeText(this,task.exception?.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, task.exception?.message, Toast.LENGTH_LONG).show()
                 }
             }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        callbackManager?.onActivityResult(requestCode,resultCode,data)
+        callbackManager?.onActivityResult(requestCode, resultCode, data)
     }
 
 
-
-    private fun moveMainPage(user: FirebaseUser?){
-        if(user != null){
-            startActivity(Intent(this,MainActivity::class.java))
+    private fun moveMainPage(user: FirebaseUser?) {
+        if (user != null) {
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
     }
