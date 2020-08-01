@@ -1,6 +1,7 @@
 package com.max.timemaster.profile.edit
 
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,7 +32,9 @@ class ProfileEditViewModel(
     var edColor = MutableLiveData<String>().apply {
         value = selectDate.color
     }
-
+    var selectedPosition =MutableLiveData<Int>().apply {
+        value = selectDate.position
+    }
     var imagePhoto = MutableLiveData<String>().apply {
         value = selectDate.image
     }
@@ -70,9 +73,12 @@ class ProfileEditViewModel(
                 birthday = editDate.value,
                 color = edColor.value,
                 active = edActive.value,
+                position = selectedPosition.value,
                 image = imagePhoto.value
             )
         }
+        Log.e("MaxP","${selectedPosition.value}")
+
     }
 
     fun updateDate(myDate: MyDate) {

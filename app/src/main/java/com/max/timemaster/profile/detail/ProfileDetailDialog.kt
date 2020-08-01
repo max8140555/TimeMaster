@@ -109,6 +109,7 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
 
         viewModel.edColor.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
+                binding.imageView.background.setTint(Color.parseColor("#$it"))
                 binding.editBirthday.background.setTint(Color.parseColor("#$it"))
                 binding.editBirthday.setTextColor(Color.parseColor("#$it"))
             }

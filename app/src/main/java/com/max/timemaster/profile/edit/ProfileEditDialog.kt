@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -62,6 +63,11 @@ class ProfileEditDialog : AppCompatDialogFragment() {
         binding.viewModel = viewModel
         permission()
 
+//        val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
+//        val colors = intArrayOf(Color.parseColor("#${viewModel.edColor.value}"))
+//        val colorsStateList = ColorStateList(states, colors)
+//        binding.imageView.backgroundTintList = colorsStateList
+
         binding.layoutPublish.startAnimation(
             AnimationUtils.loadAnimation(
                 context,
@@ -110,7 +116,7 @@ class ProfileEditDialog : AppCompatDialogFragment() {
 
         viewModel.edColor.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
-//                binding.editBirthday.background.colorFilter = Color.parseColor("#$it"
+                binding.imageView.background.setTint(Color.parseColor("#$it"))
                 binding.editBirthday.background.setTint(Color.parseColor("#$it"))
                 binding.editBirthday.setTextColor(Color.parseColor("#$it"))
             }

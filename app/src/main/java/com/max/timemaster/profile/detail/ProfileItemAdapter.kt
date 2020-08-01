@@ -1,6 +1,7 @@
 package com.max.timemaster.profile.detail
 
 import android.content.DialogInterface
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -31,7 +32,8 @@ class ProfileItemAdapter(val onClickListener: OnClickListener) :
             binding.textProfileName.text = myDate.name
             binding.imageString = myDate.image
             binding.date = myDate
-
+            binding.imageProfileMain.background.setTint(
+                Color.parseColor("#${myDate.color}"))
             binding.executePendingBindings()
         }
     }

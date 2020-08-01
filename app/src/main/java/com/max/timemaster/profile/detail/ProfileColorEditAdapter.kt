@@ -29,20 +29,20 @@ class ProfileColorEditAdapter(var viewModel: ProfileEditViewModel) :
      * The MarsPropertyViewHolder constructor takes the binding variable from the associated
      * GridViewItem, which nicely gives it access to the full [MarsProperty] information.
      */
-    var selectedPosition = -1
+
 
     //1.ViewHolder 畫布
     class ProfileColorViewHolder(private var binding: ItemProfileColorBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @RequiresApi(Build.VERSION_CODES.M)
-        fun bind(colorCode: String, selectedPosition: Int,viewModel: ProfileEditViewModel) {
+        fun bind(colorCode: String, viewModel: ProfileEditViewModel) {
             colorCode.let {
                 val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
                 val colors = intArrayOf(Color.parseColor("#$colorCode"))
                 val colorsStateList = ColorStateList(states, colors)
                 binding.imageDetailColor.backgroundTintList = colorsStateList
 
-                if (adapterPosition == selectedPosition) {
+                if (adapterPosition == viewModel.selectedPosition.value) {
                     binding.imageCorrect.visibility = View.VISIBLE
                 } else {
                     binding.imageCorrect.visibility = View.GONE
@@ -100,11 +100,11 @@ class ProfileColorEditAdapter(var viewModel: ProfileEditViewModel) :
         val colorCode =
             getItem(position)  //告訴onCreateViewHolder 要生成幾個viewholder
         holder.itemView.setOnClickListener {
-            selectedPosition = position
+            viewModel.selectedPosition.value = position
             viewModel.edColor.value = colorCode
             notifyDataSetChanged()
         }
-        holder.bind(colorCode,selectedPosition,viewModel)
+        holder.bind(colorCode,viewModel)
     }
 
 }

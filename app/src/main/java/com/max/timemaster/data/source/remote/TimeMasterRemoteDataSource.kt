@@ -329,14 +329,15 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                         for (doc in docs) {
                             db.document(it).collection("date").document(doc.id).update(
                                 "active",
-                                myDate.active
-                                ,
+                                myDate.active,
                                 "birthday",
                                 myDate.birthday,
                                 "color",
                                 myDate.color,
                                 "image",
-                                myDate.image
+                                myDate.image,
+                                "position",
+                                myDate.position
                             )
                         }
 
@@ -390,7 +391,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                 .collection("users").document(it).collection("calendar")
                 .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
                 .addSnapshotListener { snapshot, exception ->
-
+                    Logger.i("$snapshot")
                     Logger.i("addSnapshotListener detect")
 
                     exception?.let {
