@@ -448,10 +448,12 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
         val db = FirebaseFirestore.getInstance().collection("users")
         db
             .whereEqualTo("email", UserManager.userEmail)
+
             .get()
             .addOnSuccessListener {
                 UserManager.userEmail?.let {
                     db.document(it).collection("date")
+                        .orderBy("loginDate", Query.Direction.ASCENDING)
                         .addSnapshotListener { snapshot, exception ->
 
                             Logger.i("addSnapshotListener detect")

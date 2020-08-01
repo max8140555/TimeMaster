@@ -167,7 +167,15 @@ class CalendarFragment : Fragment() {
                             }
                         }
                     }
-
+                    if (list.isNullOrEmpty()){
+                        binding.prompt.visibility = View.VISIBLE
+                        binding.imagePrompt.visibility = View.VISIBLE
+                        binding.prompt.text = "點左上角按鈕，選擇對象新增行程吧！"
+                        binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
+                    }else{
+                        binding.prompt.visibility = View.GONE
+                        binding.imagePrompt.visibility =View.GONE
+                    }
                     adapter.submitList(list.sortedBy { it.dateStamp })
 
                     binding.btnAdd.visibility = View.GONE
@@ -179,9 +187,9 @@ class CalendarFragment : Fragment() {
                     if (selectedPersonEvents.isNullOrEmpty()){
                         binding.imagePrompt.visibility = View.VISIBLE
                         binding.imagePrompt.setImageResource(R.drawable.icon_add)
+                        binding.prompt.visibility = View.VISIBLE
                         binding.prompt.text = "點選按鈕，新增行程吧！"
                     }
-
                     adapter.submitList(selectedPersonEvents)
 
                     binding.btnAdd.visibility = View.VISIBLE

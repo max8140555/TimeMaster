@@ -84,6 +84,7 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
                         viewModel.myDate.value?.let { it1 -> viewModel.postAddDate(it1) }
                         UserManager.addDate.value = viewModel.edDateName.value
                         Log.d(" UserManager.addDate.value", "${UserManager.addDate.value}")
+                        binding.editBirthday.background.setTint(Color.parseColor("#FFFFFF"))
                     }
                 })
 
@@ -109,7 +110,6 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
 
         viewModel.edColor.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
-                binding.imageView.background.setTint(Color.parseColor("#$it"))
                 binding.editBirthday.background.setTint(Color.parseColor("#$it"))
                 binding.editBirthday.setTextColor(Color.parseColor("#$it"))
             }
