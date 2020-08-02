@@ -65,6 +65,9 @@ class FavoriteFragment : Fragment() {
                             binding.prompt.text = "點擊按鈕紀錄對象喜歡什麼吧！"
                             binding.imagePrompt.visibility = VISIBLE
                             binding.prompt.visibility = VISIBLE
+                            binding.imagePrompt.setOnClickListener {
+                                findNavController().navigate(R.id.navigate_to_favoriteDetailDialog)
+                            }
                         }else{
                             binding.imagePrompt.visibility = GONE
                             binding.prompt.visibility = GONE
@@ -122,8 +125,8 @@ class FavoriteFragment : Fragment() {
                             }
                             if (list.isNullOrEmpty()){
                                 binding.prompt.text = "點左上角按鈕，選擇對象紀錄他喜歡什麼吧！"
-                                binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
-                                binding.imagePrompt.visibility = VISIBLE
+//                                binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
+//                                binding.imagePrompt.visibility = VISIBLE
                                 binding.prompt.visibility = VISIBLE
                             }else{
                                 binding.imagePrompt.visibility = GONE

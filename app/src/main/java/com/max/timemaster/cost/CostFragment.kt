@@ -96,8 +96,8 @@ class CostFragment : Fragment() {
                             }
                             if (allDateCostList.isNullOrEmpty()) {
                                 binding.prompt.text = "點左上角按鈕，選擇對象新增花費吧！"
-                                binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
-                                binding.imagePrompt.visibility = VISIBLE
+//                                binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
+////                                binding.imagePrompt.visibility = VISIBLE
                                 binding.prompt.visibility = VISIBLE
                             } else {
                                 binding.imagePrompt.visibility = GONE
@@ -118,6 +118,9 @@ class CostFragment : Fragment() {
                                 binding.prompt.text = "點擊按鈕紀錄你的花費吧！"
                                 binding.imagePrompt.visibility = VISIBLE
                                 binding.prompt.visibility = VISIBLE
+                                binding.imagePrompt.setOnClickListener {
+                                    findNavController().navigate(R.id.navigate_to_costDetailDialog)
+                                }
                             } else {
                                 binding.imagePrompt.visibility = GONE
                                 binding.prompt.visibility = GONE

@@ -81,14 +81,15 @@ class CalendarFragment : Fragment() {
                     if (listDate.isNullOrEmpty()){
                         binding.prompt.visibility = View.VISIBLE
                         binding.prompt.text = " 請先到個人頁面，新增對象喔！"
-                        binding.imagePrompt.visibility = View.VISIBLE
-                        binding.imagePrompt.setImageResource(R.drawable.icon_profile)
+//                        binding.imagePrompt.visibility = View.VISIBLE
+//                        binding.imagePrompt.setImageResource(R.drawable.icon_profile)
                     }else{
                         if (viewModel.selectEvent.value.isNullOrEmpty()){
                             binding.prompt.visibility = View.VISIBLE
-                            binding.imagePrompt.visibility = View.VISIBLE
+//                            binding.imagePrompt.visibility = View.VISIBLE
                             binding.prompt.text = "點左上角按鈕，選擇對象新增行程吧！"
-                            binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
+//                            binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
+
                         }else{
                             binding.prompt.visibility = View.GONE
                             binding.imagePrompt.visibility =View.GONE
@@ -127,10 +128,19 @@ class CalendarFragment : Fragment() {
                                 date.attendee == select
                             }
                             if (x.isNullOrEmpty()){
-                                binding.imagePrompt.visibility = View.VISIBLE
+//                                binding.imagePrompt.visibility = View.VISIBLE
                                 binding.prompt.visibility = View.VISIBLE
                                 binding.imagePrompt.setImageResource(R.drawable.icon_add)
                                 binding.prompt.text = "點選按鈕，新增行程吧！"
+                                binding.imagePrompt.setOnClickListener {
+                                    viewModel.selectDate.value?.let { selectDate ->
+                                        findNavController().navigate(
+                                            NavigationDirections.navigateToCalendarDetailFragment(
+                                                selectDate
+                                            )
+                                        )
+                                    }
+                                }
                             }
                             Log.d("viewModel22", "${UserManager.selectTime.value}")
                             Log.d("viewModel2", "$x")
@@ -169,9 +179,9 @@ class CalendarFragment : Fragment() {
                     }
                     if (list.isNullOrEmpty()){
                         binding.prompt.visibility = View.VISIBLE
-                        binding.imagePrompt.visibility = View.VISIBLE
+//                        binding.imagePrompt.visibility = View.VISIBLE
                         binding.prompt.text = "點左上角按鈕，選擇對象新增行程吧！"
-                        binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
+//                        binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
                     }else{
                         binding.prompt.visibility = View.GONE
                         binding.imagePrompt.visibility =View.GONE
@@ -189,6 +199,15 @@ class CalendarFragment : Fragment() {
                         binding.imagePrompt.setImageResource(R.drawable.icon_add)
                         binding.prompt.visibility = View.VISIBLE
                         binding.prompt.text = "點選按鈕，新增行程吧！"
+                        binding.imagePrompt.setOnClickListener {
+                            viewModel.selectDate.value?.let { selectDate ->
+                                findNavController().navigate(
+                                    NavigationDirections.navigateToCalendarDetailFragment(
+                                        selectDate
+                                    )
+                                )
+                            }
+                        }
                     }
                     adapter.submitList(selectedPersonEvents)
 
