@@ -213,9 +213,10 @@ class CostFragment : Fragment() {
                         it.costPrice
                     }
                     Log.e("Max111","$dayMoney")
-                    if (dayMoney.isEmpty()) {
-                        dayMoney = emptyList()
-                    }
+
+//                    if (dayMoney.isEmpty()) {
+//                        dayMoney = listOf(0)
+//                    }
 
 
 
@@ -230,7 +231,7 @@ class CostFragment : Fragment() {
                     Log.e("Max", "list = ${dates[d]} , ${labels[l]}, $dayMoney")
                     dateDayPrice.add(daySum)
 
-                    Log.e("Max", "dayMonet = $dateDayPrice")
+                    Log.e("Max", "dayMoney = $dateDayPrice")
 
 
                 }
@@ -250,7 +251,7 @@ class CostFragment : Fragment() {
                 dataSet.valueTextSize = 12F
                 dataSet.getEntriesForXValue(0F)
 
-                if (!dayMoney.isNullOrEmpty()) {
+                if (!dayMoney.isNullOrEmpty() || daySum != 0L) {
                     dataSetGroup.add(dataSet)
                 }
 

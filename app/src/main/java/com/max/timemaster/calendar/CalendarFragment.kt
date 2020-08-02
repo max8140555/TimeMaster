@@ -80,7 +80,7 @@ class CalendarFragment : Fragment() {
 
                     if (listDate.isNullOrEmpty()){
                         binding.prompt.visibility = View.VISIBLE
-                        binding.prompt.text = " 請先到個人頁面，增加對象喔！"
+                        binding.prompt.text = " 請先到個人頁面，新增對象喔！"
                         binding.imagePrompt.visibility = View.VISIBLE
                         binding.imagePrompt.setImageResource(R.drawable.icon_profile)
                     }else{
