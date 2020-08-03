@@ -60,7 +60,7 @@ class FavoriteFragment : Fragment() {
                             date.attendeeName == attendee
                         }
 
-                        if (dateSelect.isNullOrEmpty()){
+                        if (dateSelect.isNullOrEmpty()) {
                             binding.imagePrompt.setImageResource(R.drawable.icon_add)
                             binding.prompt.text = "點擊按鈕紀錄對象喜歡什麼吧！"
                             binding.imagePrompt.visibility = VISIBLE
@@ -68,7 +68,7 @@ class FavoriteFragment : Fragment() {
                             binding.imagePrompt.setOnClickListener {
                                 findNavController().navigate(R.id.navigate_to_favoriteDetailDialog)
                             }
-                        }else{
+                        } else {
                             binding.imagePrompt.visibility = GONE
                             binding.prompt.visibility = GONE
                         }
@@ -123,15 +123,30 @@ class FavoriteFragment : Fragment() {
                                     }
                                 }
                             }
-                            if (list.isNullOrEmpty()){
-                                binding.prompt.text = "點左上角按鈕，選擇對象紀錄他喜歡什麼吧！"
+
+                            mainViewModel.liveMyDate.observe(
+                                viewLifecycleOwner,
+                                Observer { listDate ->
+                                    if (listDate.isNullOrEmpty()) {
+                                        binding.prompt.visibility = VISIBLE
+                                        binding.prompt.text = " 請先到個人頁面，新增對象喔！"
+                                        binding.imagePrompt.visibility = GONE
+//                        binding.imagePrompt.setImageResource(R.drawable.icon_profile)
+                                    } else {
+                                        if (list.isNullOrEmpty()) {
+                                            binding.prompt.text = "點左上角按鈕，選擇對象紀錄他喜歡什麼吧！"
 //                                binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
-//                                binding.imagePrompt.visibility = VISIBLE
-                                binding.prompt.visibility = VISIBLE
-                            }else{
-                                binding.imagePrompt.visibility = GONE
-                                binding.prompt.visibility = GONE
-                            }
+                                            binding.imagePrompt.visibility = GONE
+                                            binding.prompt.visibility = VISIBLE
+                                        } else {
+                                            binding.imagePrompt.visibility = GONE
+                                            binding.prompt.visibility = GONE
+                                        }
+                                    }
+                                })
+
+
+
                             adapter.submitList(list)
                             adapter.notifyDataSetChanged()
 

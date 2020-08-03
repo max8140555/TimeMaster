@@ -94,15 +94,28 @@ class CostFragment : Fragment() {
                                     }
                                 }
                             }
-                            if (allDateCostList.isNullOrEmpty()) {
-                                binding.prompt.text = "點左上角按鈕，選擇對象新增花費吧！"
+
+                            mainViewModel.liveMyDate.observe(
+                                viewLifecycleOwner,
+                                Observer { listDate ->
+                                    if (listDate.isNullOrEmpty()) {
+                                        binding.prompt.visibility = View.VISIBLE
+                                        binding.prompt.text = " 請先到個人頁面，新增對象喔！"
+//                                        binding.imagePrompt.visibility = GONE
+//                        binding.imagePrompt.setImageResource(R.drawable.icon_profile)
+                                    } else {
+                                        if (allDateCostList.isNullOrEmpty()) {
+                                            binding.prompt.text = "點左上角按鈕，選擇對象新增花費吧！"
 //                                binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
-////                                binding.imagePrompt.visibility = VISIBLE
-                                binding.prompt.visibility = VISIBLE
-                            } else {
-                                binding.imagePrompt.visibility = GONE
-                                binding.prompt.visibility = GONE
-                            }
+//                                binding.imagePrompt.visibility = VISIBLE
+                                            binding.prompt.visibility = VISIBLE
+                                        } else {
+                                            binding.imagePrompt.visibility = GONE
+                                            binding.prompt.visibility = GONE
+                                        }
+                                    }
+                                })
+
 
                             setPluralData(allDateCostList)
                             adapter.submitList(allDateCostList.sortedByDescending {
@@ -215,20 +228,17 @@ class CostFragment : Fragment() {
                     }.map {
                         it.costPrice
                     }
-                    Log.e("Max111","$dayMoney")
+                    Log.e("Max111", "$dayMoney")
 
 //                    if (dayMoney.isEmpty()) {
 //                        dayMoney = listOf(0)
 //                    }
 
 
+                    for (money in dayMoney.indices) {
 
-
-
-                        for (money in dayMoney.indices) {
-
-                                daySum += dayMoney[money]!!
-                        }
+                        daySum += dayMoney[money]!!
+                    }
 
 
                     Log.e("Max", "list = ${dates[d]} , ${labels[l]}, $dayMoney")
