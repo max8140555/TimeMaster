@@ -28,7 +28,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            tools:context=".profile.detail.ProfileDetailDialog">
+            tools:context=".profile.detail.ProfileDetailDialog"
+            android:onClick="@{() -> viewModel.nothing()}">
 
             <com.kyleduo.switchbutton.SwitchButton
                 android:id="@+id/btn_active"
@@ -124,7 +125,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView"
                 app:spanCount="5"
-                tools:itemCount="10" />
+                tools:itemCount="10"
+                android:overScrollMode="never"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

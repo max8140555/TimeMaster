@@ -77,4 +77,7 @@ class CostDetailDialogViewModel( private val timeMasterRepository: TimeMasterRep
         _leave.value = null
     }
 
+    fun nothing() {
+
+    }
 }

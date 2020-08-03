@@ -116,4 +116,7 @@ class ProfileEditViewModel(
     fun onLeft() {
         _leave.value = null
     }
+    fun nothing(){
+
+    }
 }

@@ -81,4 +81,8 @@ class FavoriteDetailDialogViewModel(private var timeMasterRepository: TimeMaster
     fun onLeft() {
         _leave.value = null
     }
+
+    fun nothing() {
+
+    }
 }

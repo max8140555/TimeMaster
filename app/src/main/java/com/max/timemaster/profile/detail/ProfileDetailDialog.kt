@@ -23,6 +23,8 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.storage.FirebaseStorage
 import com.max.timemaster.NavigationDirections
 import com.max.timemaster.R
@@ -121,6 +123,8 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
                 viewModel.onLeft()
             }
         })
+
+
 
         return binding.root
     }

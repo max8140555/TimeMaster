@@ -98,4 +98,8 @@ class ProfileDetailViewModel(private val timeMasterRepository: TimeMasterReposit
     fun onLeft() {
         _leave.value = null
     }
+
+    fun nothing() {
+
+    }
 }

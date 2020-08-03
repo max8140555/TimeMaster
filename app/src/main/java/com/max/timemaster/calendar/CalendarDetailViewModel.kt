@@ -195,6 +195,8 @@ class CalendarDetailViewModel(
         }
     }
 
+    fun nothing() {
 
+    }
 }
 
