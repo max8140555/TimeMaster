@@ -7,12 +7,10 @@ import android.app.TimePickerDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -88,10 +86,9 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
                 binding.selectEndTime.isEnabled = false
                 binding.selectTime.setBackgroundResource(R.drawable.bg_publish)
                 binding.selectEndTime.setBackgroundResource(R.drawable.bg_publish)
-                Log.d("edActive", "${viewModel.editTime.value}")
-                Log.d("edActive", "${viewModel.editEndTime.value}")
+
             } else {
-                Log.d("edActive", "非整天")
+
                 binding.selectTime.isEnabled = true
                 binding.selectEndTime.isEnabled = true
                 binding.selectTime.setBackgroundColor(Color.parseColor(getString(R.string.color_white_text)))
@@ -101,10 +98,10 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
 
         viewModel.isConflict.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let { isConflict ->
-                Log.e("Max","$isConflict")
-                if (isConflict == true) {
 
-                    findNavController().navigate(NavigationDirections.navigateToMessengerDialog(MessageTypeFilter.CONFLICT.value))
+                if (isConflict) {
+
+                    findNavController().navigate(NavigationDirections.navigateToMessengerDialog(MessageType.CONFLICT.value))
 
                 } else {
                     val stampStart = dateToStampTime(
@@ -203,12 +200,12 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
         when {
             stampStart >= stampEnd -> {
 
-                findNavController().navigate(NavigationDirections.navigateToMessengerDialog(MessageTypeFilter.TIME_ERROR.value))
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog(MessageType.TIME_ERROR.value))
 
             }
             viewModel.editTitle.value.isNullOrEmpty() -> {
 
-                findNavController().navigate(NavigationDirections.navigateToMessengerDialog(MessageTypeFilter.NOT_TITLE.value))
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog(MessageType.NOT_TITLE.value))
             }
             else -> viewModel.checkIfConflict(stampStart, stampEnd, start, end)
         }

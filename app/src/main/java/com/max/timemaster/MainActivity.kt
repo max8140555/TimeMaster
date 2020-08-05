@@ -1,12 +1,8 @@
 package com.max.timemaster
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -23,6 +19,7 @@ import com.max.timemaster.ext.getVmFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.max.timemaster.databinding.ActivityMainBinding
 import com.max.timemaster.util.CurrentFragmentType
+import com.max.timemaster.util.SetColorStateList
 import com.max.timemaster.util.UserManager
 
 
@@ -88,10 +85,6 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        viewModel.postUser(UserManager.user)
-        viewModel.getLiveUserResult()
-        viewModel.getLiveMyDateResult()
-        viewModel.getAllEventResult()
 
         viewModel.liveUser.observe(this, Observer {
             it?.let { user ->
@@ -99,33 +92,29 @@ class MainActivity : AppCompatActivity() {
                 UserManager.exp.value = UserManager.user.exp
             }
         })
+
         UserManager.exp.observe(this, Observer {
             viewModel.upUserExp(it)
         })
+
         viewModel.liveMyDate.observe(this, Observer {
             it?.let { listMyDate ->
-                    UserManager.myDate.value = listMyDate
-                    setupDrawer()
+                UserManager.myDate.value = listMyDate
+                setupDrawer()
             }
         })
+
         viewModel.liveAllEvent.observe(this, Observer {
-            it?.let {allEvents ->
+            it?.let { allEvents ->
                 UserManager.allEvent.value = allEvents
-                Log.d("ccc", "$it")
-                Log.d("ccc", "${UserManager.allEvent.value}")
             }
         })
-
-
-
 
         setupBottomNav()
         setupNavController()
     }
 
-    /**
-     * Set up [androidx.drawerlayout.widget.DrawerLayout] with [androidx.appcompat.widget.Toolbar]
-     */
+
     @SuppressLint("ResourceType")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setupDrawer() {
@@ -148,58 +137,48 @@ class MainActivity : AppCompatActivity() {
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         ) {
-            override fun onDrawerOpened(drawerView: View) {
-                super.onDrawerOpened(drawerView)
 
-            }
         }.apply {
             binding.drawerLayout.addDrawerListener(this)
             syncState()
         }
 
-        val m = binding.drawerNavView.menu
-        m.clear()
-        val menu = m.addSubMenu(getString(R.string.drawer_title_text))
+        val navMenu = binding.drawerNavView.menu
+        navMenu.clear()
 
-        val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
+        val menu = navMenu.addSubMenu(getString(R.string.drawer_title_text))
 
-        val myColor = intArrayOf(Color.parseColor(getString(R.string.main_color_text)))
-        val myColorStateList = ColorStateList(states, myColor)
+        menu.add(getString(R.string.drawer_item_text))
+            .setIcon(R.drawable.bg_publish)
+            .setIconTintList(SetColorStateList.setColorStateList(getString(R.string.main_color_text)))
+            .setOnMenuItemClickListener {
+            viewModel.selectAttendee.value = ""
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
 
-        menu.add(getString(R.string.drawer_item_text)).setIcon(R.drawable.bg_publish).setIconTintList(myColorStateList).setOnMenuItemClickListener {
+            return@setOnMenuItemClickListener true
+        }
 
-                viewModel.selectAttendee.value = ""
-                binding.drawerLayout.closeDrawer(GravityCompat.START)
-                return@setOnMenuItemClickListener true
-            }
-        val s = UserManager.myDate.value?.filter {
+        val activeDate = UserManager.myDate.value?.filter {
             it.active == true
         }
 
-        if (s != null) {
-            for (i in s) {
+        if (activeDate != null) {
+            for (date in activeDate) {
 
-                val colors = intArrayOf(Color.parseColor("#${i.color}"))
-                val colorsStateList = ColorStateList(states, colors)
-                Log.d("zxc", i.color)
-
-                menu.add(i.name).setIcon(R.drawable.bg_publish).setIconTintList(colorsStateList).setOnMenuItemClickListener {
-                    Log.d("zxc", i.color)
-                        viewModel.selectAttendee.value = i.name
+                menu.add(date.name)
+                    .setIcon(R.drawable.bg_publish)
+                    .setIconTintList(date.color?.let { SetColorStateList.setColorStateList(it) })
+                    .setOnMenuItemClickListener {
+                        viewModel.selectAttendee.value = date.name
                         binding.drawerLayout.closeDrawer(GravityCompat.START)
+
                         return@setOnMenuItemClickListener true
                     }
             }
-        } else {
-            Log.d("zxcERR", "有問題")
         }
     }
 
 
-
-    /**
-     * override back key for the drawer design
-     */
     override fun onBackPressed() {
 
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {

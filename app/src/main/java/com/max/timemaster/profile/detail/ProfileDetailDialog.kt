@@ -22,10 +22,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.storage.FirebaseStorage
-import com.max.timemaster.NavigationDirections
-import com.max.timemaster.R
-import com.max.timemaster.TimeMasterApplication
-import com.max.timemaster.bindProfileImage
+import com.max.timemaster.*
 import com.max.timemaster.databinding.DialogProfileDetailBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.UserManager
@@ -89,7 +86,7 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
                 })
 
             }else{
-                findNavController().navigate(NavigationDirections.navigateToMessengerDialog("allNull"))
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog( MessageType.INCOMPLETE_TEXT.value))
             }
 
 

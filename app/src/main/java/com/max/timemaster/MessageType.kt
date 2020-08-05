@@ -1,6 +1,6 @@
 package com.max.timemaster
 
-enum class MessageTypeFilter(val value: String) {
+enum class MessageType(val value: String) {
     CONFLICT("conflict"),
     TIME_ERROR("timeError"),
     NOT_TITLE("notTitle"),

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.max.timemaster.data.DateCost
 import com.max.timemaster.databinding.ItemCostBinding
+import com.max.timemaster.util.SetColorStateList
 import com.max.timemaster.util.TimeUtil.stampToDateNoYear
 import com.max.timemaster.util.UserManager
 import kotlinx.android.synthetic.main.item_cost.view.*
@@ -39,10 +40,7 @@ class CostAdapter() :
             }!![0].color
             binding.attendee.text = dateCost.attendeeName
             binding.content.text = dateCost.costContent
-            val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
-            val colors = intArrayOf(Color.parseColor("#$color"))
-            val colorsStateList = ColorStateList(states, colors)
-            binding.view.backgroundTintList = colorsStateList
+            binding.view.backgroundTintList = color?.let { SetColorStateList.setColorStateList(it) }
 
 
             binding.executePendingBindings()

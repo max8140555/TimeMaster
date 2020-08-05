@@ -19,18 +19,15 @@ class CalendarViewModel(
     var returnDate: String?,
     var selectAttendeeArg: String?
 ) : ViewModel() {
-    private val _selectEvent = MutableLiveData<List<CalendarEvent>>()
-
-    val selectEvent: LiveData<List<CalendarEvent>>
-        get() = _selectEvent
-
-    var liveAllEvent = MutableLiveData<List<CalendarEvent>>()
-
-
 
     var selectAttendee = MutableLiveData<String>().apply {
         selectAttendeeArg?.let { value = it }
     }
+
+    private val _selectEvent = MutableLiveData<List<CalendarEvent>>()
+
+    val selectEvent: LiveData<List<CalendarEvent>>
+        get() = _selectEvent
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()

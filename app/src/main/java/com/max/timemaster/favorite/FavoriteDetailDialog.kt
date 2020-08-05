@@ -1,6 +1,5 @@
 package com.max.timemaster.favorite
 
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
@@ -21,6 +20,7 @@ import com.max.timemaster.*
 import com.max.timemaster.data.DateFavorite
 import com.max.timemaster.databinding.DialogFavoriteDetailBinding
 import com.max.timemaster.ext.getVmFactory
+import com.max.timemaster.util.SetColorStateList
 import com.max.timemaster.util.UserManager
 
 class FavoriteDetailDialog : AppCompatDialogFragment() {
@@ -101,16 +101,14 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
                             chipGroup.removeView(chip)
                         }
                     }
-//                    val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
-//                    val chipColors = intArrayOf(Color.parseColor("#E8DDB5"))
-//                    val chipColorsStateList = ColorStateList(states, chipColors)
-                    val color = UserManager.myDate.value?.filter {
+
+                    val dateColor = UserManager.myDate.value?.filter {
                         it.name == viewModel.edAttendee.value
                     }!![0].color
-                    val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
-                    val colors = intArrayOf(Color.parseColor("#$color"))
-                    val colorsStateList = ColorStateList(states, colors)
-                    chip.chipBackgroundColor = colorsStateList
+
+                    chip.chipBackgroundColor = dateColor?.let { color ->
+                        SetColorStateList.setColorStateList(color)
+                    }
                     val paddingDp = TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP,
                         10f,
@@ -133,7 +131,7 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
                 viewModel.postAddDateFavorite(addDateFavorite())
             }else{
                 findNavController().navigate(NavigationDirections.navigateToMessengerDialog(
-                    MessageTypeFilter.INCOMPLETE_TEXT.value))
+                    MessageType.INCOMPLETE_TEXT.value))
             }
 
 

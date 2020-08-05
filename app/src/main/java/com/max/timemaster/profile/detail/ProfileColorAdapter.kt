@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.max.timemaster.databinding.ItemProfileColorBinding
+import com.max.timemaster.util.SetColorStateList
 
 
 class ProfileColorAdapter(var viewModel: ProfileDetailViewModel) :
@@ -25,10 +26,7 @@ class ProfileColorAdapter(var viewModel: ProfileDetailViewModel) :
         @RequiresApi(Build.VERSION_CODES.M)
         fun bind(colorCode: String, selectedPosition: Int) {
             colorCode.let {
-                val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
-                val colors = intArrayOf(Color.parseColor("#$colorCode"))
-                val colorsStateList = ColorStateList(states, colors)
-                binding.imageDetailColor.backgroundTintList = colorsStateList
+                binding.imageDetailColor.backgroundTintList = SetColorStateList.setColorStateList(colorCode)
 
                 if (adapterPosition == selectedPosition) {
                     binding.imageCorrect.visibility = View.VISIBLE

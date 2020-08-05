@@ -53,7 +53,7 @@ class CostDetailDialog : AppCompatDialogFragment() {
             } else {
 
                 findNavController().navigate(NavigationDirections.navigateToMessengerDialog(
-                    MessageTypeFilter.INCOMPLETE_TEXT.value))
+                    MessageType.INCOMPLETE_TEXT.value))
             }
         }
         viewModel.leave.observe(viewLifecycleOwner, Observer {

@@ -9,6 +9,7 @@ import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.data.User
 import com.max.timemaster.network.LoadApiStatus
 import com.max.timemaster.util.CurrentFragmentType
+import com.max.timemaster.util.UserManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -69,6 +70,13 @@ class MainViewModel(
 
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+    init {
+        postUser(UserManager.user)
+        getLiveUserResult()
+        getLiveMyDateResult()
+        getAllEventResult()
+    }
 
 
     override fun onCleared() {

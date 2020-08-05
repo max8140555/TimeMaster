@@ -8,7 +8,6 @@ import kotlin.properties.Delegates
 
 class TimeMasterApplication : Application() {
 
-    // Depends on the flavor,
     val timeMasterRepository :TimeMasterRepository
         get() = ServiceLocator.provideTasksRepository()
 

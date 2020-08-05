@@ -7,13 +7,16 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
+import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.data.DateFavorite
 import com.max.timemaster.databinding.ItemFavoriteBinding
+import com.max.timemaster.util.SetColorStateList
 import com.max.timemaster.util.UserManager
 
 class FavoriteAdapter() :
@@ -28,12 +31,14 @@ class FavoriteAdapter() :
             binding.title.text = dateFavorite.favoriteTitle
             binding.attendee.text = dateFavorite.attendeeName
 
-            val color = UserManager.myDate.value?.filter {
+            val dateColor = UserManager.myDate.value?.filter {
                 it.name == dateFavorite.attendeeName
             }!![0].color
-            val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
-            val colors = intArrayOf(Color.parseColor("#$color"))
-            val colorsStateList = ColorStateList(states, colors)
+//            val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
+//            val colors = intArrayOf(Color.parseColor("#$color"))
+            val colorsStateList = dateColor?.let { color ->
+                SetColorStateList.setColorStateList(color)
+            }
             binding.view.backgroundTintList = colorsStateList
 
             val chipGroup = binding.chipGroup
@@ -48,7 +53,8 @@ class FavoriteAdapter() :
                     chip.textSize = 12f
                     chip.setTextColor(Color.BLACK)
                     chip.chipBackgroundColor = colorsStateList
-                    chip.closeIconTint = ColorStateList(states, intArrayOf(Color.WHITE))
+                    chip.closeIconTint = SetColorStateList.setColorStateList(
+                        TimeMasterApplication.instance.getString(R.string.color_white_text))
                     val paddingDp = TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP,
                         10f,

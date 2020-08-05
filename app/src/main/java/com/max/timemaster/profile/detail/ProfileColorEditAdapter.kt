@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.max.timemaster.databinding.ItemProfileColorBinding
 import com.max.timemaster.profile.edit.ProfileEditViewModel
+import com.max.timemaster.util.SetColorStateList
 
 class ProfileColorEditAdapter(var viewModel: ProfileEditViewModel) :
     ListAdapter<String, ProfileColorEditAdapter.ProfileColorViewHolder>(
@@ -23,10 +24,8 @@ class ProfileColorEditAdapter(var viewModel: ProfileEditViewModel) :
         @RequiresApi(Build.VERSION_CODES.M)
         fun bind(colorCode: String, viewModel: ProfileEditViewModel) {
             colorCode.let {
-                val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
-                val colors = intArrayOf(Color.parseColor("#$colorCode"))
-                val colorsStateList = ColorStateList(states, colors)
-                binding.imageDetailColor.backgroundTintList = colorsStateList
+
+                binding.imageDetailColor.backgroundTintList = SetColorStateList.setColorStateList(colorCode)
 
                 if (adapterPosition == viewModel.selectedPosition.value) {
                     binding.imageCorrect.visibility = View.VISIBLE
@@ -63,7 +62,7 @@ class ProfileColorEditAdapter(var viewModel: ProfileEditViewModel) :
             ItemProfileColorBinding.inflate(
                 LayoutInflater.from(
                     parent.context
-                ), parent, false                  //在有inflate 的地方 要注意   parnt, false
+                ), parent, false
             )
         )
     }

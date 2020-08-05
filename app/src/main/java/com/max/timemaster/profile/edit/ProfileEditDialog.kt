@@ -63,11 +63,6 @@ class ProfileEditDialog : AppCompatDialogFragment() {
         binding.viewModel = viewModel
         permission()
 
-//        val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
-//        val colors = intArrayOf(Color.parseColor("#${viewModel.edColor.value}"))
-//        val colorsStateList = ColorStateList(states, colors)
-//        binding.imageView.backgroundTintList = colorsStateList
-
         binding.layoutPublish.startAnimation(
             AnimationUtils.loadAnimation(
                 context,
@@ -91,13 +86,13 @@ class ProfileEditDialog : AppCompatDialogFragment() {
 
 
                 findNavController().navigate(NavigationDirections.navigateToMessengerDialog(
-                    MessageTypeFilter.ACTIVE.value))
+                    MessageType.ACTIVE.value))
 
                 viewModel.edActive.value = true
             } else {
 
 
-                findNavController().navigate(NavigationDirections.navigateToMessengerDialog(MessageTypeFilter.ARCHIVE.value))
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog(MessageType.ARCHIVE.value))
 
                 viewModel.edActive.value = false
             }
