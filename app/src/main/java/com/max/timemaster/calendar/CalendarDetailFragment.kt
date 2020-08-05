@@ -18,10 +18,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.max.timemaster.MainViewModel
-import com.max.timemaster.NavigationDirections
-import com.max.timemaster.R
-import com.max.timemaster.TimeMasterApplication
+import com.max.timemaster.*
 import com.max.timemaster.databinding.FragmentCalendarDetailBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.TimeUtil
@@ -85,8 +82,8 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
 
         binding.btnAllDay.setOnCheckedChangeListener { buttonView, isChecked ->
             if (buttonView.isChecked) {
-                viewModel.editTime.value = "00:00"
-                viewModel.editEndTime.value = "23:59"
+                viewModel.editTime.value = getString(R.string.time_0000_text)
+                viewModel.editEndTime.value = getString(R.string.time_2359_text)
                 binding.selectTime.isEnabled = false
                 binding.selectEndTime.isEnabled = false
                 binding.selectTime.setBackgroundResource(R.drawable.bg_publish)
@@ -97,8 +94,8 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
                 Log.d("edActive", "非整天")
                 binding.selectTime.isEnabled = true
                 binding.selectEndTime.isEnabled = true
-                binding.selectTime.setBackgroundColor(Color.parseColor("#FFFFFF"))
-                binding.selectEndTime.setBackgroundColor(Color.parseColor("#FFFFFF"))
+                binding.selectTime.setBackgroundColor(Color.parseColor(getString(R.string.color_white_text)))
+                binding.selectEndTime.setBackgroundColor(Color.parseColor(getString(R.string.color_white_text)))
             }
         }
 
@@ -107,7 +104,7 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
                 Log.e("Max","$isConflict")
                 if (isConflict == true) {
 
-                    findNavController().navigate(NavigationDirections.navigateToMessengerDialog("conflict"))
+                    findNavController().navigate(NavigationDirections.navigateToMessengerDialog(MessageTypeFilter.CONFLICT.value))
 
                 } else {
                     val stampStart = dateToStampTime(
@@ -206,11 +203,12 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
         when {
             stampStart >= stampEnd -> {
 
-                findNavController().navigate(NavigationDirections.navigateToMessengerDialog("timeError"))
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog(MessageTypeFilter.TIME_ERROR.value))
+
             }
             viewModel.editTitle.value.isNullOrEmpty() -> {
 
-                findNavController().navigate(NavigationDirections.navigateToMessengerDialog("null"))
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog(MessageTypeFilter.NOT_TITLE.value))
             }
             else -> viewModel.checkIfConflict(stampStart, stampEnd, start, end)
         }

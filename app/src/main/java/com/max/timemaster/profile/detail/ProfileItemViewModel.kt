@@ -10,31 +10,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 
-/**
- * Created by Wayne Chen in Jul. 2019.
- *
- * The [ViewModel] that is attached to the [CatalogItemFragment].
- */
 class ProfileItemViewModel(
     private val timeMasterRepository:TimeMasterRepository,
-    private val profileType: ProfileTypeFilter // Handle the type for each catalog item, myDate: com.max.timemaster.data.MyDate){}, myDate: com.max.timemaster.data.MyDate){}
+    private val profileType: ProfileTypeFilter
 ) : ViewModel() {
-
-//    private val sourceFactory = PagingDataSourceFactory(catalogType)
-//
-//    val pagingDataProducts: LiveData<PagedList<Product>> = sourceFactory.toLiveData(6, null)
-
-//    // Handle load api status
-//    val status: LiveData<LoadApiStatus> = Transformations.switchMap(sourceFactory.sourceLiveData) {
-//        it.statusInitialLoad
-//    }
-//
-//    // Handle load api error
-//    val error: LiveData<String> = Transformations.switchMap(sourceFactory.sourceLiveData) {
-//        it.errorInitialLoad
-//    }
-//
-
 
     private val _leave = MutableLiveData<Boolean>()
 
@@ -54,10 +33,6 @@ class ProfileItemViewModel(
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
 
-    /**
-     * When the [ViewModel] is finished, we cancel our coroutine [viewModelJob], which tells the
-     * Retrofit service to stop.
-     */
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
@@ -69,9 +44,4 @@ class ProfileItemViewModel(
         Logger.i("------------------------------------")
     }
 
-//    fun refresh() {
-//        if (status.value != LoadApiStatus.LOADING) {
-//            sourceFactory.sourceLiveData.value.invalidate()
-//        }
-//    }
 }

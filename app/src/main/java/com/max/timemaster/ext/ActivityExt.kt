@@ -7,11 +7,7 @@ import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.factory.ViewModelFactory
 
 
-/**
- * Created by Wayne Chen in Jul. 2019.
- *
- * Extension functions for Activity.
- */
+
 fun Activity.getVmFactory(): ViewModelFactory {
     val repository = (applicationContext as TimeMasterApplication).timeMasterRepository
     return ViewModelFactory(repository)

@@ -1,7 +1,6 @@
 package com.max.timemaster.favorite
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,17 +12,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.max.timemaster.MainViewModel
-import com.max.timemaster.NavigationDirections
 
 import com.max.timemaster.R
 import com.max.timemaster.bindProfileImage
+
 import com.max.timemaster.data.DateFavorite
 import com.max.timemaster.databinding.FragmentFavoriteBinding
 import com.max.timemaster.ext.getVmFactory
-import com.max.timemaster.util.TimeUtil.stampToDate
 import com.max.timemaster.util.TimeUtil.stampToDateNoYear
 import com.max.timemaster.util.UserManager
-import kotlinx.android.synthetic.main.item_calendar.view.*
 import java.util.*
 
 class FavoriteFragment : Fragment() {
@@ -62,7 +59,7 @@ class FavoriteFragment : Fragment() {
 
                         if (dateSelect.isNullOrEmpty()) {
                             binding.imagePrompt.setImageResource(R.drawable.icon_add)
-                            binding.prompt.text = "點擊按鈕紀錄對象喜歡什麼吧！"
+                            binding.prompt.text = getString(R.string.hint_add_favorite_text)
                             binding.imagePrompt.visibility = VISIBLE
                             binding.prompt.visibility = VISIBLE
                             binding.imagePrompt.setOnClickListener {
@@ -129,13 +126,13 @@ class FavoriteFragment : Fragment() {
                                 Observer { listDate ->
                                     if (listDate.isNullOrEmpty()) {
                                         binding.prompt.visibility = VISIBLE
-                                        binding.prompt.text = " 請先到個人頁面，新增對象喔！"
+                                        binding.prompt.text = getString(R.string.hint_add_date_text)
                                         binding.imagePrompt.visibility = GONE
-//                        binding.imagePrompt.setImageResource(R.drawable.icon_profile)
+
                                     } else {
                                         if (list.isNullOrEmpty()) {
-                                            binding.prompt.text = "點左上角按鈕，選擇對象紀錄他喜歡什麼吧！"
-//                                binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
+                                            binding.prompt.text = getString(R.string.hint_select_date_text)
+
                                             binding.imagePrompt.visibility = GONE
                                             binding.prompt.visibility = VISIBLE
                                         } else {

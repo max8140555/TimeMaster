@@ -1,10 +1,8 @@
 package com.max.timemaster.login
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.widget.Toast
 import com.facebook.AccessToken
@@ -13,8 +11,6 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -22,25 +18,26 @@ import com.max.timemaster.MainActivity
 import com.max.timemaster.R
 import com.max.timemaster.util.UserManager
 import kotlinx.android.synthetic.main.activity_login.*
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
-import java.util.*
 
 class LoginActivity : AppCompatActivity() {
-    var auth: FirebaseAuth? = null
-    var callbackManager: CallbackManager? = null
+
+    private var auth: FirebaseAuth? = null
+    private var callbackManager: CallbackManager? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
 
-
         btn_login.setOnClickListener {
             facebookLogin()
         }
+
         auth = FirebaseAuth.getInstance()
+
         //printHashKey()
         callbackManager = CallbackManager.Factory.create()
+
     }
 
     override fun onStart() {
@@ -58,8 +55,6 @@ class LoginActivity : AppCompatActivity() {
                     //Second step
                     handleFacebookAccessToken(result?.accessToken)
 
-
-//
                 }
 
                 override fun onCancel() {
@@ -76,7 +71,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun handleFacebookAccessToken(token: AccessToken?) {
-        var credential = FacebookAuthProvider.getCredential(token?.token!!)
+        val credential = FacebookAuthProvider.getCredential(token?.token!!)
         auth?.signInWithCredential(credential)
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -96,7 +91,6 @@ class LoginActivity : AppCompatActivity() {
                     )
                     UserManager.user.email = task.result?.user?.email.toString()
                     UserManager.user.name = task.result?.user?.displayName.toString()
-
 
                 } else {
                     //Show the error message

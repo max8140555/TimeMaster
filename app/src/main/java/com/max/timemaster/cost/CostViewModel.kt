@@ -26,15 +26,11 @@ class CostViewModel(private val timeMasterRepository: TimeMasterRepository) : Vi
     val error: LiveData<String>
         get() = _error
 
-
-
     // status for the loading icon of swl
     private val _refreshStatus = MutableLiveData<Boolean>()
 
     val refreshStatus: LiveData<Boolean>
         get() = _refreshStatus
-
-
 
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
@@ -43,18 +39,10 @@ class CostViewModel(private val timeMasterRepository: TimeMasterRepository) : Vi
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
 
-
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
     }
-
-
-
-
-
-
-
 
     fun getLiveDateCostResult() {
         dateCost = timeMasterRepository.getLiveDateCost()

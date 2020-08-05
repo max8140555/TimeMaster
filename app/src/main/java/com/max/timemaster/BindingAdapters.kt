@@ -1,9 +1,9 @@
 package com.max.timemaster
 
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
@@ -12,13 +12,12 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.max.timemaster.network.LoadApiStatus
-import com.max.timemaster.util.TimeUtil
 import java.util.*
+
 
 /**
  * Displays date to [TextView] by [Long]
  */
-
 @RequiresApi(Build.VERSION_CODES.O)
 @BindingAdapter("timestamp")
 fun bindDate(textView: TextView, timestamp: Long?) {
@@ -29,6 +28,7 @@ fun bindDate(textView: TextView, timestamp: Long?) {
         textView.text = date
     }
 }
+
 
 /**
  * According to [LoadApiStatus] to decide the visibility of [ProgressBar]
@@ -41,30 +41,16 @@ fun bindApiStatus(view: ProgressBar, status: LoadApiStatus?) {
     }
 }
 
-/**
- * Uses the Glide library to load an image by URL into an [ImageView]
- */
-@BindingAdapter("imageUrl")
-fun bindImage(imgView: ImageView, imgUrl: String?) {
-    imgUrl?.let {
-        val imgUri = it.toUri().buildUpon().build()
-        Glide.with(imgView.context)
-            .load(imgUri)
-            .apply(
-                RequestOptions()
-                    .placeholder(R.drawable.ic_placeholder)
-                    .error(R.drawable.ic_placeholder)
-            )
-            .into(imgView)
-    }
-}
 
+/**
+ * Uses the Glide library to load an image by URL into an [ImageView] (circleCrop)
+ */
 @BindingAdapter("profileImageUrl")
 fun bindProfileImage(imgView: ImageView, imgUrl: String?) {
     imgUrl?.let {
-        val imgUrl = imgUrl.toUri().buildUpon().scheme("https").build()
+        val imgUri = it.toUri().buildUpon().scheme("https").build()
         Glide.with(imgView.context)
-            .load(imgUrl)
+            .load(imgUri)
             .apply(
                 RequestOptions()
                     .circleCrop()
@@ -73,56 +59,63 @@ fun bindProfileImage(imgView: ImageView, imgUrl: String?) {
     }
 }
 
+
 /**
  * Displays exp to [TextView] by [Long]
  */
-
+@SuppressLint("SetTextI18n")
 @RequiresApi(Build.VERSION_CODES.O)
 @BindingAdapter("exp")
 fun bindExp(textView: TextView, exp: Long?) {
     exp?.let {
-        textView.text = "${exp % 100}%"
+        textView.text = "${it % 100}%"
     }
 }
 
+/**
+ * Use [Long] to convert exp to level and display as [TextView]
+ */
+@SuppressLint("SetTextI18n")
 @RequiresApi(Build.VERSION_CODES.O)
 @BindingAdapter("level")
 fun bindLevel(textView: TextView, exp: Long?) {
     exp?.let {
-        textView.text = "${exp / 100 + 1}"
+        textView.text = "${it / 100 + 1}"
     }
 }
 
+/**
+ * Use [Long] to convert exp to level and display the corresponding Title as [TextView]
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @BindingAdapter("title")
 fun bindTitle(textView: TextView, exp: Long?) {
     exp?.let {
         when {
-            exp / 100 + 1 in 3..6 -> {
+            it / 100 + 1 in 3..6 -> {
                 textView.text = TimeMasterApplication.instance.getString(R.string.level3_6)
             }
-            exp / 100 + 1 >= 7 -> {
+            it / 100 + 1 >= 7 -> {
                 textView.text = TimeMasterApplication.instance.getString(R.string.level7_up)
                 textView.textSize = 12F
             }
             else -> {
                 textView.text = TimeMasterApplication.instance.getString(R.string.level1_2)
-
             }
         }
-
     }
 }
 
+/**
+ * Displays login days to [TextView] by [Long]
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @BindingAdapter("loginTime")
 fun bindLoginTime(textView: TextView, timestamp: Long?) {
     timestamp?.let {
         val cal = Calendar.getInstance(Locale.TAIWAN).timeInMillis
-
-        val day = (cal - it) / 86400000 +1
+        val day = (cal - it) / 86400000 + 1
 
         textView.text = day.toString()
     }
 }
-

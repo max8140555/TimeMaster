@@ -3,13 +3,8 @@ package com.max.timemaster.data.source
 import androidx.lifecycle.MutableLiveData
 import com.max.timemaster.data.*
 
-/**
- * Created by Wayne Chen in Jul. 2019.
- *
- * Concrete implementation to load Stylish sources.
- */
-class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSource,
-                                  private val localDataSource: TimeMasterDataSource
+
+class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSource
 ) : TimeMasterRepository {
     override suspend fun getSelectEvent(greaterThan: Long, lessThan: Long): Result<List<CalendarEvent>> {
         return remoteDataSource.getSelectEvent(greaterThan ,lessThan)
@@ -39,15 +34,13 @@ class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSo
         return remoteDataSource.updateDate(myDate)
     }
 
-    override suspend fun updateExp(exp: Long): Result<Boolean> {
-        return remoteDataSource.updateExp(exp)
+    override suspend fun upUserExp(exp: Long): Result<Boolean> {
+        return remoteDataSource.upUserExp(exp)
     }
 
     override fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>> {
         return remoteDataSource.getLiveAllEvent()
     }
-
-
 
     override fun getLiveUser(): MutableLiveData<User> {
         return remoteDataSource.getLiveUser()

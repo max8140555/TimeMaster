@@ -6,11 +6,7 @@ import com.max.timemaster.calendar.CalendarDetailViewModel
 import com.max.timemaster.MessengerViewModel
 import com.max.timemaster.data.TimeMasterRepository
 
-/**
- * Created by Wayne Chen in Jul. 2019.
- *
- * Factory for all ViewModels.
- */
+
 @Suppress("UNCHECKED_CAST")
 class CalendarDetailViewModelFactory constructor(
     private val timeMasterRepository: TimeMasterRepository,

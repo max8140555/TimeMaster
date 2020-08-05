@@ -21,8 +21,6 @@ class FavoriteAdapter() :
         DiffCallback
     ) {
 
-
-    //1.ViewHolder 畫布
     class ProductDetailedEvaluationViewHolder(private var binding: ItemFavoriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -41,7 +39,7 @@ class FavoriteAdapter() :
             val chipGroup = binding.chipGroup
             val contentList = dateFavorite.favoriteContent
             chipGroup.removeAllViews()
-//            val listContent = viewModel.edListContent
+
             if (contentList != null) {
                 for (index in contentList.indices) {
                     val content = contentList[index]
@@ -58,15 +56,6 @@ class FavoriteAdapter() :
                     ).toInt()
 
                     chip.setPadding(40, paddingDp, paddingDp, paddingDp)
-//                    chip.setOnClickListener {
-//                        chip.isCloseIconEnabled = !chip.isCloseIconEnabled
-//                        //Added click listener on close icon to remove tag from ChipGroup
-//                        chip.setOnCloseIconClickListener {
-//                            contentList.remove(tagName)
-//                            chipGroup.removeView(chip)
-//                            Log.e ("Connie", contentList.toString())
-//                        }
-//                    }
 
                     chipGroup.addView(chip)
                     binding.executePendingBindings()
@@ -78,10 +67,7 @@ class FavoriteAdapter() :
         }
     }
 
-    /**
-     * Allows the RecyclerView to determine which items have changed when the [List] of [MarsProperty]
-     * has been updated.
-     */
+
     companion object DiffCallback : DiffUtil.ItemCallback<DateFavorite>() {
         override fun areItemsTheSame(
             oldItem: DateFavorite,
@@ -98,10 +84,8 @@ class FavoriteAdapter() :
         }
     }
 
-    /**
-     * Create new [RecyclerView] item views (invoked by the layout manager)
-     */
-    //執行畫布
+
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -111,18 +95,16 @@ class FavoriteAdapter() :
             ItemFavoriteBinding.inflate(
                 LayoutInflater.from(
                     parent.context
-                ), parent, false                  //在有inflate 的地方 要注意   parnt, false
+                ), parent, false
             )
         )
     }
 
-    /**
-     * Replaces the contents of a view (invoked by the layout manager)
-     */
-    //2.綁定ViewHolder 畫布
+
+
     override fun onBindViewHolder(holder: ProductDetailedEvaluationViewHolder, position: Int) {
         val product =
-            getItem(position)  //告訴onCreateViewHolder 要生成幾個viewholderholder.itemView.setOnClickListener {
+            getItem(position)
         holder.bind(product)
     }
 

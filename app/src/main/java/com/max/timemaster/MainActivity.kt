@@ -30,10 +30,10 @@ class MainActivity : AppCompatActivity() {
 
     val viewModel by viewModels<MainViewModel> { getVmFactory() }
 
-    private lateinit var binding: ActivityMainBinding
-    private var actionBarDrawerToggle: ActionBarDrawerToggle? = null
-    private lateinit var appBarConfiguration: AppBarConfiguration
     lateinit var navController: NavController
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private var actionBarDrawerToggle: ActionBarDrawerToggle? = null
 
     private val onNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomNav() {
         binding.bottomNavView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
     }
+
     private fun setupNavController() {
         findNavController(R.id.myNavHostFragment).addOnDestinationChangedListener { navController: NavController, _: NavDestination, _: Bundle? ->
             viewModel.currentFragmentType.value = when (navController.currentDestination?.id) {
@@ -78,6 +79,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,35 +88,29 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-
-
-
-
         viewModel.postUser(UserManager.user)
-
         viewModel.getLiveUserResult()
         viewModel.getLiveMyDateResult()
         viewModel.getAllEventResult()
+
         viewModel.liveUser.observe(this, Observer {
-            it?.let {
-                UserManager.user = viewModel.liveUser.value!!
+            it?.let { user ->
+                UserManager.user = user
                 UserManager.exp.value = UserManager.user.exp
             }
         })
         UserManager.exp.observe(this, Observer {
-            viewModel.updateExp(it)
+            viewModel.upUserExp(it)
         })
         viewModel.liveMyDate.observe(this, Observer {
-            it?.let {
-                UserManager.addDate.value?.let { savedDate ->
-                    UserManager.myDate.value = viewModel.liveMyDate.value
+            it?.let { listMyDate ->
+                    UserManager.myDate.value = listMyDate
                     setupDrawer()
-                }
             }
         })
         viewModel.liveAllEvent.observe(this, Observer {
-            it?.let {
-                UserManager.allEvent.value = viewModel.liveAllEvent.value
+            it?.let {allEvents ->
+                UserManager.allEvent.value = allEvents
                 Log.d("ccc", "$it")
                 Log.d("ccc", "${UserManager.allEvent.value}")
             }
@@ -163,14 +159,15 @@ class MainActivity : AppCompatActivity() {
 
         val m = binding.drawerNavView.menu
         m.clear()
-        val menu = m.addSubMenu("時間管理")
+        val menu = m.addSubMenu(getString(R.string.drawer_title_text))
 
         val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
 
-        val myColor = intArrayOf(Color.parseColor("#265D7C"))
+        val myColor = intArrayOf(Color.parseColor(getString(R.string.main_color_text)))
         val myColorStateList = ColorStateList(states, myColor)
-        menu.add("所有對象").setIcon(R.drawable.bg_publish).setIconTintList(myColorStateList).setOnMenuItemClickListener {
-                Log.d("zxc", "All")
+
+        menu.add(getString(R.string.drawer_item_text)).setIcon(R.drawable.bg_publish).setIconTintList(myColorStateList).setOnMenuItemClickListener {
+
                 viewModel.selectAttendee.value = ""
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
                 return@setOnMenuItemClickListener true
@@ -197,6 +194,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("zxcERR", "有問題")
         }
     }
+
 
 
     /**

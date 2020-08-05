@@ -6,7 +6,9 @@ import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.data.*
 
 object UserManager {
+
     var user = User()
+
     var myDate = MutableLiveData<List<MyDate>>()
 
     var exp = MutableLiveData<Long>()
@@ -28,7 +30,7 @@ object UserManager {
             return pref.getString("userEmail", null)
         }
         set(value) {
-            // writ data to sharedperference
+            // writ data to sharedPreferences
             val setUserEmail = pref.edit()
             setUserEmail.putString("userEmail", value).apply()
         }

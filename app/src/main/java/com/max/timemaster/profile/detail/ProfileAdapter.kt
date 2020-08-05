@@ -6,9 +6,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import com.max.timemaster.profile.ProfileTypeFilter
 
 
-/**
- * Created by Wayne Chen in Jul. 2019.
- */
+
 class ProfileAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     override fun getItem(position: Int): Fragment {
         return ProfileItemFragment(ProfileTypeFilter.values()[position])

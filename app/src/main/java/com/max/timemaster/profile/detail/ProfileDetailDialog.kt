@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -15,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
@@ -23,8 +21,6 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.storage.FirebaseStorage
 import com.max.timemaster.NavigationDirections
 import com.max.timemaster.R
@@ -36,6 +32,7 @@ import com.max.timemaster.util.UserManager
 import java.util.*
 
 class ProfileDetailDialog : AppCompatDialogFragment() {
+
     private val viewModel by viewModels<ProfileDetailViewModel> { getVmFactory() }
     lateinit var binding: DialogProfileDetailBinding
     var saveUri: Uri? = null
@@ -52,7 +49,7 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
 
 
     @RequiresApi(Build.VERSION_CODES.M)
-    @SuppressLint("LongLogTag")
+    @SuppressLint("LongLogTag", "ResourceAsColor")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -72,7 +69,6 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
             datePicker()
         }
         binding.imageView.setOnClickListener {
-
             toAlbum()
         }
 
@@ -83,10 +79,12 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
                 viewModel.addDate(imageUri)
                 viewModel.myDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
                     it?.let {
+
                         viewModel.myDate.value?.let { it1 -> viewModel.postAddDate(it1) }
                         UserManager.addDate.value = viewModel.edDateName.value
                         Log.d(" UserManager.addDate.value", "${UserManager.addDate.value}")
-                        binding.editBirthday.background.setTint(Color.parseColor("#FFFFFF"))
+                        binding.editBirthday.background.setTint(R.color.black)
+
                     }
                 })
 
@@ -181,7 +179,7 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         if (permissionList.isNotEmpty()) ActivityCompat.requestPermissions(
             (activity as AppCompatActivity),
             permissionList.toArray(array),
-            0
+            PHOTO_FROM_GALLERY
         )
     }
 

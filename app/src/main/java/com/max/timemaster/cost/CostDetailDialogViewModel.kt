@@ -1,11 +1,11 @@
 package com.max.timemaster.cost
 
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
-import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.data.DateCost
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.network.LoadApiStatus
@@ -31,6 +31,7 @@ class CostDetailDialogViewModel( private val timeMasterRepository: TimeMasterRep
 
     val leave: LiveData<Boolean>
         get() = _leave
+
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
@@ -69,6 +70,7 @@ class CostDetailDialogViewModel( private val timeMasterRepository: TimeMasterRep
             }
         }
     }
+
     fun leave(needRefresh: Boolean = false) {
         _leave.value = needRefresh
     }

@@ -7,11 +7,8 @@ import androidx.lifecycle.ViewModel
 import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.data.CalendarEvent
-
 import com.max.timemaster.data.TimeMasterRepository
-import com.max.timemaster.data.User
 import com.max.timemaster.network.LoadApiStatus
-import com.max.timemaster.util.UserManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -110,14 +107,5 @@ class CalendarViewModel(
             _refreshStatus.value = false
         }
     }
-
-    fun getAllEventResult() {
-        liveAllEvent = timeMasterRepository.getLiveAllEvent()
-        _status.value = LoadApiStatus.DONE
-        _refreshStatus.value = false
-    }
-
-
-
 
 }

@@ -6,11 +6,7 @@ import com.max.timemaster.data.MyDate
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.profile.edit.ProfileEditViewModel
 
-/**
- * Created by Wayne Chen on 2019-08-07.
- *
- * Factory for catalog item ViewModels.
- */
+
 @Suppress("UNCHECKED_CAST")
 class ProfileEditViewModelFactory(
     private val timeMasterRepository: TimeMasterRepository,

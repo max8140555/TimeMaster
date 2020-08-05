@@ -2,12 +2,6 @@ package com.max.timemaster.data
 
 import androidx.lifecycle.MutableLiveData
 
-
-/**
- * Created by Wayne Chen in Jul. 2019.
- *
- * Main entry point for accessing Stylish sources.
- */
 interface TimeMasterDataSource {
     suspend fun getSelectEvent(greaterThan: Long, lessThan: Long): Result<List<CalendarEvent>>
 
@@ -23,11 +17,9 @@ interface TimeMasterDataSource {
 
     suspend fun updateDate(myDate: MyDate): Result<Boolean>
 
-    suspend fun updateExp(exp: Long): Result<Boolean>
+    suspend fun upUserExp(exp: Long): Result<Boolean>
 
     fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>>
-
-
 
     fun getLiveUser(): MutableLiveData<User>
 

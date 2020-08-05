@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.max.timemaster.data.DateFavorite
-
-import com.max.timemaster.data.MyDate
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.network.LoadApiStatus
 import kotlinx.coroutines.CoroutineScope

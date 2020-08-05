@@ -30,7 +30,6 @@ import com.max.timemaster.databinding.FragmentCostBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.TimeUtil.stampToDateNoYear
 import com.max.timemaster.util.UserManager
-import org.threeten.bp.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -99,15 +98,13 @@ class CostFragment : Fragment() {
                                 viewLifecycleOwner,
                                 Observer { listDate ->
                                     if (listDate.isNullOrEmpty()) {
-                                        binding.prompt.visibility = View.VISIBLE
-                                        binding.prompt.text = " 請先到個人頁面，新增對象喔！"
-//                                        binding.imagePrompt.visibility = GONE
-//                        binding.imagePrompt.setImageResource(R.drawable.icon_profile)
+                                        binding.prompt.visibility = VISIBLE
+                                        binding.prompt.text = getString(R.string.hint_add_date_text)
+
                                     } else {
                                         if (allDateCostList.isNullOrEmpty()) {
-                                            binding.prompt.text = "點左上角按鈕，選擇對象新增花費吧！"
-//                                binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
-//                                binding.imagePrompt.visibility = VISIBLE
+
+                                            binding.prompt.text = getString(R.string.hint_select_date_text)
                                             binding.prompt.visibility = VISIBLE
                                         } else {
                                             binding.imagePrompt.visibility = GONE
@@ -128,7 +125,7 @@ class CostFragment : Fragment() {
                             // Selected Date
                             if (dateSelect.isNullOrEmpty()) {
                                 binding.imagePrompt.setImageResource(R.drawable.icon_add)
-                                binding.prompt.text = "點擊按鈕紀錄你的花費吧！"
+                                binding.prompt.text = getString(R.string.hint_cost_text)
                                 binding.imagePrompt.visibility = VISIBLE
                                 binding.prompt.visibility = VISIBLE
                                 binding.imagePrompt.setOnClickListener {
@@ -229,10 +226,6 @@ class CostFragment : Fragment() {
                         it.costPrice
                     }
                     Log.e("Max111", "$dayMoney")
-
-//                    if (dayMoney.isEmpty()) {
-//                        dayMoney = listOf(0)
-//                    }
 
 
                     for (money in dayMoney.indices) {

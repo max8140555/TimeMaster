@@ -13,6 +13,25 @@
     <string name="level3_6">魚池管理員</string>
     <string name="level7_up">時間管理大師</string>
     <string name="level1_2">小小釣手</string>
+    <string name="time_conflict_text">　時間衝突囉！</string>
+    <string name="time_error_text">　時間設定有誤！</string>
+    <string name="incomplete_title_text">　請填寫行程！</string>
+    <string name="incomplete_text">　請輸入完整！</string>
+    <string name="activity_text">追蹤中</string>
+    <string name="archive_text">封存對象</string>
+    <string name="drawer_title_text">時間管理</string>
+    <string name="main_color_text">#265D7C</string>
+    <string name="drawer_item_text">所有對象</string>
+    <string name="hint_add_favorite_text">點擊按鈕紀錄對象的喜好吧！</string>
+    <string name="hint_add_cost_text">點擊按鈕紀錄你的花費吧！</string>
+    <string name="hint_add_date_text">請先到個人頁面，新增對象喔！</string>
+    <string name="hint_select_date_text">點左上角按鈕，選擇對象！</string>
+    <string name="hint_cost_text">點擊按鈕紀錄你的花費吧！</string>
+    <string name="hint_event_text">點選按鈕，新增行程吧！</string>
+    <string name="time_0000_text">00:00</string>
+    <string name="space_text">\u0020</string>
+    <string name="time_2359_text">23:59</string>
+    <string name="color_white_text">#FFFFFF</string>
 
 
 </resources>

@@ -6,11 +6,7 @@ import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.profile.ProfileTypeFilter
 import com.max.timemaster.profile.detail.ProfileItemViewModel
 
-/**
- * Created by Wayne Chen on 2019-08-07.
- *
- * Factory for catalog item ViewModels.
- */
+
 @Suppress("UNCHECKED_CAST")
 class ProfileItemViewModelFactory(
     private val timeMasterRepository: TimeMasterRepository,

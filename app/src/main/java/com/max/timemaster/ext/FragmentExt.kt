@@ -7,11 +7,7 @@ import com.max.timemaster.factory.*
 
 import com.max.timemaster.profile.ProfileTypeFilter
 
-/**
- * Created by Wayne Chen in Jul. 2019.
- *
- * Extension functions for Fragment.
- */
+
 fun Fragment.getVmFactory(): ViewModelFactory {
     val repository = (requireContext().applicationContext as TimeMasterApplication).timeMasterRepository
     return ViewModelFactory(repository)

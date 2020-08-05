@@ -38,7 +38,7 @@
                 android:checked="@{viewModel.edActive}"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                app:kswTintColor="@color/C_265D7C"
+                app:kswTintColor="@color/main_color"
                 app:layout_constraintBottom_toTopOf="@+id/editText"
                 app:layout_constraintEnd_toEndOf="parent" />
 

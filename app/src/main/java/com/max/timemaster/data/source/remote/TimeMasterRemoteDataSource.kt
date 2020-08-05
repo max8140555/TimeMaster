@@ -17,14 +17,13 @@ import com.max.timemaster.util.UserManager
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-/**
- * Created by Wayne Chen in Jul. 2019.
- *
- * Implementation of the Stylish source that from network.
- */
-object TimeMasterRemoteDataSource : TimeMasterDataSource {
 
-    private const val PATH_ARTICLES = "calendar"
+object TimeMasterRemoteDataSource : TimeMasterDataSource {
+    private const val PATH_USERS = "users"
+    private const val PATH_CALENDAR = "calendar"
+    private const val PATH_DATE_FAVORITE = "dateFavorite"
+    private const val PATH_DATE_COST = "dateCost"
+    private const val PATH_DATE = "date"
     private const val KEY_CREATED_TIME = "dateStamp"
 
     override suspend fun getSelectEvent(
@@ -32,12 +31,11 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
         lessThan: Long
     ): Result<List<CalendarEvent>> = suspendCoroutine { continuation ->
 
-
         UserManager.userEmail?.let {
             FirebaseFirestore.getInstance()
-                .collection("users").document(it).collection("calendar")
-                .whereGreaterThan("dateStamp", greaterThan)
-                .whereLessThan("dateStamp", lessThan)
+                .collection(PATH_USERS).document(it).collection(PATH_CALENDAR)
+                .whereGreaterThan(KEY_CREATED_TIME, greaterThan)
+                .whereLessThan(KEY_CREATED_TIME, lessThan)
                 .orderBy(KEY_CREATED_TIME, Query.Direction.ASCENDING)
                 .get()
                 .addOnCompleteListener { task ->
@@ -69,11 +67,11 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
         }
     }
 
-//        calendarEvent.dateStamp = Calendar.getInstance().timeInMillis
+
 
     override suspend fun postEvent(calendarEvent: CalendarEvent): Result<Boolean> =
         suspendCoroutine { continuation ->
-            val event = FirebaseFirestore.getInstance().collection("users")
+            val event = FirebaseFirestore.getInstance().collection(PATH_USERS)
             val document = UserManager.userEmail?.let { event.document(it) }
 
             UserManager.userEmail?.let {
@@ -81,13 +79,15 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                     .get()
                     .addOnSuccessListener { doc ->
                         document
-                            ?.collection("calendar")
+                            ?.collection(PATH_CALENDAR)
                             ?.add(calendarEvent)
                             ?.addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     Logger.i("postEvent: $calendarEvent")
                                     UserManager.exp.value = UserManager.exp.value?.plus(10)
+
                                     Toast.makeText(TimeMasterApplication.instance,"Exp +10",Toast.LENGTH_SHORT).show()
+
                                     continuation.resume(Result.Success(true))
                                 } else {
                                     task.exception?.let {
@@ -112,7 +112,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
     @RequiresApi(Build.VERSION_CODES.N)
     override suspend fun postUser(user: User): Result<Boolean> =
         suspendCoroutine { continuation ->
-            val db = FirebaseFirestore.getInstance().collection("users")
+            val db = FirebaseFirestore.getInstance().collection(PATH_USERS)
             val document = UserManager.userEmail?.let { db.document(it) }
 
             db
@@ -155,17 +155,17 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
     @RequiresApi(Build.VERSION_CODES.N)
     override suspend fun postDate(myDate: MyDate): Result<Boolean> =
         suspendCoroutine { continuation ->
-            val db = FirebaseFirestore.getInstance().collection("users")
+            val db = FirebaseFirestore.getInstance().collection(PATH_USERS)
             val document = UserManager.userEmail?.let { db.document(it) }
 
             UserManager.userEmail?.let { it ->
-                db.document(it).collection("date")
+                db.document(it).collection(PATH_DATE)
                     .whereEqualTo("name", myDate.name)
                     .get()
                     .addOnSuccessListener { doc ->
                         myDate.loginDate = Calendar.getInstance().timeInMillis
                         if (doc.isEmpty) {
-                            document?.collection("date")?.add(myDate)
+                            document?.collection(PATH_DATE)?.add(myDate)
                                 ?.addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
                                         Logger.i("postMyDate: $myDate")
@@ -198,18 +198,18 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
 
     override suspend fun postFavorite(dateFavorite: DateFavorite): Result<Boolean> =
         suspendCoroutine { continuation ->
-            val db = FirebaseFirestore.getInstance().collection("users")
+            val db = FirebaseFirestore.getInstance().collection(PATH_USERS)
             val document = UserManager.userEmail?.let { db.document(it) }
 
             UserManager.userEmail?.let {
-                db.document(it).collection("dateFavorite")
+                db.document(it).collection(PATH_DATE_FAVORITE)
                     .whereEqualTo("attendeeName",dateFavorite.attendeeName)
                     .whereEqualTo("favoriteTitle",dateFavorite.favoriteTitle)
                     .get()
                     .addOnSuccessListener { doc ->
 
                         if (doc.isEmpty){
-                            document?.collection("dateFavorite")?.add(dateFavorite)
+                            document?.collection(PATH_DATE_FAVORITE)?.add(dateFavorite)
                                 ?.addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
                                         Logger.i("postdateFavorite: $dateFavorite")
@@ -244,7 +244,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                 Log.e("Max","$list")
                                 Log.e("Max","${i["favoriteContent"]}")
                                 document
-                                    ?.collection("dateFavorite")
+                                    ?.collection(PATH_DATE_FAVORITE)
                                     ?.document(i.id)
                                     ?.update("favoriteContent",list)
                                     ?.addOnCompleteListener { task ->
@@ -279,7 +279,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
     @RequiresApi(Build.VERSION_CODES.N)
     override suspend fun postCost(dateCost: DateCost): Result<Boolean> =
         suspendCoroutine { continuation ->
-            val db = FirebaseFirestore.getInstance().collection("users")
+            val db = FirebaseFirestore.getInstance().collection(PATH_USERS)
             val document = UserManager.userEmail?.let { db.document(it) }
 
             UserManager.userEmail?.let {
@@ -287,7 +287,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                     .get()
                     .addOnSuccessListener { doc ->
                         dateCost.time = Calendar.getInstance().timeInMillis
-                        document?.collection("dateCost")?.add(dateCost)
+                        document?.collection(PATH_DATE_COST)?.add(dateCost)
                             ?.addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     Logger.i("postEvent: $dateCost")
@@ -317,17 +317,17 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
 
     override suspend fun updateDate(myDate: MyDate): Result<Boolean> =
         suspendCoroutine { continuation ->
-            val db = FirebaseFirestore.getInstance().collection("users")
+            val db = FirebaseFirestore.getInstance().collection(PATH_USERS)
             UserManager.userEmail?.let {
                 db
                     .document(it)
-                    .collection("date")
+                    .collection(PATH_DATE)
                     .whereEqualTo("name", myDate.name)
                     .get()
                     .addOnSuccessListener { docs ->
 
                         for (doc in docs) {
-                            db.document(it).collection("date").document(doc.id).update(
+                            db.document(it).collection(PATH_DATE).document(doc.id).update(
                                 "active",
                                 myDate.active,
                                 "birthday",
@@ -352,9 +352,9 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
             }
         }
 
-    override suspend fun updateExp(exp: Long): Result<Boolean>  =
+    override suspend fun upUserExp(exp: Long): Result<Boolean>  =
         suspendCoroutine { continuation ->
-            val db = FirebaseFirestore.getInstance().collection("users")
+            val db = FirebaseFirestore.getInstance().collection(PATH_USERS)
             UserManager.userEmail?.let {
                 db
                     .document(it)
@@ -388,7 +388,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
 
         UserManager.userEmail?.let {
             FirebaseFirestore.getInstance()
-                .collection("users").document(it).collection("calendar")
+                .collection(PATH_USERS).document(it).collection(PATH_CALENDAR)
                 .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
                 .addSnapshotListener { snapshot, exception ->
                     Logger.i("$snapshot")
@@ -417,7 +417,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
         val liveData = MutableLiveData<User>()
 
         FirebaseFirestore.getInstance()
-            .collection("users")
+            .collection(PATH_USERS)
             .whereEqualTo("email", UserManager.userEmail)
 
             .addSnapshotListener { snapshot, exception ->
@@ -445,14 +445,14 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
     override fun getLiveMyDate(): MutableLiveData<List<MyDate>> {
         val liveData = MutableLiveData<List<MyDate>>()
 
-        val db = FirebaseFirestore.getInstance().collection("users")
+        val db = FirebaseFirestore.getInstance().collection(PATH_USERS)
         db
             .whereEqualTo("email", UserManager.userEmail)
 
             .get()
             .addOnSuccessListener {
                 UserManager.userEmail?.let {
-                    db.document(it).collection("date")
+                    db.document(it).collection(PATH_DATE)
                         .orderBy("loginDate", Query.Direction.ASCENDING)
                         .addSnapshotListener { snapshot, exception ->
 
@@ -480,9 +480,9 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
     override fun getLiveDateFavorite(): MutableLiveData<List<DateFavorite>> {
         val liveData = MutableLiveData<List<DateFavorite>>()
 
-        val db = FirebaseFirestore.getInstance().collection("users")
+        val db = FirebaseFirestore.getInstance().collection(PATH_USERS)
         UserManager.userEmail?.let {
-            db.document(it).collection("dateFavorite")
+            db.document(it).collection(PATH_DATE_FAVORITE)
                 .addSnapshotListener { snapshot, exception ->
 
                     Logger.i("addSnapshotListener detect")
@@ -508,9 +508,9 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
     override fun getLiveDateCost(): MutableLiveData<List<DateCost>> {
         val liveData = MutableLiveData<List<DateCost>>()
 
-        val db = FirebaseFirestore.getInstance().collection("users")
+        val db = FirebaseFirestore.getInstance().collection(PATH_USERS)
         UserManager.userEmail?.let {
-            db.document(it).collection("dateCost")
+            db.document(it).collection(PATH_DATE_COST)
                 .orderBy("time", Query.Direction.DESCENDING)
                 .addSnapshotListener { snapshot, exception ->
 

@@ -3,15 +3,12 @@ package com.max.timemaster.favorite
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -20,15 +17,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.max.timemaster.MainViewModel
-import com.max.timemaster.NavigationDirections
-import com.max.timemaster.R
-import com.max.timemaster.TimeMasterApplication
+import com.max.timemaster.*
 import com.max.timemaster.data.DateFavorite
 import com.max.timemaster.databinding.DialogFavoriteDetailBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.UserManager
-import kotlinx.android.synthetic.main.dialog_favorite_detail.*
 
 class FavoriteDetailDialog : AppCompatDialogFragment() {
 
@@ -139,7 +132,8 @@ class FavoriteDetailDialog : AppCompatDialogFragment() {
             if (!viewModel.edTitle.value.isNullOrEmpty() && !viewModel.edListContent.isNullOrEmpty()){
                 viewModel.postAddDateFavorite(addDateFavorite())
             }else{
-                findNavController().navigate(NavigationDirections.navigateToMessengerDialog("allNull"))
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog(
+                    MessageTypeFilter.INCOMPLETE_TEXT.value))
             }
 
 

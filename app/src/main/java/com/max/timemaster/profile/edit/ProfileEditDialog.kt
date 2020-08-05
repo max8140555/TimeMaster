@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -15,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
@@ -24,28 +22,30 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.storage.FirebaseStorage
-import com.max.timemaster.NavigationDirections
-
-import com.max.timemaster.R
-import com.max.timemaster.TimeMasterApplication
-import com.max.timemaster.bindProfileImage
-import com.max.timemaster.databinding.DialogProfileDetailBinding
+import com.max.timemaster.*
 import com.max.timemaster.databinding.DialogProfileEditBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.profile.detail.*
 import com.max.timemaster.util.TimeUtil.dateToStamp
-import com.max.timemaster.util.UserManager
 import java.util.*
 
+
 class ProfileEditDialog : AppCompatDialogFragment() {
-    private val viewModel by viewModels<ProfileEditViewModel> { getVmFactory(ProfileEditDialogArgs.fromBundle(requireArguments()).selectedDateKey) }
+    private val viewModel by viewModels<ProfileEditViewModel> {
+        getVmFactory(
+            ProfileEditDialogArgs.fromBundle(
+                requireArguments()
+            ).selectedDateKey
+        )
+    }
     lateinit var binding: DialogProfileEditBinding
     var saveUri: Uri? = null
     private var imageUri = ""
 
     private companion object {
-        val PHOTO_FROM_GALLERY = 0
+        const val PHOTO_FROM_GALLERY = 0
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NO_FRAME, R.style.PublishDialog)
@@ -87,21 +87,22 @@ class ProfileEditDialog : AppCompatDialogFragment() {
         adapter.submitList(colorList)
 
         binding.btnActive.setOnClickListener {
-            if (viewModel.edActive.value != true){
+            if (viewModel.edActive.value != true) {
 
 
-                findNavController().navigate(NavigationDirections.navigateToMessengerDialog("active"))
-                Log.d("edActive", "${viewModel.edActive.value}")
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog(
+                    MessageTypeFilter.ACTIVE.value))
+
                 viewModel.edActive.value = true
-            }else{
+            } else {
 
 
-                findNavController().navigate(NavigationDirections.navigateToMessengerDialog("!Active"))
-                Log.d("edActive", "${viewModel.edActive.value}")
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog(MessageTypeFilter.ARCHIVE.value))
+
                 viewModel.edActive.value = false
             }
         }
-        Log.e("Max","${binding.btnActive.isChecked}")
+        Log.e("Max", "${binding.btnActive.isChecked}")
         binding.editBirthday.setOnClickListener {
             datePicker()
         }
@@ -121,7 +122,7 @@ class ProfileEditDialog : AppCompatDialogFragment() {
                 binding.editBirthday.setTextColor(Color.parseColor("#$it"))
             }
         })
-        viewModel.leave.observe(viewLifecycleOwner, androidx.lifecycle.Observer  {
+        viewModel.leave.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
 
                 findNavController().navigateUp()
@@ -142,7 +143,8 @@ class ProfileEditDialog : AppCompatDialogFragment() {
             val newMonth = String.format("%02d", month)
             val newDay = String.format("%02d", day)
             binding.editBirthday.text = "$year-${newMonth.toInt() + 1}-$newDay"
-            viewModel.editDate.value = dateToStamp("$year-${newMonth.toInt() + 1}-$newDay", Locale.TAIWAN)
+            viewModel.editDate.value =
+                dateToStamp("$year-${newMonth.toInt() + 1}-$newDay", Locale.TAIWAN)
         }
 
         context?.let {
@@ -155,6 +157,7 @@ class ProfileEditDialog : AppCompatDialogFragment() {
             ).show()
         }
     }
+
     fun toAlbum() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
@@ -184,21 +187,22 @@ class ProfileEditDialog : AppCompatDialogFragment() {
         if (permissionList.isNotEmpty()) ActivityCompat.requestPermissions(
             (activity as AppCompatActivity),
             permissionList.toArray(array),
-            0
+            PHOTO_FROM_GALLERY
         )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            ProfileEditDialog.PHOTO_FROM_GALLERY -> {
+            PHOTO_FROM_GALLERY -> {
+
                 when (resultCode) {
                     Activity.RESULT_OK -> {
+
                         val uri = data!!.data
                         saveUri = uri
                         uploadImage()
 
-//                        binding.imageView.setImageURI(uri)
                     }
                     Activity.RESULT_CANCELED -> {
                         Log.wtf("getImageResult", resultCode.toString())
@@ -226,7 +230,7 @@ class ProfileEditDialog : AppCompatDialogFragment() {
 //                        newRecord.recordImage = it.toString()
                         imageUri = it.toString()
                         viewModel.imagePhoto.value = imageUri
-                        bindProfileImage(binding.imageView,imageUri)
+                        bindProfileImage(binding.imageView, imageUri)
                     }
                 }
         }

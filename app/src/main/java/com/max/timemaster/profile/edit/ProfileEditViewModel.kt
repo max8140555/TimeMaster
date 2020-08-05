@@ -10,13 +10,10 @@ import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.data.MyDate
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.network.LoadApiStatus
-import com.max.timemaster.util.TimeUtil.dateToStamp
-import com.max.timemaster.util.TimeUtil.stampToDateNoYear
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.util.*
 
 class ProfileEditViewModel(
     private val timeMasterRepository: TimeMasterRepository,

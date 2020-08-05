@@ -11,9 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.crashlytics.android.Crashlytics
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.max.timemaster.MainViewModel
 import com.max.timemaster.NavigationDirections
 import com.max.timemaster.R
@@ -22,7 +20,6 @@ import com.max.timemaster.databinding.FragmentCalendarBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.network.LoadApiStatus
 import com.max.timemaster.util.CurrentDayDecorator
-import com.max.timemaster.util.Logger
 import com.max.timemaster.util.TimeUtil.dateToStampTime
 import com.max.timemaster.util.TimeUtil.stampToDate
 import com.max.timemaster.util.UserManager
@@ -76,79 +73,82 @@ class CalendarFragment : Fragment() {
                     mark()
                 })
 
-                mainViewModel.liveMyDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer { listDate ->
+                mainViewModel.liveMyDate.observe(
+                    viewLifecycleOwner,
+                    androidx.lifecycle.Observer { listDate ->
 
-                    if (listDate.isNullOrEmpty()){
-                        binding.prompt.visibility = View.VISIBLE
-                        binding.prompt.text = " 請先到個人頁面，新增對象喔！"
+                        if (listDate.isNullOrEmpty()) {
+                            binding.prompt.visibility = View.VISIBLE
+                            binding.prompt.text = getString(R.string.hint_add_date_text)
 //                        binding.imagePrompt.visibility = View.VISIBLE
 //                        binding.imagePrompt.setImageResource(R.drawable.icon_profile)
-                    }else{
-                        if (viewModel.selectEvent.value.isNullOrEmpty()){
-                            binding.prompt.visibility = View.VISIBLE
+                        } else {
+                            if (viewModel.selectEvent.value.isNullOrEmpty()) {
+                                binding.prompt.visibility = View.VISIBLE
 //                            binding.imagePrompt.visibility = View.VISIBLE
-                            binding.prompt.text = "點左上角按鈕，選擇對象新增行程吧！"
+                                binding.prompt.text = getString(R.string.hint_select_date_text)
 //                            binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
 
-                        }else{
-                            binding.prompt.visibility = View.GONE
-                            binding.imagePrompt.visibility =View.GONE
+                            } else {
+                                binding.prompt.visibility = View.GONE
+                                binding.imagePrompt.visibility = View.GONE
+                            }
                         }
-                    }
 
 //                    adapter.submitList(viewModel.selectEvent.value)
-                    UserManager.selectTime.value = viewModel.selectEvent.value
+                        UserManager.selectTime.value = viewModel.selectEvent.value
 
-                    mainViewModel.selectAttendee.value?.let { select ->
-                        if (select.isEmpty()) {
-                            // 驅除封存
-                            val date = UserManager.myDate.value?.filter { myDate ->
-                                myDate.active == true
-                            }?.map {
-                                it.name
-                            }
-                            val list = mutableListOf<CalendarEvent>()
+                        mainViewModel.selectAttendee.value?.let { select ->
+                            if (select.isEmpty()) {
+                                // 驅除封存
+                                val date = UserManager.myDate.value?.filter { myDate ->
+                                    myDate.active == true
+                                }?.map {
+                                    it.name
+                                }
+                                val list = mutableListOf<CalendarEvent>()
 
-                            if (date != null) {
-                                for (x in date.indices) {
-                                    val item = UserManager.selectTime.value?.filter { dateEvent ->
-                                        dateEvent.attendee == date[x]
-                                    }
-                                    if (!item.isNullOrEmpty()) {
-                                        list.addAll(item)
+                                if (date != null) {
+                                    for (x in date.indices) {
+                                        val item =
+                                            UserManager.selectTime.value?.filter { dateEvent ->
+                                                dateEvent.attendee == date[x]
+                                            }
+                                        if (!item.isNullOrEmpty()) {
+                                            list.addAll(item)
+                                        }
                                     }
                                 }
-                            }
 
 
-                            adapter.submitList(list.sortedBy { it.dateStamp })
-                        } else {
+                                adapter.submitList(list.sortedBy { it.dateStamp })
+                            } else {
 
-                            val x = UserManager.selectTime.value?.filter { date ->
-                                date.attendee == select
-                            }
-                            if (x.isNullOrEmpty()){
+                                val x = UserManager.selectTime.value?.filter { date ->
+                                    date.attendee == select
+                                }
+                                if (x.isNullOrEmpty()) {
 //                                binding.imagePrompt.visibility = View.VISIBLE
-                                binding.prompt.visibility = View.VISIBLE
-                                binding.imagePrompt.setImageResource(R.drawable.icon_add)
-                                binding.prompt.text = "點選按鈕，新增行程吧！"
-                                binding.imagePrompt.setOnClickListener {
-                                    viewModel.selectDate.value?.let { selectDate ->
-                                        findNavController().navigate(
-                                            NavigationDirections.navigateToCalendarDetailFragment(
-                                                selectDate
+                                    binding.prompt.visibility = View.VISIBLE
+                                    binding.imagePrompt.setImageResource(R.drawable.icon_add)
+                                    binding.prompt.text = getString(R.string.hint_event_text)
+                                    binding.imagePrompt.setOnClickListener {
+                                        viewModel.selectDate.value?.let { selectDate ->
+                                            findNavController().navigate(
+                                                NavigationDirections.navigateToCalendarDetailFragment(
+                                                    selectDate
+                                                )
                                             )
-                                        )
+                                        }
                                     }
                                 }
-                            }
-                            Log.d("viewModel22", "${UserManager.selectTime.value}")
-                            Log.d("viewModel2", "$x")
+                                Log.d("viewModel22", "${UserManager.selectTime.value}")
+                                Log.d("viewModel2", "$x")
 
-                            adapter.submitList(x)
+                                adapter.submitList(x)
+                            }
                         }
-                    }
-                })
+                    })
             }
         })
 
@@ -177,14 +177,14 @@ class CalendarFragment : Fragment() {
                             }
                         }
                     }
-                    if (list.isNullOrEmpty()){
+                    if (list.isNullOrEmpty()) {
                         binding.prompt.visibility = View.VISIBLE
 //                        binding.imagePrompt.visibility = View.VISIBLE
-                        binding.prompt.text = "點左上角按鈕，選擇對象新增行程吧！"
+                        binding.prompt.text = getString(R.string.hint_select_date_text)
 //                        binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
-                    }else{
+                    } else {
                         binding.prompt.visibility = View.GONE
-                        binding.imagePrompt.visibility =View.GONE
+                        binding.imagePrompt.visibility = View.GONE
                     }
                     adapter.submitList(list.sortedBy { it.dateStamp })
 
@@ -194,11 +194,11 @@ class CalendarFragment : Fragment() {
                     val selectedPersonEvents = UserManager.selectTime.value?.filter {
                         it.attendee == select
                     }
-                    if (selectedPersonEvents.isNullOrEmpty()){
+                    if (selectedPersonEvents.isNullOrEmpty()) {
                         binding.imagePrompt.visibility = View.VISIBLE
                         binding.imagePrompt.setImageResource(R.drawable.icon_add)
                         binding.prompt.visibility = View.VISIBLE
-                        binding.prompt.text = "點選按鈕，新增行程吧！"
+                        binding.prompt.text = getString(R.string.hint_event_text)
                         binding.imagePrompt.setOnClickListener {
                             viewModel.selectDate.value?.let { selectDate ->
                                 findNavController().navigate(
@@ -216,23 +216,14 @@ class CalendarFragment : Fragment() {
             })
 
 
-        // LiveData .. 取得所有Event
-        /*
-         viewModel.getAllEventResult()
-         viewModel.liveAllEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-             it?.let {
-                 Log.d("liveAllEvent","${viewModel.liveAllEvent.value}")
-             }
-         })
-         */
         viewModel.status.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            it?.let{
-                if (viewModel.status.value == LoadApiStatus.LOADING){
+            it?.let {
+                if (viewModel.status.value == LoadApiStatus.LOADING) {
                     binding.lottieLoading.visibility = View.VISIBLE
-                }else{
+                } else {
                     Handler().postDelayed({
                         binding.lottieLoading.visibility = View.GONE
-                    },1000)
+                    }, 1000)
                 }
             }
         })
@@ -264,7 +255,6 @@ class CalendarFragment : Fragment() {
 
                     }
                     BottomSheetBehavior.STATE_DRAGGING -> {
-//                        Handler().postDelayed({changeToMonth()},200)
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
 
@@ -282,8 +272,6 @@ class CalendarFragment : Fragment() {
 
 
         widget = view?.findViewById(R.id.calendarView) as MaterialCalendarView
-
-//        viewModel.getAllEventTimeResult()
 
         UserManager.allEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
@@ -409,8 +397,14 @@ class CalendarFragment : Fragment() {
     private fun showSelectEvent() {
         widget.setOnDateChangedListener { widget, date, selected ->
             viewModel.selectDate.value = date.date.toString()
-            viewModel.greaterThan = dateToStampTime(date.date.toString() + " 00:00", Locale.TAIWAN)
-            viewModel.lessThan = dateToStampTime(date.date.toString() + " 23:59", Locale.TAIWAN)
+            viewModel.greaterThan = dateToStampTime(
+                date.date.toString() + getString(R.string.space_text) + getString(R.string.time_0000_text),
+                Locale.TAIWAN
+            )
+            viewModel.lessThan = dateToStampTime(
+                date.date.toString() + getString(R.string.space_text) + getString(R.string.time_2359_text),
+                Locale.TAIWAN
+            )
             viewModel.getSelectEventResult()
         }
     }
@@ -418,13 +412,27 @@ class CalendarFragment : Fragment() {
     private fun showTodayEvent() {
         if (viewModel.returnDate == null) {
             viewModel.greaterThan =
-                dateToStampTime(LocalDate.now().toString() + " 00:00", Locale.TAIWAN)
+                dateToStampTime(
+                    LocalDate.now()
+                        .toString() + getString(R.string.space_text) + getString(R.string.time_0000_text),
+                    Locale.TAIWAN
+                )
             viewModel.lessThan =
-                dateToStampTime(LocalDate.now().toString() + " 23:59", Locale.TAIWAN)
+                dateToStampTime(
+                    LocalDate.now()
+                        .toString() + getString(R.string.space_text) + getString(R.string.time_2359_text),
+                    Locale.TAIWAN
+                )
             viewModel.getSelectEventResult()
         } else {
-            viewModel.greaterThan = dateToStampTime(viewModel.returnDate + " 00:00", Locale.TAIWAN)
-            viewModel.lessThan = dateToStampTime(viewModel.returnDate + " 23:59", Locale.TAIWAN)
+            viewModel.greaterThan = dateToStampTime(
+                viewModel.returnDate + getString(R.string.space_text) + getString(R.string.time_0000_text),
+                Locale.TAIWAN
+            )
+            viewModel.lessThan = dateToStampTime(
+                viewModel.returnDate + getString(R.string.space_text) + getString(R.string.time_2359_text),
+                Locale.TAIWAN
+            )
             viewModel.getSelectEventResult()
 
         }

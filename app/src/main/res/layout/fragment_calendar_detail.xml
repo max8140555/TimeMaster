@@ -95,7 +95,7 @@
                 android:checked="false"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                app:kswTintColor="@color/C_265D7C"
+                app:kswTintColor="@color/main_color"
                 app:layout_constraintBottom_toBottomOf="@+id/select_end_time"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/select_end_time" />

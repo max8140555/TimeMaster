@@ -2,27 +2,20 @@ package com.max.timemaster.cost
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.AdapterView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.max.timemaster.MainViewModel
-import com.max.timemaster.NavigationDirections
-import com.max.timemaster.R
-import com.max.timemaster.TimeMasterApplication
+import com.max.timemaster.*
 import com.max.timemaster.data.DateCost
 import com.max.timemaster.databinding.DialogCostDetailBinding
 import com.max.timemaster.ext.getVmFactory
-import com.max.timemaster.util.UserManager
 
 
 class CostDetailDialog : AppCompatDialogFragment() {
@@ -37,6 +30,7 @@ class CostDetailDialog : AppCompatDialogFragment() {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NO_FRAME, R.style.PublishDialog)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,19 +40,24 @@ class CostDetailDialog : AppCompatDialogFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        binding.layoutPublish.startAnimation(AnimationUtils.loadAnimation(context, R.anim.anim_slide_up))
+        binding.layoutPublish.startAnimation(
+            AnimationUtils.loadAnimation(
+                context,
+                R.anim.anim_slide_up
+            )
+        )
         binding.buttonPublish.setOnClickListener {
-            if (!viewModel.edTitle.value.isNullOrEmpty() && !viewModel.edMoney.value.isNullOrEmpty()){
+            if (!viewModel.edTitle.value.isNullOrEmpty() && !viewModel.edMoney.value.isNullOrEmpty()) {
                 addCost()?.let { it1 -> viewModel.postAddCost(it1) }
 
-            }else{
+            } else {
 
-                findNavController().navigate(NavigationDirections.navigateToMessengerDialog("allNull"))
+                findNavController().navigate(NavigationDirections.navigateToMessengerDialog(
+                    MessageTypeFilter.INCOMPLETE_TEXT.value))
             }
         }
         viewModel.leave.observe(viewLifecycleOwner, Observer {
             it?.let {
-
                 findNavController().navigateUp()
                 viewModel.onLeft()
             }
@@ -67,39 +66,6 @@ class CostDetailDialog : AppCompatDialogFragment() {
         mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {
             it?.let { attendee ->
                 viewModel.edAttendee.value = attendee
-
-//                val listTitle = UserManager.dateCost.value?.filter {
-//                    it.attendeeName == attendee
-//                }?.map { title ->
-//                    title.costTitle
-//                }?.toMutableList()
-//
-//                listTitle?.add(0,"")
-//                binding.niceSpinner.attachDataSource(listTitle)
-//                binding.niceSpinner.setOnItemSelectedListener( object:
-//                    AdapterView.OnItemSelectedListener {
-//                    override fun onNothingSelected(parent: AdapterView<*>?) {
-//                        TODO("Not yet implemented")
-//                    }
-//
-//                    override fun onItemSelected(
-//                        parent: AdapterView<*>?,
-//                        view: View?,
-//                        position: Int,
-//                        id: Long
-//                    ) {
-//                        listTitle?.let { titleString ->
-//                            viewModel.edTitle.value = titleString[position]
-//                        }
-//
-//                    }
-//
-//                })
-
-
-
-
-
 
             }
         })
@@ -113,10 +79,10 @@ class CostDetailDialog : AppCompatDialogFragment() {
     fun addCost(): DateCost? {
         return DateCost(
             viewModel.edAttendee.value,
-                viewModel.edTitle.value,
-                viewModel.edMoney.value?.toLong(),
-                viewModel.edContent.value
-            )
+            viewModel.edTitle.value,
+            viewModel.edMoney.value?.toLong(),
+            viewModel.edContent.value
+        )
 
     }
 

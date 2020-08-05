@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.max.timemaster.data.DateCost
-import com.max.timemaster.databinding.ItemCalendarBinding
 import com.max.timemaster.databinding.ItemCostBinding
 import com.max.timemaster.util.TimeUtil.stampToDateNoYear
 import com.max.timemaster.util.UserManager
@@ -24,12 +23,9 @@ class CostAdapter() :
         DiffCallback
     ) {
 
-    /**
-     * The MarsPropertyViewHolder constructor takes the binding variable from the associated
-     * GridViewItem, which nicely gives it access to the full [MarsProperty] information.
-     */
 
-    //1.ViewHolder 畫布
+
+
     class ProductDetailedEvaluationViewHolder(private var binding: ItemCostBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -53,10 +49,6 @@ class CostAdapter() :
         }
     }
 
-    /**
-     * Allows the RecyclerView to determine which items have changed when the [List] of [MarsProperty]
-     * has been updated.
-     */
     companion object DiffCallback : DiffUtil.ItemCallback<DateCost>() {
         override fun areItemsTheSame(
             oldItem: DateCost,
@@ -73,10 +65,8 @@ class CostAdapter() :
         }
     }
 
-    /**
-     * Create new [RecyclerView] item views (invoked by the layout manager)
-     */
-    //執行畫布
+
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -86,19 +76,15 @@ class CostAdapter() :
             ItemCostBinding.inflate(
                 LayoutInflater.from(
                     parent.context
-                ), parent, false                  //在有inflate 的地方 要注意   parnt, false
+                ), parent, false
             )
         )
     }
 
-    /**
-     * Replaces the contents of a view (invoked by the layout manager)
-     */
-    //2.綁定ViewHolder 畫布
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onBindViewHolder(holder: ProductDetailedEvaluationViewHolder, position: Int) {
         val product =
-            getItem(position)  //告訴onCreateViewHolder 要生成幾個viewholder
+            getItem(position)
         holder.itemView.setOnClickListener {
             val itemVisibility = holder.itemView.content.visibility
             holder.itemView.content.visibility = if (itemVisibility == View.VISIBLE) {

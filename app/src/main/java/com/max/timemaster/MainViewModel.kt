@@ -1,6 +1,5 @@
 package com.max.timemaster
 
-import android.os.UserManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,7 +9,6 @@ import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.data.User
 import com.max.timemaster.network.LoadApiStatus
 import com.max.timemaster.util.CurrentFragmentType
-import com.max.timemaster.util.ServiceLocator.timeMasterRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,18 +18,28 @@ class MainViewModel(
     private val timeMasterRepository: TimeMasterRepository
 ) : ViewModel() {
 
-    var liveUser = MutableLiveData<User>()
-    var liveMyDate = MutableLiveData<List<MyDate>>()
-    var liveAllEvent = MutableLiveData<List<CalendarEvent>>()
-
-
-
     var selectAttendee = MutableLiveData<String>().apply {
         value = ""
     }
 
     // Record current fragment to support data binding
     val currentFragmentType = MutableLiveData<CurrentFragmentType>()
+
+    private var _liveUser = MutableLiveData<User>()
+
+    val liveUser: LiveData<User>
+        get() = _liveUser
+
+
+    private var _liveMyDate = MutableLiveData<List<MyDate>>()
+
+    val liveMyDate: LiveData<List<MyDate>>
+        get() = _liveMyDate
+
+    private var _liveAllEvent = MutableLiveData<List<CalendarEvent>>()
+
+    val liveAllEvent: LiveData<List<CalendarEvent>>
+        get() = _liveAllEvent
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -56,14 +64,11 @@ class MainViewModel(
     val refreshStatus: LiveData<Boolean>
         get() = _refreshStatus
 
-
-
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
 
 
     override fun onCleared() {
@@ -72,15 +77,14 @@ class MainViewModel(
     }
 
 
-
-
-    fun updateExp(exp: Long) {
+    //上傳經驗值
+    fun upUserExp(exp: Long) {
 
         coroutineScope.launch {
 
             _status.value = LoadApiStatus.LOADING
 
-            when (val result = timeMasterRepository.updateExp(exp)) {
+            when (val result = timeMasterRepository.upUserExp(exp)) {
                 is com.max.timemaster.data.Result.Success -> {
                     _error.value = null
                     _status.value = LoadApiStatus.DONE
@@ -103,12 +107,7 @@ class MainViewModel(
         }
     }
 
-
-
-
-
-
-
+    //上傳從 Facebook 拿到的資訊
     fun postUser(user: User) {
 
         coroutineScope.launch {
@@ -137,23 +136,29 @@ class MainViewModel(
         }
     }
 
+    //取得 User 資訊
     fun getLiveUserResult() {
-        liveUser = timeMasterRepository.getLiveUser()
-        _status.value = LoadApiStatus.DONE
-        _refreshStatus.value = false
-    }
-    fun leave(needRefresh: Boolean = false) {
-        _leave.value = needRefresh
-    }
-    fun getLiveMyDateResult() {
-        liveMyDate = timeMasterRepository.getLiveMyDate()
+        _liveUser = timeMasterRepository.getLiveUser()
         _status.value = LoadApiStatus.DONE
         _refreshStatus.value = false
     }
 
-    fun getAllEventResult() {
-        liveAllEvent = timeMasterRepository.getLiveAllEvent()
+    //取得我所有的 Date 資訊
+    fun getLiveMyDateResult() {
+        _liveMyDate = timeMasterRepository.getLiveMyDate()
         _status.value = LoadApiStatus.DONE
         _refreshStatus.value = false
     }
+
+    //取得所有 Events
+    fun getAllEventResult() {
+        _liveAllEvent = timeMasterRepository.getLiveAllEvent()
+        _status.value = LoadApiStatus.DONE
+        _refreshStatus.value = false
+    }
+
+    fun leave(needRefresh: Boolean = false) {
+        _leave.value = needRefresh
+    }
+
 }
