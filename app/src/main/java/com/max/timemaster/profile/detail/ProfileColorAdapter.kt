@@ -1,7 +1,6 @@
 package com.max.timemaster.profile.detail
 
-import android.content.res.ColorStateList
-import android.graphics.Color
+
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -65,7 +64,7 @@ class ProfileColorAdapter(var viewModel: ProfileDetailViewModel) :
             ItemProfileColorBinding.inflate(
                 LayoutInflater.from(
                     parent.context
-                ), parent, false                  //在有inflate 的地方 要注意   parnt, false
+                ), parent, false                  
             )
         )
     }
@@ -74,7 +73,7 @@ class ProfileColorAdapter(var viewModel: ProfileDetailViewModel) :
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: ProfileColorViewHolder, position: Int) {
         val product =
-            getItem(position)  //告訴onCreateViewHolder 要生成幾個viewholder
+            getItem(position)  
         holder.itemView.setOnClickListener {
             viewModel.selectedPosition.value = position
             viewModel.edColor.value = product

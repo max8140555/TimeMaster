@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -25,36 +25,36 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/text_event_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:text="XXXXX"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/view"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Title" />
 
         <TextView
-            android:id="@+id/content"
+            android:id="@+id/text_event_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:text="XXXXX"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/title"
-            app:layout_constraintTop_toBottomOf="@+id/attendee" />
+            app:layout_constraintStart_toStartOf="@+id/text_event_title"
+            app:layout_constraintTop_toBottomOf="@+id/text_event_attendee"
+            tools:text="content" />
 
         <TextView
-            android:id="@+id/attendee"
+            android:id="@+id/text_event_attendee"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -68,19 +68,19 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/time"
+            android:id="@+id/text_start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:text="00:00"
             android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/end_time"
-            app:layout_constraintEnd_toEndOf="@+id/end_time"
+            app:layout_constraintBottom_toTopOf="@+id/text_end_time"
+            app:layout_constraintEnd_toEndOf="@+id/text_end_time"
             app:layout_constraintHorizontal_bias="0.444"
-            app:layout_constraintStart_toStartOf="@+id/end_time" />
+            app:layout_constraintStart_toStartOf="@+id/text_end_time" />
 
         <TextView
-            android:id="@+id/end_time"
+            android:id="@+id/text_end_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"

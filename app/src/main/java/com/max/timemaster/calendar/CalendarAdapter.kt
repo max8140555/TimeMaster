@@ -1,7 +1,5 @@
 package com.max.timemaster.calendar
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -16,13 +14,13 @@ import com.max.timemaster.util.TimeUtil.stampToDateTime
 import com.max.timemaster.util.UserManager
 import java.util.*
 
-class CalendarAdapter() :
-    ListAdapter<CalendarEvent, CalendarAdapter.ProductDetailedEvaluationViewHolder>(
+class CalendarAdapter:
+    ListAdapter<CalendarEvent, CalendarAdapter.CalendarEventViewHolder>(
         DiffCallback
     ) {
 
 
-    class ProductDetailedEvaluationViewHolder(private var binding: ItemCalendarBinding) :
+    class CalendarEventViewHolder(private var binding: ItemCalendarBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @RequiresApi(Build.VERSION_CODES.M)
         fun bind(calendarEvent: CalendarEvent) {
@@ -31,24 +29,22 @@ class CalendarAdapter() :
                 it.name == calendarEvent.attendee
             }!![0].color
 
-            binding.title.text = calendarEvent.calendarTitle
-            binding.attendee.text = calendarEvent.attendee
-
-            binding.view.backgroundTintList = color?.let { SetColorStateList.setColorStateList(it) }
-
-            val selectedDate = calendarEvent.dateStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
-            val splitTime = selectedDate?.split(" ")
-
-            val time = splitTime?.get(1)  // 時:分+
-            binding.time.text = time.toString()
+            val selectedStartDate = calendarEvent.dateStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
+            val splitTime = selectedStartDate?.split(" ")
+            val startTime = splitTime?.get(1)  // 時:分+
 
             val selectedEndDate = calendarEvent.dateEndStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
             val splitEndTime = selectedEndDate?.split(" ")
-
             val endTime = splitEndTime?.get(1)  // 時:分+
-            binding.time.text = time.toString()
-            binding.endTime.text = endTime.toString()
-            binding.content.text = calendarEvent.calendarContent
+
+            binding.view.backgroundTintList = color?.let { SetColorStateList.setColorStateList(it) }
+            binding.textEventTitle.text = calendarEvent.calendarTitle
+            binding.textEventAttendee.text = calendarEvent.attendee
+            binding.textEventContent.text = calendarEvent.calendarContent
+            binding.textStartTime.text = startTime.toString()
+            binding.textEndTime.text = endTime.toString()
+
+
 
             binding.executePendingBindings()
         }
@@ -74,8 +70,8 @@ class CalendarAdapter() :
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ProductDetailedEvaluationViewHolder {
-        return ProductDetailedEvaluationViewHolder(
+    ): CalendarEventViewHolder {
+        return CalendarEventViewHolder(
             ItemCalendarBinding.inflate(
                 LayoutInflater.from(
                     parent.context
@@ -85,11 +81,11 @@ class CalendarAdapter() :
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    override fun onBindViewHolder(holder: ProductDetailedEvaluationViewHolder, position: Int) {
-        val product =
+    override fun onBindViewHolder(holder: CalendarEventViewHolder, position: Int) {
+        val events =
             getItem(position)
 
-        holder.bind(product)
+        holder.bind(events)
     }
 
 }

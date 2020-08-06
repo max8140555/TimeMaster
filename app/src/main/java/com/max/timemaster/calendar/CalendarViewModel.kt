@@ -8,11 +8,15 @@ import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.data.TimeMasterRepository
+import com.max.timemaster.data.source.remote.TimeMasterRemoteDataSource
 import com.max.timemaster.network.LoadApiStatus
+import com.max.timemaster.util.TimeUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDate
+import java.util.*
 
 class CalendarViewModel(
     private val timeMasterRepository: TimeMasterRepository,
@@ -52,8 +56,9 @@ class CalendarViewModel(
     val refreshStatus: LiveData<Boolean>
         get() = _refreshStatus
 
-    val selectDate = MutableLiveData<String>()
-
+    val selectDate = MutableLiveData<String>().apply {
+        value = LocalDate.now().toString()
+    }
     var greaterThan: Long = 0
     var lessThan: Long = 0
 
@@ -64,11 +69,46 @@ class CalendarViewModel(
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
+    init {
+        showTodayEvent()
+    }
 
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
     }
+
+    fun setTimeInterval(selectDate: String?) {
+        greaterThan =
+            TimeUtil.dateToStampTime(
+                selectDate + TimeMasterApplication.instance.getString(R.string.space_text) + TimeMasterApplication.instance.getString(
+                    R.string.time_0000_text
+                ),
+                Locale.TAIWAN
+            )
+        lessThan =
+            TimeUtil.dateToStampTime(
+                selectDate + TimeMasterApplication.instance.getString(R.string.space_text) + TimeMasterApplication.instance.getString(
+                    R.string.time_2359_text
+                ),
+                Locale.TAIWAN
+            )
+
+    }
+
+    private fun showTodayEvent() {
+        when (returnDate) {
+            null -> {
+                setTimeInterval(LocalDate.now().toString())
+            }
+            else -> {
+                setTimeInterval(returnDate)
+            }
+        }
+        getSelectEventResult()
+    }
+
+
 
     fun getSelectEventResult() {
 

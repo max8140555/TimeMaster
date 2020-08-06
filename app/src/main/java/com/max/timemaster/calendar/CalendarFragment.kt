@@ -41,18 +41,18 @@ class CalendarFragment : Fragment() {
     lateinit var widget: MaterialCalendarView
     lateinit var binding: FragmentCalendarBinding
     lateinit var mainViewModel: MainViewModel
-    var previousDates = mutableListOf<Any?>()
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<NestedScrollView>
+    var previousDates = mutableListOf<Any?>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         binding = FragmentCalendarBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        viewModel.selectDate.value = LocalDate.now().toString()
 
         binding.btnAdd.setOnClickListener {
             viewModel.selectDate.value?.let { selectDate ->
@@ -80,22 +80,17 @@ class CalendarFragment : Fragment() {
                         if (listDate.isNullOrEmpty()) {
                             binding.prompt.visibility = View.VISIBLE
                             binding.prompt.text = getString(R.string.hint_add_date_text)
-//                        binding.imagePrompt.visibility = View.VISIBLE
-//                        binding.imagePrompt.setImageResource(R.drawable.icon_profile)
+
                         } else {
                             if (viewModel.selectEvent.value.isNullOrEmpty()) {
                                 binding.prompt.visibility = View.VISIBLE
-//                            binding.imagePrompt.visibility = View.VISIBLE
                                 binding.prompt.text = getString(R.string.hint_select_date_text)
-//                            binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
-
                             } else {
                                 binding.prompt.visibility = View.GONE
                                 binding.imagePrompt.visibility = View.GONE
                             }
                         }
 
-//                    adapter.submitList(viewModel.selectEvent.value)
                         UserManager.selectTime.value = viewModel.selectEvent.value
 
                         mainViewModel.selectAttendee.value?.let { select ->
@@ -119,8 +114,6 @@ class CalendarFragment : Fragment() {
                                         }
                                     }
                                 }
-
-
                                 adapter.submitList(list.sortedBy { it.dateStamp })
                             } else {
 
@@ -128,7 +121,6 @@ class CalendarFragment : Fragment() {
                                     date.attendee == select
                                 }
                                 if (x.isNullOrEmpty()) {
-//                                binding.imagePrompt.visibility = View.VISIBLE
                                     binding.prompt.visibility = View.VISIBLE
                                     binding.imagePrompt.setImageResource(R.drawable.icon_add)
                                     binding.prompt.text = getString(R.string.hint_event_text)
@@ -142,8 +134,6 @@ class CalendarFragment : Fragment() {
                                         }
                                     }
                                 }
-                                Log.d("viewModel22", "${UserManager.selectTime.value}")
-                                Log.d("viewModel2", "$x")
 
                                 adapter.submitList(x)
                             }
@@ -236,41 +226,26 @@ class CalendarFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-
-        // Identify BottomSheetBehavior to present different calendar layout
-
-        bottomSheetBehavior = BottomSheetBehavior.from<NestedScrollView>(nested_view)
-
-        bottomSheetBehavior.setBottomSheetCallback(object :
+        bottomSheetBehavior = BottomSheetBehavior.from(nested_view)
+        bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(p0: View, p1: Float) {
-            }
+            override fun onSlide(p0: View, p1: Float) {}
 
             override fun onStateChanged(bottomSheet: View, state: Int) {
                 print(state)
                 when (state) {
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                    }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-
-                    }
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                    }
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-
-                    }
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                    }
-                    BottomSheetBehavior.STATE_SETTLING -> {
-                    }
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> { }
+                    BottomSheetBehavior.STATE_COLLAPSED -> { }
+                    BottomSheetBehavior.STATE_DRAGGING -> { }
+                    BottomSheetBehavior.STATE_EXPANDED -> { }
+                    BottomSheetBehavior.STATE_HIDDEN -> { }
+                    BottomSheetBehavior.STATE_SETTLING -> { }
                 }
             }
         })
 
 
         val calendar = LocalDate.now()
-
-
         widget = view?.findViewById(R.id.calendarView) as MaterialCalendarView
 
         UserManager.allEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -283,37 +258,33 @@ class CalendarFragment : Fragment() {
         })
 
 
-
-
         if (viewModel.returnDate == null) {
             widget.setSelectedDate(calendar)
         } else {
-            val selectedDate = viewModel.returnDate!!.split("-")
-            val year = selectedDate[0]
-            val month = selectedDate[1]
-            val day = selectedDate[2]
-            widget.selectedDate = CalendarDay.from(year.toInt(), month.toInt(), day.toInt())
+            viewModel.returnDate?.let {
+                val selectedDate = it.split("-")
+                val year = selectedDate[0]
+                val month = selectedDate[1]
+                val day = selectedDate[2]
+                widget.selectedDate = CalendarDay.from(year.toInt(), month.toInt(), day.toInt())
+            }
         }
-
-        showTodayEvent()
-
-
     }
 
-
     private fun mark() {
+        widget.removeDecorators()
+        widget.invalidateDecorators()
 
-        val date = UserManager.myDate.value?.filter { myDate ->
+        val activeDate = UserManager.myDate.value?.filter { myDate ->
             myDate.active == true
         }?.map {
             it.name
         }
-
         val listAllEvent = mutableListOf<Long?>()
-        Log.d("XXXXXXX", "$date")
-        date?.let {
 
-            for (x in date) {
+        activeDate?.let {
+
+            for (x in activeDate) {
                 val event = UserManager.allEvent.value?.filter {
                     it.attendee == x
                 }?.map {
@@ -337,8 +308,7 @@ class CalendarFragment : Fragment() {
         }
         val list = mutableListOf<String>()
 
-        widget.removeDecorators()
-        widget.invalidateDecorators()
+
 
 
         if (mainViewModel.selectAttendee.value?.isEmpty()!!) {
@@ -353,6 +323,7 @@ class CalendarFragment : Fragment() {
                     month.toInt(),
                     day.toInt()
                 ) // year, month, date
+
                 widget.addDecorators(
                     CurrentDayDecorator(
                         resources.getColor(R.color.black),
@@ -397,46 +368,12 @@ class CalendarFragment : Fragment() {
     private fun showSelectEvent() {
         widget.setOnDateChangedListener { widget, date, selected ->
             viewModel.selectDate.value = date.date.toString()
-            viewModel.greaterThan = dateToStampTime(
-                date.date.toString() + getString(R.string.space_text) + getString(R.string.time_0000_text),
-                Locale.TAIWAN
-            )
-            viewModel.lessThan = dateToStampTime(
-                date.date.toString() + getString(R.string.space_text) + getString(R.string.time_2359_text),
-                Locale.TAIWAN
-            )
+
+            viewModel.setTimeInterval(date.date.toString())
             viewModel.getSelectEventResult()
         }
     }
 
-    private fun showTodayEvent() {
-        if (viewModel.returnDate == null) {
-            viewModel.greaterThan =
-                dateToStampTime(
-                    LocalDate.now()
-                        .toString() + getString(R.string.space_text) + getString(R.string.time_0000_text),
-                    Locale.TAIWAN
-                )
-            viewModel.lessThan =
-                dateToStampTime(
-                    LocalDate.now()
-                        .toString() + getString(R.string.space_text) + getString(R.string.time_2359_text),
-                    Locale.TAIWAN
-                )
-            viewModel.getSelectEventResult()
-        } else {
-            viewModel.greaterThan = dateToStampTime(
-                viewModel.returnDate + getString(R.string.space_text) + getString(R.string.time_0000_text),
-                Locale.TAIWAN
-            )
-            viewModel.lessThan = dateToStampTime(
-                viewModel.returnDate + getString(R.string.space_text) + getString(R.string.time_2359_text),
-                Locale.TAIWAN
-            )
-            viewModel.getSelectEventResult()
-
-        }
-    }
 
     override fun onResume() {
         super.onResume()
