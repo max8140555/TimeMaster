@@ -2,7 +2,6 @@ package com.max.timemaster.calendar
 
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +15,12 @@ import com.max.timemaster.MainViewModel
 import com.max.timemaster.NavigationDirections
 import com.max.timemaster.R
 import com.max.timemaster.data.CalendarEvent
+import com.max.timemaster.data.DateSet
 import com.max.timemaster.databinding.FragmentCalendarBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.network.LoadApiStatus
 import com.max.timemaster.util.CurrentDayDecorator
-import com.max.timemaster.util.TimeUtil.dateToStampTime
+import com.max.timemaster.util.TimeUtil.splitDateSet
 import com.max.timemaster.util.TimeUtil.stampToDate
 import com.max.timemaster.util.UserManager
 import com.prolificinteractive.materialcalendarview.CalendarDay
@@ -42,7 +42,6 @@ class CalendarFragment : Fragment() {
     lateinit var binding: FragmentCalendarBinding
     lateinit var mainViewModel: MainViewModel
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<NestedScrollView>
-    var previousDates = mutableListOf<Any?>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -234,12 +233,18 @@ class CalendarFragment : Fragment() {
             override fun onStateChanged(bottomSheet: View, state: Int) {
                 print(state)
                 when (state) {
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> { }
-                    BottomSheetBehavior.STATE_COLLAPSED -> { }
-                    BottomSheetBehavior.STATE_DRAGGING -> { }
-                    BottomSheetBehavior.STATE_EXPANDED -> { }
-                    BottomSheetBehavior.STATE_HIDDEN -> { }
-                    BottomSheetBehavior.STATE_SETTLING -> { }
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                    }
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                    }
+                    BottomSheetBehavior.STATE_SETTLING -> {
+                    }
                 }
             }
         })
@@ -262,11 +267,8 @@ class CalendarFragment : Fragment() {
             widget.setSelectedDate(calendar)
         } else {
             viewModel.returnDate?.let {
-                val selectedDate = it.split("-")
-                val year = selectedDate[0]
-                val month = selectedDate[1]
-                val day = selectedDate[2]
-                widget.selectedDate = CalendarDay.from(year.toInt(), month.toInt(), day.toInt())
+                val date = splitDateSet(it,"-")
+                widget.selectedDate = CalendarDay.from(date.year, date.month, date.day)
             }
         }
     }
@@ -275,92 +277,10 @@ class CalendarFragment : Fragment() {
         widget.removeDecorators()
         widget.invalidateDecorators()
 
-        val activeDate = UserManager.myDate.value?.filter { myDate ->
-            myDate.active == true
-        }?.map {
-            it.name
-        }
-        val listAllEvent = mutableListOf<Long?>()
-
-        activeDate?.let {
-
-            for (x in activeDate) {
-                val event = UserManager.allEvent.value?.filter {
-                    it.attendee == x
-                }?.map {
-                    it.dateStamp
-                }
-                if (event != null) {
-                    for (i in event) {
-                        listAllEvent.add(i)
-                    }
-                }
-
-            }
-        }
-
-        val selectDateMark = UserManager.allEvent.value?.let { allEvent ->
-            allEvent.filter { att ->
-                att.attendee == mainViewModel.selectAttendee.value
-            }.map {
-                it.dateStamp
-            }
-        }
-        val list = mutableListOf<String>()
-
-
-
-
         if (mainViewModel.selectAttendee.value?.isEmpty()!!) {
-
-            for (a in listAllEvent) {
-                val selectedDate = stampToDate(a as Long, Locale.TAIWAN).split("-")
-                val year = selectedDate[0]
-                val month = selectedDate[1]
-                val day = selectedDate[2]
-                val calendarDay = CalendarDay.from(
-                    year.toInt(),
-                    month.toInt(),
-                    day.toInt()
-                ) // year, month, date
-
-                widget.addDecorators(
-                    CurrentDayDecorator(
-                        resources.getColor(R.color.black),
-                        calendarDay
-                    )
-                )
-
-                list.add(stampToDate(a, Locale.TAIWAN))
-
-                previousDates.add(calendarDay)
-            }
-            Log.e("Max", previousDates.toString())
+            setMarkData(viewModel.getActiveDateTime())
         } else {
-
-            if (selectDateMark != null) {
-                for (a in selectDateMark) {
-                    val selectedDate = stampToDate(a as Long, Locale.TAIWAN).split("-")
-                    val year = selectedDate[0]
-                    val month = selectedDate[1]
-                    val date = selectedDate[2]
-                    val calendarDay = CalendarDay.from(
-                        year.toInt(),
-                        month.toInt(),
-                        date.toInt()
-                    ) // year, month, date
-                    widget.addDecorators(
-                        CurrentDayDecorator(
-                            resources.getColor(R.color.black),
-                            calendarDay
-                        )
-                    )
-
-                    list.add(stampToDate(a, Locale.TAIWAN))
-
-                    previousDates.add(calendarDay)
-                }
-            }
+            setMarkData(viewModel.getSelectAttendeeTime(mainViewModel.selectAttendee.value ?: ""))
         }
     }
 
@@ -368,12 +288,10 @@ class CalendarFragment : Fragment() {
     private fun showSelectEvent() {
         widget.setOnDateChangedListener { widget, date, selected ->
             viewModel.selectDate.value = date.date.toString()
-
             viewModel.setTimeInterval(date.date.toString())
             viewModel.getSelectEventResult()
         }
     }
-
 
     override fun onResume() {
         super.onResume()
@@ -382,6 +300,22 @@ class CalendarFragment : Fragment() {
         })
     }
 
+    private fun setMarkData(markTime: MutableList<Long?>) {
+        for (mT in markTime) {
+            mT?.let {
+
+                val date = splitDateSet(stampToDate(mT, Locale.TAIWAN),"-")
+                val calendarDay = CalendarDay.from(date.year, date.month, date.day)
+
+                widget.addDecorators(
+                    CurrentDayDecorator(
+                        resources.getColor(R.color.black),
+                        calendarDay
+                    )
+                )
+            }
+        }
+    }
 }
 
 

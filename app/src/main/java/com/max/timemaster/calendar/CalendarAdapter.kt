@@ -30,19 +30,15 @@ class CalendarAdapter:
             }!![0].color
 
             val selectedStartDate = calendarEvent.dateStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
-            val splitTime = selectedStartDate?.split(" ")
-            val startTime = splitTime?.get(1)  // 時:分+
-
             val selectedEndDate = calendarEvent.dateEndStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
-            val splitEndTime = selectedEndDate?.split(" ")
-            val endTime = splitEndTime?.get(1)  // 時:分+
+
 
             binding.view.backgroundTintList = color?.let { SetColorStateList.setColorStateList(it) }
             binding.textEventTitle.text = calendarEvent.calendarTitle
             binding.textEventAttendee.text = calendarEvent.attendee
             binding.textEventContent.text = calendarEvent.calendarContent
-            binding.textStartTime.text = startTime.toString()
-            binding.textEndTime.text = endTime.toString()
+            binding.textStartTime.text = selectedStartDate
+            binding.textEndTime.text = selectedEndDate
 
 
 

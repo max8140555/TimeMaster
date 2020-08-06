@@ -8,9 +8,9 @@ import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.data.TimeMasterRepository
-import com.max.timemaster.data.source.remote.TimeMasterRemoteDataSource
 import com.max.timemaster.network.LoadApiStatus
 import com.max.timemaster.util.TimeUtil
+import com.max.timemaster.util.UserManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -78,6 +78,40 @@ class CalendarViewModel(
         viewModelJob.cancel()
     }
 
+    fun getActiveDateTime(): MutableList<Long?> {
+        val activeDateMark = mutableListOf<Long?>()
+        val activeDate = UserManager.myDate.value?.filter { myDate ->
+            myDate.active == true
+        }?.map {
+            it.name
+        }
+        activeDate?.let {
+            for (name in activeDate) {
+                val event = UserManager.allEvent.value?.filter {
+                    it.attendee == name
+                }?.map {
+                    it.dateStamp
+                }
+                if (event != null) {
+                    for (i in event) {
+                        activeDateMark.add(i)
+                    }
+                }
+            }
+        }
+        return activeDateMark
+    }
+
+    fun getSelectAttendeeTime(selectAttendee: String): MutableList<Long?> {
+        return UserManager.allEvent.value?.let { allEvent ->
+            allEvent.filter { att ->
+                att.attendee == selectAttendee
+            }.map {
+                it.dateStamp
+            }
+        }?.toMutableList() ?: mutableListOf()
+    }
+
     fun setTimeInterval(selectDate: String?) {
         greaterThan =
             TimeUtil.dateToStampTime(
@@ -107,7 +141,6 @@ class CalendarViewModel(
         }
         getSelectEventResult()
     }
-
 
 
     fun getSelectEventResult() {

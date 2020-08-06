@@ -6,7 +6,6 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,9 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.max.timemaster.*
 import com.max.timemaster.databinding.FragmentCalendarDetailBinding
 import com.max.timemaster.ext.getVmFactory
-import com.max.timemaster.util.TimeUtil
-import com.max.timemaster.util.TimeUtil.dateToStampTime
-import com.max.timemaster.util.UserManager
+import com.max.timemaster.util.TimeUtil.splitDateSet
 import java.lang.String.format
 import java.util.*
 
@@ -60,10 +57,10 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
             datePicker()
         }
         binding.selectTime.setOnClickListener {
-            selectTime(SELECT_START_TIME)
+            timePicker(SELECT_START_TIME)
         }
         binding.selectEndTime.setOnClickListener {
-            selectTime(SELECT_END_TIME)
+            timePicker(SELECT_END_TIME)
         }
 
         binding.save.setOnClickListener {
@@ -154,7 +151,7 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
     }
 
     @SuppressLint("DefaultLocale", "SetTextI18n")
-    fun selectTime(number: Int) {
+    fun timePicker(number: Int) {
         val calendar = Calendar.getInstance()
         val calendarHour = calendar.get(Calendar.HOUR_OF_DAY)
         val calendarMinute = calendar.get(Calendar.MINUTE)
@@ -185,19 +182,10 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
             viewModel.editDate.value = "$year-${newMonth.toInt() + 1}-$newDay"
         }
 
-        val selectedDate = viewModel.selectDate.split("-")
-        val year = selectedDate[0]
-        val month = selectedDate[1]
-        val date = selectedDate[2]
+        val date = splitDateSet(viewModel.selectDate,"-")
 
         activity?.let {
-            DatePickerDialog(
-                it,
-                dateListener,
-                year.toInt(),
-                month.toInt()-1,
-                date.toInt()
-            ).show()
+            DatePickerDialog(it, dateListener, date.year, date.month-1, date.day).show()
         }
     }
 
