@@ -25,13 +25,11 @@ class CalendarAdapter:
         @RequiresApi(Build.VERSION_CODES.M)
         fun bind(calendarEvent: CalendarEvent) {
 
+            val selectedStartDate = calendarEvent.dateStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
+            val selectedEndDate = calendarEvent.dateEndStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
             val color = UserManager.myDate.value?.filter {
                 it.name == calendarEvent.attendee
             }!![0].color
-
-            val selectedStartDate = calendarEvent.dateStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
-            val selectedEndDate = calendarEvent.dateEndStamp?.let { stampToDateTime(it, Locale.TAIWAN) }
-
 
             binding.view.backgroundTintList = color?.let { SetColorStateList.setColorStateList(it) }
             binding.textEventTitle.text = calendarEvent.calendarTitle

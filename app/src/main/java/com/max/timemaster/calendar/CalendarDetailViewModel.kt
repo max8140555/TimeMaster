@@ -99,8 +99,8 @@ class CalendarDetailViewModel(
             }
 
             else -> {
-                checkIfConflict(stampStart, stampEnd)
                 insertCalendar(stampStart, stampEnd)
+                checkIfConflict(stampStart, stampEnd)
             }
         }
     }
@@ -143,8 +143,6 @@ class CalendarDetailViewModel(
             isConflict.value = false
         }
     }
-
-
 
     fun postEvent() {
 

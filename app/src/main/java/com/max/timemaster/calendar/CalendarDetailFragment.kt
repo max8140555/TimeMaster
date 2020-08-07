@@ -67,31 +67,7 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
 
             viewModel.checkInputData()
 
-            viewModel.inputState.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-                it?.let {
-                    when (it) {
-                        0 -> {
-                            findNavController().navigate(
-                                NavigationDirections.navigateToMessengerDialog(
-                                    MessageType.TIME_ERROR.value
-                                )
-                            )
-                            viewModel.restoreInputState()
-                        }
 
-                        1 -> {
-                            findNavController().navigate(
-                                NavigationDirections.navigateToMessengerDialog(
-                                    MessageType.NOT_TITLE.value
-                                )
-                            )
-                            viewModel.restoreInputState()
-                        }
-
-                        else -> viewModel.nothing()
-                    }
-                }
-            })
 
         }
 
@@ -117,6 +93,32 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
         mainViewModel.selectAttendee.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
                 viewModel.editAttendee.value = it
+            }
+        })
+
+        viewModel.inputState.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            it?.let {
+                when (it) {
+                    0 -> {
+                        findNavController().navigate(
+                            NavigationDirections.navigateToMessengerDialog(
+                                MessageType.TIME_ERROR.value
+                            )
+                        )
+                        viewModel.restoreInputState()
+                    }
+
+                    1 -> {
+                        findNavController().navigate(
+                            NavigationDirections.navigateToMessengerDialog(
+                                MessageType.NOT_TITLE.value
+                            )
+                        )
+                        viewModel.restoreInputState()
+                    }
+
+                    else -> viewModel.nothing()
+                }
             }
         })
 

@@ -17,7 +17,7 @@ object UserManager {
 
     var allEvent = MutableLiveData<List<CalendarEvent>>()
 
-    var selectTime = MutableLiveData<List<CalendarEvent>>()
+    var selectEvent = MutableLiveData<List<CalendarEvent>>()
 
     var dateFavorite = MutableLiveData<List<DateFavorite>>()
 

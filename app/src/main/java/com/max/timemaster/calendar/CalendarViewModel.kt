@@ -24,6 +24,9 @@ class CalendarViewModel(
     var selectAttendeeArg: String?
 ) : ViewModel() {
 
+    private var greaterThan: Long = 0
+    private var lessThan: Long = 0
+
     var selectAttendee = MutableLiveData<String>().apply {
         selectAttendeeArg?.let { value = it }
     }
@@ -59,9 +62,6 @@ class CalendarViewModel(
     val selectDate = MutableLiveData<String>().apply {
         value = LocalDate.now().toString()
     }
-    var greaterThan: Long = 0
-    var lessThan: Long = 0
-
 
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
@@ -76,6 +76,27 @@ class CalendarViewModel(
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+    fun getActiveAttendeeEvents(): List<CalendarEvent> {
+        val list = mutableListOf<CalendarEvent>()
+        val date = UserManager.myDate.value?.filter { myDate ->
+            myDate.active == true
+        }?.map {
+            it.name
+        }
+
+        if (date != null) {
+            for (d in date.indices) {
+                val item = UserManager.selectEvent.value?.filter { dateEvent ->
+                    dateEvent.attendee == date[d]
+                }
+                if (!item.isNullOrEmpty()) {
+                    list.addAll(item)
+                }
+            }
+        }
+        return list
     }
 
     fun getActiveDateTime(): MutableList<Long?> {

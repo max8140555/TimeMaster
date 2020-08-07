@@ -135,6 +135,7 @@ class CostFragment : Fragment() {
                                 binding.imagePrompt.visibility = GONE
                                 binding.prompt.visibility = GONE
                             }
+
                             setPluralData(dateSelect)
                             adapter.submitList(dateSelect)
                             binding.btnAdd.visibility = VISIBLE

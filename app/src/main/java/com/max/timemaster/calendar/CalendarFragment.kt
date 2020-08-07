@@ -15,7 +15,6 @@ import com.max.timemaster.MainViewModel
 import com.max.timemaster.NavigationDirections
 import com.max.timemaster.R
 import com.max.timemaster.data.CalendarEvent
-import com.max.timemaster.data.DateSet
 import com.max.timemaster.databinding.FragmentCalendarBinding
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.network.LoadApiStatus
@@ -29,6 +28,9 @@ import kotlinx.android.synthetic.main.fragment_calendar.*
 import org.threeten.bp.LocalDate
 import java.util.*
 
+private const val NOT_ATTENDEE = 0
+private const val SELECT_ATTENDEE = 1
+private const val PROMPT_GONE = 2
 
 class CalendarFragment : Fragment() {
     private val viewModel by viewModels<CalendarViewModel> {
@@ -42,6 +44,7 @@ class CalendarFragment : Fragment() {
     lateinit var binding: FragmentCalendarBinding
     lateinit var mainViewModel: MainViewModel
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<NestedScrollView>
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,143 +70,80 @@ class CalendarFragment : Fragment() {
         binding.recyclerCalendar.adapter = adapter
 
         viewModel.selectEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            it?.let {
-                UserManager.myDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-                    mark()
-                })
+            it?.let { selectEvent ->
 
-                mainViewModel.liveMyDate.observe(
-                    viewLifecycleOwner,
-                    androidx.lifecycle.Observer { listDate ->
+                UserManager.selectEvent.value = selectEvent
 
-                        if (listDate.isNullOrEmpty()) {
-                            binding.prompt.visibility = View.VISIBLE
-                            binding.prompt.text = getString(R.string.hint_add_date_text)
+                mainViewModel.liveMyDate.observe(viewLifecycleOwner,
+                    androidx.lifecycle.Observer { listMyDate ->
 
-                        } else {
-                            if (viewModel.selectEvent.value.isNullOrEmpty()) {
-                                binding.prompt.visibility = View.VISIBLE
-                                binding.prompt.text = getString(R.string.hint_select_date_text)
-                            } else {
-                                binding.prompt.visibility = View.GONE
-                                binding.imagePrompt.visibility = View.GONE
+                        when {
+                            listMyDate.isNullOrEmpty() -> {     //當沒有任何對象時
+                                checkHaveDatePrompt(NOT_ATTENDEE)
+                            }
+                            else -> {
+                                if (it.isNullOrEmpty()) {       //有對象 但當天是沒行程的時候
+                                    checkHaveDatePrompt(SELECT_ATTENDEE)
+                                } else {
+                                    checkHaveDatePrompt(PROMPT_GONE)
+                                }
                             }
                         }
 
-                        UserManager.selectTime.value = viewModel.selectEvent.value
 
                         mainViewModel.selectAttendee.value?.let { select ->
+                            //當沒有選擇對象
                             if (select.isEmpty()) {
-                                // 驅除封存
-                                val date = UserManager.myDate.value?.filter { myDate ->
-                                    myDate.active == true
-                                }?.map {
-                                    it.name
-                                }
-                                val list = mutableListOf<CalendarEvent>()
 
-                                if (date != null) {
-                                    for (x in date.indices) {
-                                        val item =
-                                            UserManager.selectTime.value?.filter { dateEvent ->
-                                                dateEvent.attendee == date[x]
-                                            }
-                                        if (!item.isNullOrEmpty()) {
-                                            list.addAll(item)
-                                        }
-                                    }
-                                }
-                                adapter.submitList(list.sortedBy { it.dateStamp })
+                                adapter.submitList(
+                                    viewModel.getActiveAttendeeEvents().sortedBy { it.dateStamp })
+
                             } else {
 
-                                val x = UserManager.selectTime.value?.filter { date ->
-                                    date.attendee == select
-                                }
-                                if (x.isNullOrEmpty()) {
-                                    binding.prompt.visibility = View.VISIBLE
-                                    binding.imagePrompt.setImageResource(R.drawable.icon_add)
-                                    binding.prompt.text = getString(R.string.hint_event_text)
-                                    binding.imagePrompt.setOnClickListener {
-                                        viewModel.selectDate.value?.let { selectDate ->
-                                            findNavController().navigate(
-                                                NavigationDirections.navigateToCalendarDetailFragment(
-                                                    selectDate
-                                                )
-                                            )
-                                        }
+                                val selectedAttendeeEvents =
+                                    UserManager.selectEvent.value?.filter { date ->
+                                        date.attendee == select
                                     }
-                                }
 
-                                adapter.submitList(x)
+                                promptVisibility(selectedAttendeeEvents)
+                                adapter.submitList(selectedAttendeeEvents)
+
                             }
                         }
                     })
             }
         })
 
-
-        mainViewModel.selectAttendee.observe(
-            viewLifecycleOwner,
+        //切換drawer時
+        mainViewModel.selectAttendee.observe(viewLifecycleOwner,
             androidx.lifecycle.Observer { select ->
-                UserManager.myDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-                    mark()
-                })
+                mark()
                 if (select.isEmpty()) {
-                    val date = UserManager.myDate.value?.filter { myDate ->
-                        myDate.active == true
-                    }?.map {
-                        it.name
-                    }
-                    val list = mutableListOf<CalendarEvent>()
 
-                    if (date != null) {
-                        for (x in date.indices) {
-                            val item = UserManager.selectTime.value?.filter { dateEvent ->
-                                dateEvent.attendee == date[x]
-                            }
-                            if (!item.isNullOrEmpty()) {
-                                list.addAll(item)
-                            }
-                        }
-                    }
-                    if (list.isNullOrEmpty()) {
-                        binding.prompt.visibility = View.VISIBLE
-//                        binding.imagePrompt.visibility = View.VISIBLE
-                        binding.prompt.text = getString(R.string.hint_select_date_text)
-//                        binding.imagePrompt.setImageResource(R.drawable.toolbar_menu)
+                    if (viewModel.selectEvent.value.isNullOrEmpty()) {
+                        checkHaveDatePrompt(SELECT_ATTENDEE)
+
                     } else {
-                        binding.prompt.visibility = View.GONE
-                        binding.imagePrompt.visibility = View.GONE
+                        checkHaveDatePrompt(PROMPT_GONE)
                     }
-                    adapter.submitList(list.sortedBy { it.dateStamp })
 
                     binding.btnAdd.visibility = View.GONE
+                    adapter.submitList(
+                        viewModel.getActiveAttendeeEvents().sortedBy { it.dateStamp })
+
                 } else {
 
-                    val selectedPersonEvents = UserManager.selectTime.value?.filter {
+                    val selectedAttendeeEvents = UserManager.selectEvent.value?.filter {
                         it.attendee == select
                     }
-                    if (selectedPersonEvents.isNullOrEmpty()) {
-                        binding.imagePrompt.visibility = View.VISIBLE
-                        binding.imagePrompt.setImageResource(R.drawable.icon_add)
-                        binding.prompt.visibility = View.VISIBLE
-                        binding.prompt.text = getString(R.string.hint_event_text)
-                        binding.imagePrompt.setOnClickListener {
-                            viewModel.selectDate.value?.let { selectDate ->
-                                findNavController().navigate(
-                                    NavigationDirections.navigateToCalendarDetailFragment(
-                                        selectDate
-                                    )
-                                )
-                            }
-                        }
-                    }
-                    adapter.submitList(selectedPersonEvents)
 
                     binding.btnAdd.visibility = View.VISIBLE
+
+                    promptVisibility(selectedAttendeeEvents)
+                    adapter.submitList(selectedAttendeeEvents)
+
                 }
             })
-
 
         viewModel.status.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
@@ -216,8 +156,6 @@ class CalendarFragment : Fragment() {
                 }
             }
         })
-
-
 
         return binding.root
     }
@@ -249,25 +187,23 @@ class CalendarFragment : Fragment() {
             }
         })
 
-
-        val calendar = LocalDate.now()
-        widget = view?.findViewById(R.id.calendarView) as MaterialCalendarView
-
         UserManager.allEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
+                showSelectEvent()
                 UserManager.myDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
                     mark()
                 })
-                showSelectEvent()
             }
         })
 
+        val calendar = LocalDate.now()
+        widget = view?.findViewById(R.id.calendarView) as MaterialCalendarView
 
         if (viewModel.returnDate == null) {
             widget.setSelectedDate(calendar)
         } else {
             viewModel.returnDate?.let {
-                val date = splitDateSet(it,"-")
+                val date = splitDateSet(it, "-")
                 widget.selectedDate = CalendarDay.from(date.year, date.month, date.day)
             }
         }
@@ -293,18 +229,11 @@ class CalendarFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        UserManager.myDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            mark()
-        })
-    }
-
     private fun setMarkData(markTime: MutableList<Long?>) {
         for (mT in markTime) {
             mT?.let {
 
-                val date = splitDateSet(stampToDate(mT, Locale.TAIWAN),"-")
+                val date = splitDateSet(stampToDate(mT, Locale.TAIWAN), "-")
                 val calendarDay = CalendarDay.from(date.year, date.month, date.day)
 
                 widget.addDecorators(
@@ -316,6 +245,55 @@ class CalendarFragment : Fragment() {
             }
         }
     }
+
+    private fun promptVisibility(events: List<CalendarEvent>?) {
+        if (events.isNullOrEmpty()) {
+            binding.prompt.visibility = View.VISIBLE
+            binding.prompt.text = getString(R.string.hint_event_text)
+            binding.imagePrompt.visibility = View.VISIBLE
+            binding.imagePrompt.setOnClickListener {
+                viewModel.selectDate.value?.let { selectDate ->
+                    findNavController().navigate(
+                        NavigationDirections.navigateToCalendarDetailFragment(
+                            selectDate
+                        )
+                    )
+                }
+            }
+        } else {
+            binding.imagePrompt.visibility = View.GONE
+            binding.prompt.visibility = View.GONE
+        }
+    }
+
+    private fun checkHaveDatePrompt(state: Int?) {
+        when (state) {
+            0 -> {
+                binding.prompt.visibility = View.VISIBLE
+                binding.prompt.text = getString(R.string.hint_add_date_text)
+            }
+            1 -> {
+                binding.prompt.visibility = View.VISIBLE
+                binding.prompt.text = getString(R.string.hint_select_date_text)
+                binding.imagePrompt.visibility = View.GONE
+            }
+            2 -> {
+                binding.imagePrompt.visibility = View.GONE
+                binding.prompt.visibility = View.GONE
+            }
+        }
+    }
+
+
+//暫時先留著!!
+//    override fun onResume() {
+//        super.onResume()
+//
+//        UserManager.myDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+//            mark()
+//        })
+//    }
+
 }
 
 
