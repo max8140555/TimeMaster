@@ -69,7 +69,7 @@ class CalendarFragment : Fragment() {
         val adapter = CalendarAdapter()
         binding.recyclerCalendar.adapter = adapter
 
-        viewModel.selectEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.selectEvent.observe(viewLifecycleOwner, androidx.lifecycle.Observer { it ->
             it?.let { selectEvent ->
 
                 UserManager.selectEvent.value = selectEvent
@@ -268,16 +268,16 @@ class CalendarFragment : Fragment() {
 
     private fun checkHaveDatePrompt(state: Int?) {
         when (state) {
-            0 -> {
+            NOT_ATTENDEE -> {
                 binding.prompt.visibility = View.VISIBLE
                 binding.prompt.text = getString(R.string.hint_add_date_text)
             }
-            1 -> {
+            SELECT_ATTENDEE -> {
                 binding.prompt.visibility = View.VISIBLE
                 binding.prompt.text = getString(R.string.hint_select_date_text)
                 binding.imagePrompt.visibility = View.GONE
             }
-            2 -> {
+            PROMPT_GONE -> {
                 binding.imagePrompt.visibility = View.GONE
                 binding.prompt.visibility = View.GONE
             }

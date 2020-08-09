@@ -105,17 +105,6 @@ class CalendarDetailViewModel(
         }
     }
 
-    private fun insertCalendar(stamp: Long, stampEnd: Long) {
-
-        setData.value = CalendarEvent(
-            editTitle.value,
-            editAttendee.value,
-            editContent.value,
-            stamp,
-            stampEnd
-        )
-    }
-
     //判斷是否行程時間衝突
     private fun checkIfConflict(
         stampStart: Long,
@@ -144,7 +133,7 @@ class CalendarDetailViewModel(
         }
     }
 
-    fun postEvent() {
+    fun uploadEvent() {
 
         coroutineScope.launch {
 
@@ -171,6 +160,17 @@ class CalendarDetailViewModel(
                 }
             }
         }
+    }
+
+    private fun insertCalendar(stamp: Long, stampEnd: Long) {
+
+        setData.value = CalendarEvent(
+            editTitle.value,
+            editAttendee.value,
+            editContent.value,
+            stamp,
+            stampEnd
+        )
     }
 
     fun nothing() {

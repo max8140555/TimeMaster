@@ -15,13 +15,14 @@ import com.max.timemaster.util.UserManager
 import java.util.*
 
 class CalendarAdapter:
-    ListAdapter<CalendarEvent, CalendarAdapter.CalendarEventViewHolder>(
+    ListAdapter<CalendarEvent, CalendarAdapter.CalendarEventItemViewHolder>(
         DiffCallback
     ) {
 
 
-    class CalendarEventViewHolder(private var binding: ItemCalendarBinding) :
+    class CalendarEventItemViewHolder(private var binding: ItemCalendarBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         @RequiresApi(Build.VERSION_CODES.M)
         fun bind(calendarEvent: CalendarEvent) {
 
@@ -64,8 +65,8 @@ class CalendarAdapter:
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): CalendarEventViewHolder {
-        return CalendarEventViewHolder(
+    ): CalendarEventItemViewHolder {
+        return CalendarEventItemViewHolder(
             ItemCalendarBinding.inflate(
                 LayoutInflater.from(
                     parent.context
@@ -75,7 +76,7 @@ class CalendarAdapter:
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    override fun onBindViewHolder(holder: CalendarEventViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CalendarEventItemViewHolder, position: Int) {
         val events =
             getItem(position)
 

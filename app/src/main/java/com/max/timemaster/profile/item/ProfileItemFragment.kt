@@ -1,7 +1,6 @@
-package com.max.timemaster.profile.detail
+package com.max.timemaster.profile.item
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,11 +31,16 @@ class ProfileItemFragment(private val profileType: ProfileTypeFilter) : Fragment
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        val adapter = ProfileItemAdapter(ProfileItemAdapter.OnClickListener{ myDate->
-            let {
-                findNavController().navigate(NavigationDirections.navigateToProfileEditDialog(myDate))
-            }
-        })
+        val adapter = ProfileItemAdapter(
+            ProfileItemAdapter.OnClickListener { myDate ->
+                let {
+                    findNavController().navigate(
+                        NavigationDirections.navigateToProfileEditDialog(
+                            myDate
+                        )
+                    )
+                }
+            })
 
         binding.recyclerProfileItem.adapter = adapter
         UserManager.myDate.observe(viewLifecycleOwner, Observer {
@@ -53,7 +57,6 @@ class ProfileItemFragment(private val profileType: ProfileTypeFilter) : Fragment
                     })
                 }
             }
-            Log.d("XXXXX", "${UserManager.myDate.value}")
         })
 
         return binding.root

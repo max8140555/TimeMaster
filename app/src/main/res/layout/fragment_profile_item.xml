@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.max.timemaster.profile.detail.ProfileItemViewModel" />
+            type="com.max.timemaster.profile.item.ProfileItemViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

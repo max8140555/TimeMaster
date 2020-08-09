@@ -116,7 +116,7 @@ class MainViewModel(
     }
 
     //上傳從 Facebook 拿到的資訊
-    fun postUser(user: User) {
+    private fun postUser(user: User) {
 
         coroutineScope.launch {
 
@@ -145,21 +145,21 @@ class MainViewModel(
     }
 
     //取得 User 資訊
-    fun getLiveUserResult() {
+    private fun getLiveUserResult() {
         _liveUser = timeMasterRepository.getLiveUser()
         _status.value = LoadApiStatus.DONE
         _refreshStatus.value = false
     }
 
     //取得我所有的 Date 資訊
-    fun getLiveMyDateResult() {
+    private fun getLiveMyDateResult() {
         _liveMyDate = timeMasterRepository.getLiveMyDate()
         _status.value = LoadApiStatus.DONE
         _refreshStatus.value = false
     }
 
     //取得所有 Events
-    fun getAllEventResult() {
+    private fun getAllEventResult() {
         _liveAllEvent = timeMasterRepository.getLiveAllEvent()
         _status.value = LoadApiStatus.DONE
         _refreshStatus.value = false

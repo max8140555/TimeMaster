@@ -1,13 +1,11 @@
 package com.max.timemaster.favorite
 
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Build
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -19,60 +17,58 @@ import com.max.timemaster.databinding.ItemFavoriteBinding
 import com.max.timemaster.util.SetColorStateList
 import com.max.timemaster.util.UserManager
 
-class FavoriteAdapter() :
-    ListAdapter<DateFavorite, FavoriteAdapter.ProductDetailedEvaluationViewHolder>(
+class FavoriteAdapter :
+    ListAdapter<DateFavorite, FavoriteAdapter.FavoriteItemViewHolder>(
         DiffCallback
     ) {
 
-    class ProductDetailedEvaluationViewHolder(private var binding: ItemFavoriteBinding) :
+    class FavoriteItemViewHolder(private var binding: ItemFavoriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         fun bind(dateFavorite: DateFavorite) {
-            binding.title.text = dateFavorite.favoriteTitle
-            binding.attendee.text = dateFavorite.attendeeName
 
             val dateColor = UserManager.myDate.value?.filter {
                 it.name == dateFavorite.attendeeName
-            }!![0].color
-//            val states = arrayOf(intArrayOf(-android.R.attr.state_checked))
-//            val colors = intArrayOf(Color.parseColor("#$color"))
-            val colorsStateList = dateColor?.let { color ->
+            }?.get(0)?.color ?: ""
+            val colorsStateList = dateColor.let { color ->
                 SetColorStateList.setColorStateList(color)
             }
-            binding.view.backgroundTintList = colorsStateList
-
             val chipGroup = binding.chipGroup
             val contentList = dateFavorite.favoriteContent
+
+            binding.title.text = dateFavorite.favoriteTitle
+            binding.attendee.text = dateFavorite.attendeeName
+            binding.view.backgroundTintList = colorsStateList
+
+
             chipGroup.removeAllViews()
 
             if (contentList != null) {
                 for (index in contentList.indices) {
+
                     val content = contentList[index]
                     val chip = Chip(chipGroup.context)
+                    val paddingDp = TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 10f,
+                        TimeMasterApplication.instance.resources.displayMetrics
+                    ).toInt()
+
                     chip.text = content
                     chip.textSize = 12f
                     chip.setTextColor(Color.BLACK)
                     chip.chipBackgroundColor = colorsStateList
                     chip.closeIconTint = SetColorStateList.setColorStateList(
-                        TimeMasterApplication.instance.getString(R.string.color_white_text))
-                    val paddingDp = TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        10f,
-                        TimeMasterApplication.instance.resources.displayMetrics
-                    ).toInt()
-
+                        TimeMasterApplication.instance.getString(R.string.color_white_text)
+                    )
                     chip.setPadding(40, paddingDp, paddingDp, paddingDp)
-
                     chipGroup.addView(chip)
-                    binding.executePendingBindings()
 
+                    binding.executePendingBindings()
                 }
             }
-
-
         }
     }
-
 
     companion object DiffCallback : DiffUtil.ItemCallback<DateFavorite>() {
         override fun areItemsTheSame(
@@ -90,14 +86,11 @@ class FavoriteAdapter() :
         }
     }
 
-
-
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ProductDetailedEvaluationViewHolder {
-        return ProductDetailedEvaluationViewHolder(
+    ): FavoriteItemViewHolder {
+        return FavoriteItemViewHolder(
             ItemFavoriteBinding.inflate(
                 LayoutInflater.from(
                     parent.context
@@ -106,12 +99,10 @@ class FavoriteAdapter() :
         )
     }
 
-
-
-    override fun onBindViewHolder(holder: ProductDetailedEvaluationViewHolder, position: Int) {
-        val product =
+    override fun onBindViewHolder(holder: FavoriteItemViewHolder, position: Int) {
+        val favorite =
             getItem(position)
-        holder.bind(product)
+        holder.bind(favorite)
     }
 
 }

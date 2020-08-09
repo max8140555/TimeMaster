@@ -1,4 +1,4 @@
-package com.max.timemaster.profile.detail
+package com.max.timemaster.profile.item
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -10,7 +10,9 @@ import com.max.timemaster.data.MyDate
 import com.max.timemaster.databinding.ItemProfileGridBinding
 
 class ProfileItemAdapter(val onClickListener: OnClickListener) :
-    ListAdapter<MyDate, ProfileItemAdapter.ProductDetailedEvaluationViewHolder>(DiffCallback) {
+    ListAdapter<MyDate, ProfileItemAdapter.ProductDetailedEvaluationViewHolder>(
+        DiffCallback
+    ) {
 
     class ProductDetailedEvaluationViewHolder(private var binding: ItemProfileGridBinding) :
         RecyclerView.ViewHolder(binding.root) {

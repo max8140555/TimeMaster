@@ -13,7 +13,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.max.timemaster.*
-import com.max.timemaster.data.DateCost
 import com.max.timemaster.databinding.DialogCostDetailBinding
 import com.max.timemaster.ext.getVmFactory
 
@@ -26,6 +25,7 @@ class CostDetailDialog : AppCompatDialogFragment() {
     }
 
     lateinit var binding: DialogCostDetailBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NO_FRAME, R.style.PublishDialog)
@@ -46,9 +46,11 @@ class CostDetailDialog : AppCompatDialogFragment() {
                 R.anim.anim_slide_up
             )
         )
+
         binding.buttonPublish.setOnClickListener {
             if (!viewModel.edTitle.value.isNullOrEmpty() && !viewModel.edMoney.value.isNullOrEmpty()) {
-                addCost()?.let { it1 -> viewModel.postAddCost(it1) }
+
+                viewModel.uploadCost()
 
             } else {
 
@@ -56,6 +58,7 @@ class CostDetailDialog : AppCompatDialogFragment() {
                     MessageType.INCOMPLETE_TEXT.value))
             }
         }
+
         viewModel.leave.observe(viewLifecycleOwner, Observer {
             it?.let {
                 findNavController().navigateUp()
@@ -66,23 +69,10 @@ class CostDetailDialog : AppCompatDialogFragment() {
         mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer {
             it?.let { attendee ->
                 viewModel.edAttendee.value = attendee
-
             }
         })
 
-
-
         return binding.root
-
-    }
-
-    fun addCost(): DateCost? {
-        return DateCost(
-            viewModel.edAttendee.value,
-            viewModel.edTitle.value,
-            viewModel.edMoney.value?.toLong(),
-            viewModel.edContent.value
-        )
 
     }
 

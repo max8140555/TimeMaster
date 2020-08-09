@@ -145,7 +145,6 @@ class MainActivity : AppCompatActivity() {
 
         val navMenu = binding.drawerNavView.menu
         navMenu.clear()
-
         val menu = navMenu.addSubMenu(getString(R.string.drawer_title_text))
 
         menu.add(getString(R.string.drawer_item_text))

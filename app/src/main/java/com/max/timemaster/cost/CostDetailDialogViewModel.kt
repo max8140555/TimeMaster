@@ -15,6 +15,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class CostDetailDialogViewModel( private val timeMasterRepository: TimeMasterRepository) : ViewModel() {
+
+    var edAttendee = MutableLiveData<String>()
+    var edTitle = MutableLiveData<String>()
+    var edMoney = MutableLiveData<String>()
+    var edContent = MutableLiveData<String>()
+
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
 
@@ -38,18 +44,19 @@ class CostDetailDialogViewModel( private val timeMasterRepository: TimeMasterRep
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    var edAttendee = MutableLiveData<String>()
-    var edTitle = MutableLiveData<String>()
-    var edMoney = MutableLiveData<String>()
-    var edContent = MutableLiveData<String>()
 
-    fun postAddCost(dateCost: DateCost) {
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+
+    fun uploadCost() {
 
         coroutineScope.launch {
 
             _status.value = LoadApiStatus.LOADING
 
-            when (val result = timeMasterRepository.postCost(dateCost)) {
+            when (val result = timeMasterRepository.postCost(generateDateCost())) {
                 is com.max.timemaster.data.Result.Success -> {
                     _error.value = null
                     _status.value = LoadApiStatus.DONE
@@ -69,6 +76,15 @@ class CostDetailDialogViewModel( private val timeMasterRepository: TimeMasterRep
                 }
             }
         }
+    }
+
+    private fun generateDateCost(): DateCost {
+        return DateCost(
+            edAttendee.value,
+            edTitle.value,
+            edMoney.value?.toLong(),
+            edContent.value
+        )
     }
 
     fun leave(needRefresh: Boolean = false) {

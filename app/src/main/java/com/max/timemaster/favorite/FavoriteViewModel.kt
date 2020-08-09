@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.max.timemaster.data.DateFavorite
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.network.LoadApiStatus
+import com.max.timemaster.util.UserManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -37,10 +38,41 @@ class FavoriteViewModel(private val timeMasterRepository: TimeMasterRepository) 
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    fun getLiveDateCostResult() {
+    init {
+        getLiveDateCostResult()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+
+    private fun getLiveDateCostResult() {
         dateFavorite = timeMasterRepository.getLiveDateFavorite()
         _status.value = LoadApiStatus.DONE
         _refreshStatus.value = false
+    }
+
+    fun getActiveAttendeeFavorite(): List<DateFavorite> {
+        val date = UserManager.myDate.value?.filter { myDate ->
+            myDate.active == true
+        }?.map {
+            it.name
+        }
+
+        val list = mutableListOf<DateFavorite>()
+
+        if (date != null) {
+            for (x in date.indices) {
+                val item = dateFavorite.value?.filter { dateFavorite ->
+                        dateFavorite.attendeeName == date[x]
+                    }
+                if (!item.isNullOrEmpty()) {
+                    list.addAll(item)
+                }
+            }
+        }
+        return list
     }
 
 }

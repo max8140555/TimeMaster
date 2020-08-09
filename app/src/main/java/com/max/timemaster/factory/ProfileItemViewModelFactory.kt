@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.profile.ProfileTypeFilter
-import com.max.timemaster.profile.detail.ProfileItemViewModel
+import com.max.timemaster.profile.item.ProfileItemViewModel
 
 
 @Suppress("UNCHECKED_CAST")
@@ -17,7 +17,10 @@ class ProfileItemViewModelFactory(
         with(modelClass) {
             when {
                 isAssignableFrom(ProfileItemViewModel::class.java) ->
-                    ProfileItemViewModel(timeMasterRepository, catalogType)
+                    ProfileItemViewModel(
+                        timeMasterRepository,
+                        catalogType
+                    )
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

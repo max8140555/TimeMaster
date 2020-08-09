@@ -57,7 +57,7 @@
         app:popUpToInclusive="true"/>
     <action
         android:id="@+id/navigate_to_calendarDetailFragment"
-        app:destination="@id/calendarDetailFragment" />
+        app:destination="@id/calendarDetailDialog" />
     <action
         android:id="@+id/navigate_to_calendarFragment"
         app:destination="@id/calendarFragment"
@@ -81,12 +81,12 @@
     <action android:id="@+id/navigate_to_messengerDialog"
         app:destination="@id/messengerDialog"/>
     <dialog
-        android:id="@+id/calendarDetailFragment"
-        android:name="com.max.timemaster.calendar.CalendarDetailFragment"
-        android:label="CalendarDetailFragment"
-        tools:layout="@layout/fragment_calendar_detail">
+        android:id="@+id/calendarDetailDialog"
+        android:name="com.max.timemaster.calendar.CalendarDetailDialog"
+        android:label="CalendarDetailDialog"
+        tools:layout="@layout/dialog_calendar_detail">
         <argument
-            android:name="datekey"
+            android:name="dateKey"
             app:argType="string" />
     </dialog>
     <dialog

@@ -24,7 +24,7 @@
             android:background="@drawable/top_circle_frame"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:context=".calendar.CalendarDetailFragment"
+            tools:context=".calendar.CalendarDetailDialog"
             android:onClick="@{() -> viewModel.nothing()}">
 
             <EditText

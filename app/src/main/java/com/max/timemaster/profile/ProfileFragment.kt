@@ -12,7 +12,6 @@ import com.google.android.material.tabs.TabLayout
 import com.max.timemaster.R
 import com.max.timemaster.databinding.FragmentProfileBinding
 import com.max.timemaster.ext.getVmFactory
-import com.max.timemaster.profile.detail.ProfileAdapter
 
 class ProfileFragment : Fragment() {
 
@@ -28,7 +27,9 @@ class ProfileFragment : Fragment() {
                 lifecycleOwner = viewLifecycleOwner
                 viewpagerProfileDate.let {
                     tabsProfileDate.setupWithViewPager(it)
-                    it.adapter = ProfileAdapter(childFragmentManager)
+                    it.adapter = ProfileAdapter(
+                        childFragmentManager
+                    )
                     it.addOnPageChangeListener(
                         TabLayout.TabLayoutOnPageChangeListener(tabsProfileDate))
                 }

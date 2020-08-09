@@ -25,6 +25,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.max.timemaster.MainViewModel
 import com.max.timemaster.R
+
 import com.max.timemaster.data.DateCost
 import com.max.timemaster.databinding.FragmentCostBinding
 import com.max.timemaster.ext.getVmFactory
@@ -33,12 +34,15 @@ import com.max.timemaster.util.UserManager
 import java.util.*
 import kotlin.collections.ArrayList
 
-
+private const val NOT_ATTENDEE = 0
+private const val SELECT_ATTENDEE = 1
+private const val PROMPT_GONE = 2
 class CostFragment : Fragment() {
 
     private val viewModel by viewModels<CostViewModel> {
         getVmFactory()
     }
+
     lateinit var binding: FragmentCostBinding
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -46,96 +50,52 @@ class CostFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+
         binding = FragmentCostBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-//        binding.viewModel = viewModel
         binding.btnAdd.setOnClickListener {
             findNavController().navigate(R.id.navigate_to_costDetailDialog)
         }
 
-
-        viewModel.getLiveDateCostResult()
         val adapter = CostAdapter()
         binding.recyclerCost.adapter = adapter
-
-
 
         mainViewModel.selectAttendee.observe(viewLifecycleOwner, Observer { attendee ->
             attendee?.let {
                 viewModel.dateCost.observe(viewLifecycleOwner, Observer { dataCosts ->
                     dataCosts?.let { dateCost ->
+
                         UserManager.dateCost.value = dataCosts
                         val dateSelect = dateCost.filter { date ->
                             date.attendeeName == attendee
                         }
 
                         if (attendee.isEmpty()) {
-
-                            // All date
-
-                            val dating =
-                                com.max.timemaster.util.UserManager.myDate.value?.filter { myDate ->
-                                    myDate.active == true
-                                }?.map { myDate2 ->
-                                    myDate2.name
-                                }
-
-                            val allDateCostList = mutableListOf<DateCost>()
-
-                            if (dating != null) {
-                                for (x in dating.indices) {
-                                    val item = viewModel.dateCost.value?.filter { dateCost ->
-                                        dateCost.attendeeName == dating[x]
-                                    }
-                                    if (!item.isNullOrEmpty()) {
-                                        allDateCostList.addAll(item)
-                                    }
-                                }
-                            }
-
-                            mainViewModel.liveMyDate.observe(
-                                viewLifecycleOwner,
+                            mainViewModel.liveMyDate.observe(viewLifecycleOwner,
                                 Observer { listDate ->
+
                                     if (listDate.isNullOrEmpty()) {
-                                        binding.prompt.visibility = VISIBLE
-                                        binding.prompt.text = getString(R.string.hint_add_date_text)
-
+                                        checkHaveDatePrompt(NOT_ATTENDEE)
                                     } else {
-                                        if (allDateCostList.isNullOrEmpty()) {
-
-                                            binding.prompt.text = getString(R.string.hint_select_date_text)
-                                            binding.prompt.visibility = VISIBLE
+                                        if (viewModel.getActiveAttendeeCost().isNullOrEmpty()) {
+                                            checkHaveDatePrompt(SELECT_ATTENDEE)
                                         } else {
-                                            binding.imagePrompt.visibility = GONE
-                                            binding.prompt.visibility = GONE
+                                            checkHaveDatePrompt(PROMPT_GONE)
                                         }
                                     }
                                 })
 
-
-                            setPluralData(allDateCostList)
-                            adapter.submitList(allDateCostList.sortedByDescending {
+                            setPluralData(viewModel.getActiveAttendeeCost())
+                            adapter.submitList(viewModel.getActiveAttendeeCost().sortedByDescending {
                                 it.time
                             })
                             binding.btnAdd.visibility = GONE
 
                         } else {
 
-                            // Selected Date
-                            if (dateSelect.isNullOrEmpty()) {
-                                binding.imagePrompt.setImageResource(R.drawable.icon_add)
-                                binding.prompt.text = getString(R.string.hint_cost_text)
-                                binding.imagePrompt.visibility = VISIBLE
-                                binding.prompt.visibility = VISIBLE
-                                binding.imagePrompt.setOnClickListener {
-                                    findNavController().navigate(R.id.navigate_to_costDetailDialog)
-                                }
-                            } else {
-                                binding.imagePrompt.visibility = GONE
-                                binding.prompt.visibility = GONE
-                            }
-
+                            promptVisibility(dateSelect)
                             setPluralData(dateSelect)
                             adapter.submitList(dateSelect)
                             binding.btnAdd.visibility = VISIBLE
@@ -153,26 +113,16 @@ class CostFragment : Fragment() {
     private fun setPluralData(allListDateCost: List<DateCost>) {
 
         val lineChart = binding.lineChartView
-
         val cal = Calendar.getInstance().timeInMillis
-        Log.e("Max", "$cal")
-
-        val labels: MutableList<String> = mutableListOf(
-            stampToDateNoYear(cal - 86400000 * 3, Locale.TAIWAN)
-            , stampToDateNoYear(cal - 86400000 * 2, Locale.TAIWAN)
-            , stampToDateNoYear(cal - 86400000, Locale.TAIWAN)
-            , stampToDateNoYear(cal, Locale.TAIWAN)
-        )
-
 
         lineChart.description.text = "時間"
         lineChart.description.textSize = 10F
-        lineChart.xAxis.apply {
-            lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-            lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-            lineChart.xAxis.textSize = 12f
-            lineChart.xAxis.setDrawLabels(true)
-            lineChart.xAxis.setDrawGridLines(false)
+        lineChart.xAxis?.let {
+            it.valueFormatter = IndexAxisValueFormatter(viewModel.getLabels())
+            it.position = XAxis.XAxisPosition.BOTTOM
+            it.textSize = 12f
+            it.setDrawLabels(true)
+            it.setDrawGridLines(false)
         }
 
         val dates = UserManager.myDate.value?.filter {
@@ -180,14 +130,13 @@ class CostFragment : Fragment() {
         }?.map {
             it.name
         }
-
         val dataSetGroup = mutableListOf<LineDataSet>()
-
-
 
         dates?.let { dates ->
 
+
             for (d in dates.indices) {
+
                 var daySum: Long = 0
                 var dayMoney = listOf<Long?>()
                 val dateDayPrice = mutableListOf<Long>()
@@ -212,17 +161,16 @@ class CostFragment : Fragment() {
                     it.costPrice
                 }
 
-
                 for (mon in allMoney) {
                     if (mon != null) {
                         daySum += mon
                     }
                 }
 
-                for (l in labels.indices) {
+                for (l in viewModel.getLabels().indices) {
 
                     dayMoney = dateCost.filter {
-                        stampToDateNoYear(it.time ?: 0, Locale.TAIWAN) == labels[l]
+                        stampToDateNoYear(it.time ?: 0, Locale.TAIWAN) == viewModel.getLabels()[l]
                     }.map {
                         it.costPrice
                     }
@@ -235,7 +183,7 @@ class CostFragment : Fragment() {
                     }
 
 
-                    Log.e("Max", "list = ${dates[d]} , ${labels[l]}, $dayMoney")
+                    Log.e("Max", "list = ${dates[d]} , ${viewModel.getLabels()[l]}, $dayMoney")
                     dateDayPrice.add(daySum)
 
                     Log.e("Max", "dayMoney = $dateDayPrice")
@@ -251,6 +199,7 @@ class CostFragment : Fragment() {
                         }
                     }
                 }
+
                 val dataSet = LineDataSet(entries, dateName?.get(0))
                 dataSet.color = Color.parseColor("#${dateColor?.get(0)}")
                 dataSet.valueTextColor =
@@ -290,6 +239,42 @@ class CostFragment : Fragment() {
         lineChart.axisLeft.setStartAtZero(true)
         lineChart.invalidate()
         lineChart.notifyDataSetChanged()
+    }
+
+    private fun promptVisibility(cost: List<DateCost>?) {
+        if (cost.isNullOrEmpty()) {
+
+            binding.prompt.text = getString(R.string.hint_cost_text)
+            binding.imagePrompt.visibility = VISIBLE
+            binding.prompt.visibility = VISIBLE
+
+            binding.imagePrompt.setOnClickListener {
+                findNavController().navigate(R.id.navigate_to_costDetailDialog)
+            }
+        } else {
+
+            binding.imagePrompt.visibility = GONE
+            binding.prompt.visibility = GONE
+
+        }
+    }
+
+    private fun checkHaveDatePrompt(state: Int?) {
+        when (state) {
+            NOT_ATTENDEE -> {
+                binding.prompt.visibility = VISIBLE
+                binding.prompt.text = getString(R.string.hint_add_date_text)
+            }
+            SELECT_ATTENDEE -> {
+                binding.prompt.visibility = VISIBLE
+                binding.prompt.text = getString(R.string.hint_select_date_text)
+                binding.imagePrompt.visibility = GONE
+            }
+            PROMPT_GONE -> {
+                binding.imagePrompt.visibility = GONE
+                binding.prompt.visibility = GONE
+            }
+        }
     }
 }
 

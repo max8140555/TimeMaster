@@ -1,7 +1,5 @@
-package com.max.timemaster.profile.detail
+package com.max.timemaster.profile.edit
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +9,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.max.timemaster.databinding.ItemProfileColorBinding
-import com.max.timemaster.profile.edit.ProfileEditViewModel
 import com.max.timemaster.util.SetColorStateList
 
 class ProfileColorEditAdapter(var viewModel: ProfileEditViewModel) :

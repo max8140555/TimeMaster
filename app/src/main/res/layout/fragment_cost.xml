@@ -44,6 +44,7 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:visibility="gone"
+            android:background="@drawable/icon_add"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,12 +57,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="點擊按鈕紀錄花費"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/recycler_cost"
             app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image_prompt"
+            tools:text="點擊按鈕紀錄花費"
             tools:visibility="visible" />
 
         <ImageView
@@ -74,6 +75,6 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

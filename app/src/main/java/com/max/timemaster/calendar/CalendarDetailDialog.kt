@@ -16,7 +16,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.max.timemaster.*
-import com.max.timemaster.databinding.FragmentCalendarDetailBinding
+import com.max.timemaster.databinding.DialogCalendarDetailBinding
+
 import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.TimeUtil.splitDateSet
 import java.lang.String.format
@@ -25,13 +26,16 @@ import java.util.*
 private const val SELECT_START_TIME = 0
 private const val SELECT_END_TIME = 1
 
-class CalendarDetailFragment : AppCompatDialogFragment() {
+class CalendarDetailDialog : AppCompatDialogFragment() {
+
     private val viewModel by viewModels<CalendarDetailViewModel> {
         getVmFactory(
-            CalendarDetailFragmentArgs.fromBundle(requireArguments()).datekey
+            CalendarDetailDialogArgs.fromBundle(requireArguments()).dateKey
         )
     }
-    lateinit var binding: FragmentCalendarDetailBinding
+
+    lateinit var binding: DialogCalendarDetailBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NO_FRAME, R.style.PublishDialog)
@@ -43,7 +47,7 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        binding = FragmentCalendarDetailBinding.inflate(inflater, container, false)
+        binding = DialogCalendarDetailBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.layoutPublish.startAnimation(
@@ -64,11 +68,7 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
         }
 
         binding.save.setOnClickListener {
-
             viewModel.checkInputData()
-
-
-
         }
 
         binding.btnAllDay.setOnCheckedChangeListener { buttonView, _ ->
@@ -99,7 +99,7 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
         viewModel.inputState.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
                 when (it) {
-                    0 -> {
+                    SELECT_START_TIME -> {
                         findNavController().navigate(
                             NavigationDirections.navigateToMessengerDialog(
                                 MessageType.TIME_ERROR.value
@@ -108,7 +108,7 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
                         viewModel.restoreInputState()
                     }
 
-                    1 -> {
+                    SELECT_END_TIME -> {
                         findNavController().navigate(
                             NavigationDirections.navigateToMessengerDialog(
                                 MessageType.NOT_TITLE.value
@@ -116,7 +116,6 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
                         )
                         viewModel.restoreInputState()
                     }
-
                     else -> viewModel.nothing()
                 }
             }
@@ -133,7 +132,7 @@ class CalendarDetailFragment : AppCompatDialogFragment() {
                         )
                     )
                 } else {
-                    viewModel.postEvent()
+                    viewModel.uploadEvent()
                 }
             }
         })

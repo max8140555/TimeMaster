@@ -25,7 +25,7 @@
     <string name="hint_add_favorite_text">點擊按鈕紀錄對象的喜好吧！</string>
     <string name="hint_add_cost_text">點擊按鈕紀錄你的花費吧！</string>
     <string name="hint_add_date_text">請先到個人頁面，新增對象喔！</string>
-    <string name="hint_select_date_text">點左上角按鈕，選擇對象新增行程吧！</string>
+    <string name="hint_select_date_text">點左上角按鈕，選擇對象並開始記錄吧！</string>
     <string name="hint_cost_text">點擊按鈕紀錄你的花費吧！</string>
     <string name="hint_event_text">點選按鈕，新增行程吧！</string>
     <string name="time_0000_text">00:00</string>

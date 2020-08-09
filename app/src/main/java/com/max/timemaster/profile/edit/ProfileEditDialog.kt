@@ -25,7 +25,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.max.timemaster.*
 import com.max.timemaster.databinding.DialogProfileEditBinding
 import com.max.timemaster.ext.getVmFactory
-import com.max.timemaster.profile.detail.*
 import com.max.timemaster.util.TimeUtil.dateToStamp
 import java.util.*
 
@@ -72,7 +71,8 @@ class ProfileEditDialog : AppCompatDialogFragment() {
         binding.imageView.setOnClickListener {
             toAlbum()
         }
-        val adapter = ProfileColorEditAdapter(viewModel)
+        val adapter =
+            ProfileColorEditAdapter(viewModel)
         binding.recyclerProfileColor.adapter = adapter
         val arrayList = this.resources.getStringArray(R.array.colorList)
         val colorList = mutableListOf<String>()

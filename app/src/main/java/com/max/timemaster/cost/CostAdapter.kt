@@ -1,8 +1,6 @@
 package com.max.timemaster.cost
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -19,29 +17,27 @@ import com.max.timemaster.util.UserManager
 import kotlinx.android.synthetic.main.item_cost.view.*
 import java.util.*
 
-class CostAdapter() :
-    ListAdapter<DateCost, CostAdapter.ProductDetailedEvaluationViewHolder>(
+class CostAdapter:
+    ListAdapter<DateCost, CostAdapter.CostItemViewHolder>(
         DiffCallback
     ) {
 
-
-
-
-    class ProductDetailedEvaluationViewHolder(private var binding: ItemCostBinding) :
+    class CostItemViewHolder(private var binding: ItemCostBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         @SuppressLint("SetTextI18n")
         fun bind(dateCost: DateCost) {
-            binding.title.text = dateCost.costTitle
-            binding.time.text = dateCost.time?.let { stampToDateNoYear(it, Locale.TAIWAN) }
-            binding.price.text = "${dateCost.costPrice} 元"
+
             val color = UserManager.myDate.value?.filter {
-                it.name == dateCost.attendeeName
-            }!![0].color
+                it.name == dateCost.attendeeName }?.get(0)?.color
+
+            binding.title.text = dateCost.costTitle
             binding.attendee.text = dateCost.attendeeName
             binding.content.text = dateCost.costContent
+            binding.price.text = "${dateCost.costPrice} 元"
+            binding.time.text = dateCost.time?.let { stampToDateNoYear(it, Locale.TAIWAN) }
             binding.view.backgroundTintList = color?.let { SetColorStateList.setColorStateList(it) }
-
 
             binding.executePendingBindings()
         }
@@ -63,14 +59,11 @@ class CostAdapter() :
         }
     }
 
-
-
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ProductDetailedEvaluationViewHolder {
-        return ProductDetailedEvaluationViewHolder(
+    ): CostItemViewHolder {
+        return CostItemViewHolder(
             ItemCostBinding.inflate(
                 LayoutInflater.from(
                     parent.context
@@ -80,19 +73,21 @@ class CostAdapter() :
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun onBindViewHolder(holder: ProductDetailedEvaluationViewHolder, position: Int) {
-        val product =
+    override fun onBindViewHolder(holder: CostItemViewHolder, position: Int) {
+        val cost =
             getItem(position)
+
         holder.itemView.setOnClickListener {
+
             val itemVisibility = holder.itemView.content.visibility
+
             holder.itemView.content.visibility = if (itemVisibility == View.VISIBLE) {
                 View.GONE
             } else {
                 View.VISIBLE
             }
-
         }
-        holder.bind(product)
+        holder.bind(cost)
     }
 
 }
