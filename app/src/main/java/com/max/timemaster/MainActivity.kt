@@ -123,7 +123,6 @@ class MainActivity : AppCompatActivity() {
         val navController = this.findNavController(R.id.myNavHostFragment)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = null
-
         appBarConfiguration = AppBarConfiguration(navController.graph, binding.drawerLayout)
         NavigationUI.setupWithNavController(binding.drawerNavView, navController)
 
@@ -142,7 +141,21 @@ class MainActivity : AppCompatActivity() {
             binding.drawerLayout.addDrawerListener(this)
             syncState()
         }
+        setDrawerItem()
+    }
 
+
+    override fun onBackPressed() {
+
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setDrawerItem(){
         val navMenu = binding.drawerNavView.menu
         navMenu.clear()
         val menu = navMenu.addSubMenu(getString(R.string.drawer_title_text))
@@ -151,11 +164,11 @@ class MainActivity : AppCompatActivity() {
             .setIcon(R.drawable.bg_publish)
             .setIconTintList(SetColorStateList.setColorStateList(getString(R.string.main_color_text)))
             .setOnMenuItemClickListener {
-            viewModel.selectAttendee.value = ""
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
+                viewModel.selectAttendee.value = ""
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
 
-            return@setOnMenuItemClickListener true
-        }
+                return@setOnMenuItemClickListener true
+            }
 
         val activeDate = UserManager.myDate.value?.filter {
             it.active == true
@@ -176,17 +189,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-
-    override fun onBackPressed() {
-
-        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
-    }
-
 
 }
 

@@ -2,6 +2,7 @@ package com.max.timemaster.cost
 
 import android.icu.util.Calendar
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,8 +17,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import java.util.*
 
+private const val DAY_TIME_IN_MILLIS: Long = 86400000
 
 class CostViewModel(private val timeMasterRepository: TimeMasterRepository) : ViewModel() {
+
+    var filterDayPrice = listOf<Long?>()
 
     private var _dateCost = MutableLiveData<List<DateCost>>()
 
@@ -48,9 +52,10 @@ class CostViewModel(private val timeMasterRepository: TimeMasterRepository) : Vi
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-init {
-    getLiveDateCostResult()
-}
+    init {
+        getLiveDateCostResult()
+    }
+
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
@@ -85,13 +90,63 @@ init {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun getLabels(): MutableList<String>{
+    fun getLabels(): MutableList<String> {
         val cal = Calendar.getInstance().timeInMillis
         return mutableListOf(
-            TimeUtil.stampToDateNoYear(cal - 86400000 * 3, Locale.TAIWAN)
-            , TimeUtil.stampToDateNoYear(cal - 86400000 * 2, Locale.TAIWAN)
-            , TimeUtil.stampToDateNoYear(cal - 86400000, Locale.TAIWAN)
+            TimeUtil.stampToDateNoYear(cal - DAY_TIME_IN_MILLIS * 3, Locale.TAIWAN)
+            , TimeUtil.stampToDateNoYear(cal - DAY_TIME_IN_MILLIS * 2, Locale.TAIWAN)
+            , TimeUtil.stampToDateNoYear(cal - DAY_TIME_IN_MILLIS, Locale.TAIWAN)
             , TimeUtil.stampToDateNoYear(cal, Locale.TAIWAN)
         )
     }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun countHistoryPrice(dateCost: List<DateCost>): Long {
+        val cal = Calendar.getInstance().timeInMillis
+        var daySum: Long = 0
+
+        val allMoney = dateCost.filter {
+            it.time!! > cal - DAY_TIME_IN_MILLIS * 3
+        }.map {
+            it.costPrice
+        }
+        Log.e("ALLMONEY", allMoney.toString())
+        for (mon in allMoney) {
+            if (mon != null) {
+                daySum += mon
+            }
+        }
+
+        return daySum
+    }
+
+    fun filterDayPrice() {
+
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun countDayPrice(dateCost: List<DateCost>, historyPrice: Long): MutableList<Long> {
+        var sumPrice = historyPrice
+        var dayMoney = listOf<Long?>()
+        val dateDayPrice = mutableListOf<Long>()
+        for (l in getLabels().indices) {
+
+            dayMoney = dateCost.filter {
+                TimeUtil.stampToDateNoYear(it.time ?: 0, Locale.TAIWAN) == getLabels()[l]
+            }.map {
+                it.costPrice
+            }
+            filterDayPrice = dayMoney
+            Log.e("ALLMONEY111", filterDayPrice.toString())
+
+            for (money in dayMoney.indices) {
+
+                sumPrice += dayMoney[money]!!
+            }
+            dateDayPrice.add(sumPrice)
+        }
+        return dateDayPrice
+    }
+
 }
