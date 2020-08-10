@@ -40,7 +40,7 @@ android {
         }
     }
 
-    //新增APK 錯誤才+的 (暫時)
+
     lintOptions {
         checkReleaseBuilds false
         // Or, if you prefer, you can continue to check for errors in release builds,
@@ -63,7 +63,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.android.material:material:1.1.0'
 
     //noinspection GradleCompatible
@@ -135,4 +135,10 @@ dependencies {
     // WorkManager
     implementation "androidx.work:work-runtime-ktx:2.2.0"
     implementation 'com.google.guava:guava:27.0.1-android'
+
+    //espresso
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'com.google.guava:guava:26.0-android'
 }
