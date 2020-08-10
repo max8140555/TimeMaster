@@ -29,15 +29,12 @@ import com.max.timemaster.R
 import com.max.timemaster.data.DateCost
 import com.max.timemaster.databinding.FragmentCostBinding
 import com.max.timemaster.ext.getVmFactory
-import com.max.timemaster.util.TimeUtil.stampToDateNoYear
 import com.max.timemaster.util.UserManager
-import java.util.*
 import kotlin.collections.ArrayList
 
 private const val NOT_ATTENDEE = 0
 private const val SELECT_ATTENDEE = 1
 private const val PROMPT_GONE = 2
-private const val DAY_TIME_IN_MILLIS = 86400000
 
 class CostFragment : Fragment() {
 
@@ -75,8 +72,7 @@ class CostFragment : Fragment() {
                         }
 
                         if (attendee.isEmpty()) {
-                            mainViewModel.liveMyDate.observe(viewLifecycleOwner,
-                                Observer { listDate ->
+                            mainViewModel.liveMyDate.observe(viewLifecycleOwner, Observer { listDate ->
 
                                     if (listDate.isNullOrEmpty()) {
                                         checkHaveDatePrompt(NOT_ATTENDEE)
@@ -115,65 +111,24 @@ class CostFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     private fun setPluralData(allListDateCost: List<DateCost>) {
 
-        val dates = UserManager.myDate.value?.filter {
+        val myDates = UserManager.myDate.value?.filter {
             it.active == true
         }?.map {
             it.name
         }
         val dataSetGroup = mutableListOf<LineDataSet>()
 
-        dates?.let { dates ->
+        myDates?.let { dates ->
 
 
             for (d in dates.indices) {
 
-                  var daySum: Long = 0
-                var dayMoney = listOf<Long?>()
-                val dateDayPrice = mutableListOf<Long>()
-
                 val dateCost = allListDateCost.filter {
                     it.attendeeName == dates[d]
                 }
-
-                val cal = Calendar.getInstance().timeInMillis
-                val allMoney = dateCost.filter {
-                    it.time!! < cal - 86400000 * 3
-                }.map {
-                    it.costPrice
-                }
-
-                for (mon in allMoney) {
-                    if (mon != null) {
-                        daySum += mon
-                    }
-                }
-
-                for (l in viewModel.getLabels().indices) {
-
-                    dayMoney = dateCost.filter {
-                        stampToDateNoYear(it.time ?: 0, Locale.TAIWAN) == viewModel.getLabels()[l]
-                    }.map {
-                        it.costPrice
-                    }
-                    Log.e("Max111", "$dayMoney")
-
-
-                    for (money in dayMoney.indices) {
-
-                        daySum += dayMoney[money]!!
-                    }
-
-
-                    Log.e("Max", "list = ${dates[d]} , ${viewModel.getLabels()[l]}, $dayMoney")
-                    dateDayPrice.add(daySum)
-
-                    Log.e("Max", "dayMoney = $dateDayPrice")
-
-
-                }
-
+                val historyPrice = viewModel.countHistoryPrice(dateCost)
+                val dateDayPrice = viewModel.countDayPrice(dateCost, historyPrice)
                 val entries: MutableList<Entry> = ArrayList()
-
                 for (x in 0..dateDayPrice.size) {
                     for (y in dateDayPrice.indices) {
                         if (x == y) {
@@ -181,8 +136,6 @@ class CostFragment : Fragment() {
                         }
                     }
                 }
-
-
                 val dateName = UserManager.myDate.value?.filter {
                     it.name == dates[d]
                 }?.map { it.name }
@@ -197,8 +150,10 @@ class CostFragment : Fragment() {
                 dataSet.valueTextSize = 12F
                 dataSet.getEntriesForXValue(0F)
 
-                if (!dayMoney.isNullOrEmpty() || daySum  != 0L) {
-                    dataSetGroup.add(dataSet)
+                dateDayPrice.max()?.let {
+                    if (it.plus(historyPrice) != 0L) {
+                        dataSetGroup.add(dataSet)
+                    }
                 }
             }
         }
@@ -233,13 +188,10 @@ class CostFragment : Fragment() {
             it.description.textSize = 10F
             it.data = data
             it.setTouchEnabled(true)
-            it.axisLeft.setStartAtZero(true)
             it.invalidate()
             it.notifyDataSetChanged()
         }
-
     }
-
 
     private fun promptVisibility(cost: List<DateCost>?) {
         if (cost.isNullOrEmpty()) {

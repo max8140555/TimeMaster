@@ -15,13 +15,12 @@ import com.max.timemaster.util.UserManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import org.threeten.bp.LocalDate
 import java.util.*
 
 private const val DAY_TIME_IN_MILLIS: Long = 86400000
 
 class CostViewModel(private val timeMasterRepository: TimeMasterRepository) : ViewModel() {
-
-    var filterDayPrice = listOf<Long?>()
 
     private var _dateCost = MutableLiveData<List<DateCost>>()
 
@@ -102,28 +101,23 @@ class CostViewModel(private val timeMasterRepository: TimeMasterRepository) : Vi
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun countHistoryPrice(dateCost: List<DateCost>): Long {
-        val cal = Calendar.getInstance().timeInMillis
-        var daySum: Long = 0
 
+        var daySum: Long = 0
+        val cal = TimeUtil.dateToStamp(LocalDate.now().toString(), Locale.TAIWAN)
         val allMoney = dateCost.filter {
-            it.time!! > cal - DAY_TIME_IN_MILLIS * 3
+            it.time!! < cal - DAY_TIME_IN_MILLIS * 3
         }.map {
             it.costPrice
         }
-        Log.e("ALLMONEY", allMoney.toString())
+        Log.e("MaxCost allMoney","$allMoney")
         for (mon in allMoney) {
             if (mon != null) {
                 daySum += mon
             }
         }
-
+        Log.e("MaxCost daySum","$daySum")
         return daySum
     }
-
-    fun filterDayPrice() {
-
-    }
-
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun countDayPrice(dateCost: List<DateCost>, historyPrice: Long): MutableList<Long> {
@@ -137,8 +131,6 @@ class CostViewModel(private val timeMasterRepository: TimeMasterRepository) : Vi
             }.map {
                 it.costPrice
             }
-            filterDayPrice = dayMoney
-            Log.e("ALLMONEY111", filterDayPrice.toString())
 
             for (money in dayMoney.indices) {
 
