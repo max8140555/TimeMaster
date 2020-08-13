@@ -3,7 +3,6 @@ package com.max.timemaster.profile
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import com.max.timemaster.profile.ProfileTypeFilter
 import com.max.timemaster.profile.item.ProfileItemFragment
 
 

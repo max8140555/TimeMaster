@@ -6,7 +6,6 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -21,7 +20,6 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.storage.FirebaseStorage
 import com.max.timemaster.*
 import com.max.timemaster.databinding.DialogProfileDetailBinding
 import com.max.timemaster.ext.getVmFactory
@@ -32,11 +30,9 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
 
     private val viewModel by viewModels<ProfileDetailViewModel> { getVmFactory() }
     lateinit var binding: DialogProfileDetailBinding
-    var saveUri: Uri? = null
-    private var imageUri = ""
 
     private companion object {
-        val PHOTO_FROM_GALLERY = 0
+        const val PHOTO_FROM_GALLERY = 0
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,11 +47,10 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding = DialogProfileDetailBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        permission()
-
         binding.layoutPublish.startAnimation(
             AnimationUtils.loadAnimation(
                 context,
@@ -68,42 +63,27 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         binding.imageView.setOnClickListener {
             toAlbum()
         }
-
-
         binding.buttonPublish.setOnClickListener {
 
-            if (!viewModel.edDateName.value.isNullOrEmpty() && !viewModel.editDate.value.isNullOrEmpty() && !viewModel.edColor.value.isNullOrEmpty()){
-                viewModel.addDate(imageUri)
-                viewModel.myDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-                    it?.let {
-
-                        viewModel.myDate.value?.let { it1 -> viewModel.postAddDate(it1) }
-                        UserManager.addDate.value = viewModel.edDateName.value
-                        Log.d(" UserManager.addDate.value", "${UserManager.addDate.value}")
-                        binding.editBirthday.background.setTint(R.color.black)
-
-                    }
-                })
-
-            }else{
-                findNavController().navigate(NavigationDirections.navigateToMessengerDialog( MessageType.INCOMPLETE_TEXT.value))
+            if (!viewModel.edDateName.value.isNullOrEmpty() && !viewModel.editDate.value.isNullOrEmpty()
+                && !viewModel.edColor.value.isNullOrEmpty()
+            ) {
+                viewModel.postAddDate()
+                UserManager.addDate.value = viewModel.edDateName.value
+                Log.d(" UserManager.addDate.value", "${UserManager.addDate.value}")
+                binding.editBirthday.background.setTint(R.color.black)
+            } else {
+                findNavController().navigate(
+                    NavigationDirections.navigateToMessengerDialog(
+                        MessageType.INCOMPLETE_TEXT.value
+                    )
+                )
             }
-
-
-
-
         }
 
         val adapter = ProfileColorAdapter(viewModel)
         binding.recyclerProfileColor.adapter = adapter
-
-        val arrayList = this.resources.getStringArray(R.array.colorList)
-        val colorList = mutableListOf<String>()
-        for (x in 0..9) {
-            colorList.add(arrayList[x])
-        }
-        adapter.submitList(colorList)
-
+        adapter.submitList(viewModel.getColorList())
 
         viewModel.edColor.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
@@ -113,14 +93,18 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         })
         viewModel.leave.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
-
                 findNavController().navigateUp()
                 viewModel.onLeft()
             }
         })
 
+        viewModel.saveImage.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            it?.let {
+                bindProfileImage(binding.imageView, it)
+            }
+        })
 
-
+        permission()
         return binding.root
     }
 
@@ -147,7 +131,7 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         }
     }
 
-    fun toAlbum() {
+    private fun toAlbum() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
         startActivityForResult(intent, PHOTO_FROM_GALLERY)
@@ -159,18 +143,18 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
             android.Manifest.permission.READ_EXTERNAL_STORAGE
         )
         var size = permissionList.size
-        var i = 0
-        while (i < size) {
+        var number = 0
+        while (number < size) {
             if (ActivityCompat.checkSelfPermission(
                     TimeMasterApplication.instance.applicationContext,
-                    permissionList[i]
+                    permissionList[number]
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
-                permissionList.removeAt(i)
-                i -= 1
+                permissionList.removeAt(number)
+                number -= 1
                 size -= 1
             }
-            i += 1
+            number += 1
         }
         val array = arrayOfNulls<String>(permissionList.size)
         if (permissionList.isNotEmpty()) ActivityCompat.requestPermissions(
@@ -186,10 +170,7 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
             PHOTO_FROM_GALLERY -> {
                 when (resultCode) {
                     Activity.RESULT_OK -> {
-                        val uri = data!!.data
-                        saveUri = uri
-                        uploadImage()
-
+                        data?.data?.let { viewModel.syncImage(it) }
                     }
                     Activity.RESULT_CANCELED -> {
                         Log.wtf("getImageResult", resultCode.toString())
@@ -199,26 +180,4 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        if (saveUri != null) {
-            val uriString = saveUri.toString()
-            outState.putString("saveUri", uriString)
-        }
-    }
-
-    private fun uploadImage() {
-        val filename = UUID.randomUUID().toString()
-        val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
-        saveUri?.let {
-            ref.putFile(it)
-                .addOnSuccessListener {
-                    ref.downloadUrl.addOnSuccessListener {
-//                        newRecord.recordImage = it.toString()
-                        imageUri = it.toString()
-                        bindProfileImage(binding.imageView,imageUri)
-                    }
-                }
-        }
-    }
 }

@@ -1,5 +1,6 @@
 package com.max.timemaster.data
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 
 interface TimeMasterDataSource {
@@ -18,6 +19,8 @@ interface TimeMasterDataSource {
     suspend fun updateDate(myDate: MyDate): Result<Boolean>
 
     suspend fun upUserExp(exp: Long): Result<Boolean>
+
+    suspend fun syncImage(uri: Uri): Result<String>
 
     fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>>
 

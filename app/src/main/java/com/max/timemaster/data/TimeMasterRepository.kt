@@ -1,5 +1,6 @@
 package com.max.timemaster.data
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 
 
@@ -14,6 +15,8 @@ interface TimeMasterRepository {
     suspend fun postDate(myDate: MyDate): Result<Boolean>
 
     suspend fun postFavorite(dateFavorite: DateFavorite): Result<Boolean>
+
+    suspend fun syncImage(uri: Uri): Result<String>
 
     suspend fun postCost(dateCost: DateCost): Result<Boolean>
 
@@ -30,4 +33,5 @@ interface TimeMasterRepository {
     fun getLiveDateFavorite(): MutableLiveData<List<DateFavorite>>
 
     fun getLiveDateCost(): MutableLiveData<List<DateCost>>
+
 }

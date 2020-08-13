@@ -1,5 +1,6 @@
 package com.max.timemaster.data.source
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.max.timemaster.data.*
 
@@ -24,6 +25,10 @@ class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSo
 
     override suspend fun postFavorite(dateFavorite: DateFavorite): Result<Boolean> {
         return remoteDataSource.postFavorite(dateFavorite)
+    }
+
+    override suspend fun syncImage(uri: Uri): Result<String> {
+        return remoteDataSource.syncImage(uri)
     }
 
     override suspend fun postCost(dateCost: DateCost): Result<Boolean> {
