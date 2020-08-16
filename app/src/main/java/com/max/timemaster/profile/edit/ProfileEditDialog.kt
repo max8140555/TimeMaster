@@ -6,7 +6,6 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -21,7 +20,6 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.storage.FirebaseStorage
 import com.max.timemaster.*
 import com.max.timemaster.databinding.DialogProfileEditBinding
 import com.max.timemaster.ext.getVmFactory
@@ -37,9 +35,8 @@ class ProfileEditDialog : AppCompatDialogFragment() {
             ).selectedDateKey
         )
     }
+
     lateinit var binding: DialogProfileEditBinding
-    var saveUri: Uri? = null
-    private var imageUri = ""
 
     private companion object {
         const val PHOTO_FROM_GALLERY = 0
@@ -60,58 +57,52 @@ class ProfileEditDialog : AppCompatDialogFragment() {
         binding = DialogProfileEditBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        permission()
-
         binding.layoutPublish.startAnimation(
             AnimationUtils.loadAnimation(
                 context,
                 R.anim.anim_slide_up
             )
         )
+
         binding.imageView.setOnClickListener {
             toAlbum()
         }
-        val adapter =
-            ProfileColorEditAdapter(viewModel)
-        binding.recyclerProfileColor.adapter = adapter
-        val arrayList = this.resources.getStringArray(R.array.colorList)
-        val colorList = mutableListOf<String>()
-        for (x in 0..9) {
-            colorList.add(arrayList[x])
-        }
-        adapter.submitList(colorList)
 
         binding.btnActive.setOnClickListener {
             if (viewModel.edActive.value != true) {
 
-
-                findNavController().navigate(NavigationDirections.navigateToMessengerDialog(
-                    MessageType.ACTIVE.value))
+                findNavController().navigate(
+                    NavigationDirections.navigateToMessengerDialog(
+                        MessageType.ACTIVE.value
+                    )
+                )
 
                 viewModel.edActive.value = true
             } else {
 
-
-                findNavController().navigate(NavigationDirections.navigateToMessengerDialog(MessageType.ARCHIVE.value))
-
+                findNavController().navigate(
+                    NavigationDirections.navigateToMessengerDialog(
+                        MessageType.ARCHIVE.value)
+                )
                 viewModel.edActive.value = false
             }
         }
-        Log.e("Max", "${binding.btnActive.isChecked}")
+
         binding.editBirthday.setOnClickListener {
             datePicker()
         }
+
         binding.buttonPublish.setOnClickListener {
-            viewModel.addDate()
-            viewModel.myDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-                it?.let {
-                    viewModel.myDate.value?.let { it1 -> viewModel.updateDate(it1) }
-                }
-            })
+            viewModel.updateDate()
         }
+
+        val adapter = ProfileColorEditAdapter(viewModel)
+        binding.recyclerProfileColor.adapter = adapter
+        adapter.submitList(viewModel.getColorList())
 
         viewModel.edColor.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
+
                 binding.imageView.background.setTint(Color.parseColor("#$it"))
                 binding.editBirthday.background.setTint(Color.parseColor("#$it"))
                 binding.editBirthday.setTextColor(Color.parseColor("#$it"))
@@ -125,7 +116,13 @@ class ProfileEditDialog : AppCompatDialogFragment() {
             }
         })
 
+//        viewModel.imagePhoto.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+//            it?.let {
+//                bindProfileImage(binding.imageView, it)
+//            }
+//        })
 
+        permission()
         return binding.root
     }
 
@@ -153,10 +150,10 @@ class ProfileEditDialog : AppCompatDialogFragment() {
         }
     }
 
-    fun toAlbum() {
+    private fun toAlbum() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
-        startActivityForResult(intent, ProfileEditDialog.PHOTO_FROM_GALLERY)
+        startActivityForResult(intent, PHOTO_FROM_GALLERY)
     }
 
     private fun permission() {
@@ -165,18 +162,18 @@ class ProfileEditDialog : AppCompatDialogFragment() {
             android.Manifest.permission.READ_EXTERNAL_STORAGE
         )
         var size = permissionList.size
-        var i = 0
-        while (i < size) {
+        var number = 0
+        while (number < size) {
             if (ActivityCompat.checkSelfPermission(
                     TimeMasterApplication.instance.applicationContext,
-                    permissionList[i]
+                    permissionList[number]
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
-                permissionList.removeAt(i)
-                i -= 1
+                permissionList.removeAt(number)
+                number -= 1
                 size -= 1
             }
-            i += 1
+            number += 1
         }
         val array = arrayOfNulls<String>(permissionList.size)
         if (permissionList.isNotEmpty()) ActivityCompat.requestPermissions(
@@ -190,44 +187,15 @@ class ProfileEditDialog : AppCompatDialogFragment() {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             PHOTO_FROM_GALLERY -> {
-
                 when (resultCode) {
                     Activity.RESULT_OK -> {
-
-                        val uri = data!!.data
-                        saveUri = uri
-                        uploadImage()
-
+                        data?.data?.let { viewModel.syncImage(it) }
                     }
                     Activity.RESULT_CANCELED -> {
                         Log.wtf("getImageResult", resultCode.toString())
                     }
                 }
             }
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        if (saveUri != null) {
-            val uriString = saveUri.toString()
-            outState.putString("saveUri", uriString)
-        }
-    }
-
-    private fun uploadImage() {
-        val filename = UUID.randomUUID().toString()
-        val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
-        saveUri?.let {
-            ref.putFile(it)
-                .addOnSuccessListener {
-                    ref.downloadUrl.addOnSuccessListener {
-//                        newRecord.recordImage = it.toString()
-                        imageUri = it.toString()
-                        viewModel.imagePhoto.value = imageUri
-                        bindProfileImage(binding.imageView, imageUri)
-                    }
-                }
         }
     }
 }

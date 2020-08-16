@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.max.timemaster.data.MyDate
 import com.max.timemaster.databinding.ItemProfileGridBinding
 
-class ProfileItemAdapter(val onClickListener: OnClickListener) :
-    ListAdapter<MyDate, ProfileItemAdapter.ProductDetailedEvaluationViewHolder>(
+class ProfileItemAdapter(private val onClickListener: OnClickListener) :
+    ListAdapter<MyDate, ProfileItemAdapter.ProfileItemViewHolder>(
         DiffCallback
     ) {
 
-    class ProductDetailedEvaluationViewHolder(private var binding: ItemProfileGridBinding) :
+    class ProfileItemViewHolder(private var binding: ItemProfileGridBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(myDate: MyDate) {
             binding.textProfileName.text = myDate.name
@@ -26,7 +26,6 @@ class ProfileItemAdapter(val onClickListener: OnClickListener) :
             binding.executePendingBindings()
         }
     }
-
 
     companion object DiffCallback : DiffUtil.ItemCallback<MyDate>() {
         override fun areItemsTheSame(
@@ -44,21 +43,19 @@ class ProfileItemAdapter(val onClickListener: OnClickListener) :
         }
     }
 
-
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
-    ): ProductDetailedEvaluationViewHolder {
-        return ProductDetailedEvaluationViewHolder(
+    ): ProfileItemViewHolder {
+        return ProfileItemViewHolder(
             ItemProfileGridBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
     }
 
-
-    override fun onBindViewHolder(holder: ProductDetailedEvaluationViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ProfileItemViewHolder, position: Int) {
         val myDate =
-            getItem(position)  //告訴onCreateViewHolder 要生成幾個viewholder
+            getItem(position)
         holder.itemView.setOnClickListener {
             onClickListener.onClick(myDate)
         }

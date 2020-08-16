@@ -37,9 +37,7 @@ class ProfileFragment : Fragment() {
                 btnAddDate.setOnClickListener {
                     findNavController().navigate(R.id.navigate_to_profileDetailFragment)
                 }
-
                 return@onCreateView root
             }
     }
-
 }

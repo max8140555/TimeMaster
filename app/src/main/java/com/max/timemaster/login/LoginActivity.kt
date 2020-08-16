@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -15,29 +18,29 @@ import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.max.timemaster.MainActivity
+import com.max.timemaster.MainViewModel
 import com.max.timemaster.R
+import com.max.timemaster.databinding.ActivityLoginBinding
+import com.max.timemaster.databinding.ActivityMainBinding
+import com.max.timemaster.ext.getVmFactory
 import com.max.timemaster.util.UserManager
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
-
+    val viewModel by viewModels<LoginViewModel> { getVmFactory() }
     private var auth: FirebaseAuth? = null
     private var callbackManager: CallbackManager? = null
+    private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
-
-
-        btn_login.setOnClickListener {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+        binding.btnLogin.setOnClickListener {
             facebookLogin()
         }
-
         auth = FirebaseAuth.getInstance()
-
         //printHashKey()
         callbackManager = CallbackManager.Factory.create()
-
     }
 
     override fun onStart() {
@@ -53,57 +56,27 @@ class LoginActivity : AppCompatActivity() {
             .registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
                 override fun onSuccess(result: LoginResult?) {
                     //Second step
-                    handleFacebookAccessToken(result?.accessToken)
-
+                    viewModel.handleFacebookAccessTokenResult(result?.accessToken)
+                    viewModel.user.observe(this@LoginActivity, Observer {
+                        it?.let {
+                            moveMainPage(viewModel.user.value)
+                        }
+                    })
                 }
 
                 override fun onCancel() {
-
                 }
 
                 override fun onError(error: FacebookException?) {
-
                     Log.e("Max", error.toString())
-
                 }
-
             })
-    }
-
-    fun handleFacebookAccessToken(token: AccessToken?) {
-        val credential = FacebookAuthProvider.getCredential(token?.token!!)
-        auth?.signInWithCredential(credential)
-            ?.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-
-                    //Third step
-                    //Login
-                    val userId = task.result?.additionalUserInfo?.profile?.getValue("id")
-                    UserManager.user.image = "https://graph.facebook.com/$userId/picture?height=500"
-                    moveMainPage(task.result?.user)
-                    UserManager.userEmail = task.result?.user?.email.toString()
-                    Log.e(
-                        "Max",
-                        "${UserManager.userEmail} \n ${task.result?.user?.email.toString()}\n" +
-                                " ${task.result?.user}\n" +
-                                " ${task.result}\n" +
-                                " ${task}"
-                    )
-                    UserManager.user.email = task.result?.user?.email.toString()
-                    UserManager.user.name = task.result?.user?.displayName.toString()
-
-                } else {
-                    //Show the error message
-                    Toast.makeText(this, task.exception?.message, Toast.LENGTH_LONG).show()
-                }
-            }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         callbackManager?.onActivityResult(requestCode, resultCode, data)
     }
-
 
     private fun moveMainPage(user: FirebaseUser?) {
         if (user != null) {

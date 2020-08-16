@@ -1,6 +1,10 @@
 package com.max.timemaster.data.source
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
+import com.facebook.AccessToken
+import com.facebook.login.LoginResult
+import com.google.firebase.auth.FirebaseUser
 import com.max.timemaster.data.*
 
 
@@ -26,6 +30,10 @@ class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSo
         return remoteDataSource.postFavorite(dateFavorite)
     }
 
+    override suspend fun syncImage(uri: Uri): Result<String> {
+        return remoteDataSource.syncImage(uri)
+    }
+
     override suspend fun postCost(dateCost: DateCost): Result<Boolean> {
         return remoteDataSource.postCost(dateCost)
     }
@@ -37,6 +45,11 @@ class DefaultTimeMasterRepository(private val remoteDataSource: TimeMasterDataSo
     override suspend fun upUserExp(exp: Long): Result<Boolean> {
         return remoteDataSource.upUserExp(exp)
     }
+
+    override suspend fun handleFacebookAccessToken(token: AccessToken?): Result<FirebaseUser?> {
+        return remoteDataSource.handleFacebookAccessToken(token)
+    }
+
 
     override fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>> {
         return remoteDataSource.getLiveAllEvent()

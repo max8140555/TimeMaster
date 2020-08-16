@@ -2,18 +2,27 @@ package com.max.timemaster.data.source.remote
 
 
 import android.icu.util.Calendar
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
+import com.facebook.AccessToken
+import com.facebook.login.LoginResult
+import com.google.firebase.auth.FacebookAuthProvider
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.storage.FirebaseStorage
 import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
+import com.max.timemaster.bindProfileImage
 import com.max.timemaster.data.*
 import com.max.timemaster.util.Logger
 import com.max.timemaster.util.UserManager
+import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -68,7 +77,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
     }
 
 
-
     override suspend fun postEvent(calendarEvent: CalendarEvent): Result<Boolean> =
         suspendCoroutine { continuation ->
             val event = FirebaseFirestore.getInstance().collection(PATH_USERS)
@@ -86,7 +94,11 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                     Logger.i("postEvent: $calendarEvent")
                                     UserManager.exp.value = UserManager.exp.value?.plus(10)
 
-                                    Toast.makeText(TimeMasterApplication.instance,"Exp +10",Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        TimeMasterApplication.instance,
+                                        "Exp +10",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
 
                                     continuation.resume(Result.Success(true))
                                 } else {
@@ -203,18 +215,22 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
 
             UserManager.userEmail?.let {
                 db.document(it).collection(PATH_DATE_FAVORITE)
-                    .whereEqualTo("attendeeName",dateFavorite.attendeeName)
-                    .whereEqualTo("favoriteTitle",dateFavorite.favoriteTitle)
+                    .whereEqualTo("attendeeName", dateFavorite.attendeeName)
+                    .whereEqualTo("favoriteTitle", dateFavorite.favoriteTitle)
                     .get()
                     .addOnSuccessListener { doc ->
 
-                        if (doc.isEmpty){
+                        if (doc.isEmpty) {
                             document?.collection(PATH_DATE_FAVORITE)?.add(dateFavorite)
                                 ?.addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
                                         Logger.i("postdateFavorite: $dateFavorite")
                                         UserManager.exp.value = UserManager.exp.value?.plus(10)
-                                        Toast.makeText(TimeMasterApplication.instance,"Exp +10",Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(
+                                            TimeMasterApplication.instance,
+                                            "Exp +10",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
 
                                         continuation.resume(Result.Success(true))
                                     } else {
@@ -233,25 +249,29 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                         )
                                     }
                                 }
-                        }else{
+                        } else {
 
-                            for (i in doc){
+                            for (i in doc) {
                                 val list = i["favoriteContent"] as MutableList<String>
 
                                 dateFavorite.favoriteContent?.let { it1 -> list.addAll(it1) }
 
                                 i["favoriteTitle"]
-                                Log.e("Max","$list")
-                                Log.e("Max","${i["favoriteContent"]}")
+                                Log.e("Max", "$list")
+                                Log.e("Max", "${i["favoriteContent"]}")
                                 document
                                     ?.collection(PATH_DATE_FAVORITE)
                                     ?.document(i.id)
-                                    ?.update("favoriteContent",list)
+                                    ?.update("favoriteContent", list)
                                     ?.addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
                                             Logger.i("postdateFavorite: $dateFavorite")
                                             UserManager.exp.value = UserManager.exp.value?.plus(10)
-                                            Toast.makeText(TimeMasterApplication.instance,"Exp +10",Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(
+                                                TimeMasterApplication.instance,
+                                                "Exp +10",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
 
                                             continuation.resume(Result.Success(true))
                                         } else {
@@ -292,7 +312,11 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                 if (task.isSuccessful) {
                                     Logger.i("postEvent: $dateCost")
                                     UserManager.exp.value = UserManager.exp.value?.plus(10)
-                                    Toast.makeText(TimeMasterApplication.instance,"Exp +10",Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        TimeMasterApplication.instance,
+                                        "Exp +10",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
 
                                     continuation.resume(Result.Success(true))
                                 } else {
@@ -352,13 +376,13 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
             }
         }
 
-    override suspend fun upUserExp(exp: Long): Result<Boolean>  =
+    override suspend fun upUserExp(exp: Long): Result<Boolean> =
         suspendCoroutine { continuation ->
             val db = FirebaseFirestore.getInstance().collection(PATH_USERS)
-            UserManager.userEmail?.let {
+            UserManager.userEmail?.let { it ->
                 db
                     .document(it)
-                    .update("exp",exp)
+                    .update("exp", exp)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             Logger.i("updateExp: $exp")
@@ -382,6 +406,73 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                     }
             }
         }
+
+    override suspend fun syncImage(uri: Uri): Result<String> =
+        suspendCoroutine { continuation ->
+
+            val filename = UUID.randomUUID().toString()
+            val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
+
+            ref.putFile(uri)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        ref.downloadUrl.addOnSuccessListener { task ->
+
+
+                            continuation.resume(Result.Success(task.toString()))
+
+                        }
+                    } else {
+                        it.exception?.let {
+
+                            Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(
+                            Result.Fail(
+                                TimeMasterApplication.instance.getString(
+                                    R.string.you_know_nothing
+                                )
+                            )
+                        )
+                    }
+                }
+        }
+
+    override suspend fun handleFacebookAccessToken(token: AccessToken?): Result<FirebaseUser?> =
+        suspendCoroutine { continuation ->
+
+            val credential = FacebookAuthProvider.getCredential(token?.token!!)
+            FirebaseAuth.getInstance()?.signInWithCredential(credential)
+                ?.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        //Third step
+                        //Login
+                        val userId = task.result?.additionalUserInfo?.profile?.getValue("id")
+                        UserManager.user.image = "https://graph.facebook.com/$userId/picture?height=500"
+                        UserManager.userEmail = task.result?.user?.email.toString()
+                        UserManager.user.email = task.result?.user?.email.toString()
+                        UserManager.user.name = task.result?.user?.displayName.toString()
+                        continuation.resume(Result.Success(task.result?.user))
+                    } else {
+                        task.exception?.let {
+
+                            Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(
+                            Result.Fail(
+                                TimeMasterApplication.instance.getString(
+                                    R.string.you_know_nothing
+                                )
+                            )
+                        )
+                    }
+                }
+    }
+
 
     override fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>> {
         val liveData = MutableLiveData<List<CalendarEvent>>()
