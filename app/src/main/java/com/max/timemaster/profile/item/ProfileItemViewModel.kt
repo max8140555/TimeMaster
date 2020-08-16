@@ -32,16 +32,8 @@ class ProfileItemViewModel(
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
     }
-
-    init {
-        Logger.i("------------------------------------")
-        Logger.i("[${this::class.simpleName}]${this}")
-        Logger.i("------------------------------------")
-    }
-
 }

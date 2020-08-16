@@ -18,6 +18,7 @@ class ProfileColorEditAdapter(var viewModel: ProfileEditViewModel) :
 
     class ProfileColorViewHolder(private var binding: ItemProfileColorBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         @RequiresApi(Build.VERSION_CODES.M)
         fun bind(colorCode: String, viewModel: ProfileEditViewModel) {
             colorCode.let {
@@ -29,7 +30,6 @@ class ProfileColorEditAdapter(var viewModel: ProfileEditViewModel) :
                 } else {
                     binding.imageCorrect.visibility = View.GONE
                 }
-
                 binding.executePendingBindings()
             }
         }

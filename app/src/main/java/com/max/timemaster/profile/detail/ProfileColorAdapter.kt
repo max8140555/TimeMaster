@@ -18,10 +18,9 @@ class ProfileColorAdapter(var viewModel: ProfileDetailViewModel) :
         DiffCallback
     ) {
 
-
-
     class ProfileColorViewHolder(private var binding: ItemProfileColorBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         @RequiresApi(Build.VERSION_CODES.M)
         fun bind(colorCode: String, selectedPosition: Int) {
             colorCode.let {
@@ -37,7 +36,6 @@ class ProfileColorAdapter(var viewModel: ProfileDetailViewModel) :
             }
         }
     }
-
 
     companion object DiffCallback : DiffUtil.ItemCallback<String>() {
         override fun areItemsTheSame(
@@ -55,7 +53,6 @@ class ProfileColorAdapter(var viewModel: ProfileDetailViewModel) :
         }
     }
 
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -69,19 +66,17 @@ class ProfileColorAdapter(var viewModel: ProfileDetailViewModel) :
         )
     }
 
-
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: ProfileColorViewHolder, position: Int) {
-        val product =
+        val color =
             getItem(position)  
         holder.itemView.setOnClickListener {
             viewModel.selectedPosition.value = position
-            viewModel.edColor.value = product
-
+            viewModel.edColor.value = color
 
             notifyDataSetChanged()
         }
-        viewModel.selectedPosition.value?.let { holder.bind(product, it) }
+        viewModel.selectedPosition.value?.let { holder.bind(color, it) }
     }
 
 }

@@ -1,6 +1,8 @@
 package com.max.timemaster.profile.detail
 
 
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,6 +19,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 class ProfileDetailViewModel(private val timeMasterRepository: TimeMasterRepository) : ViewModel() {
+
     var editDate = MutableLiveData<String>()
     var edDateName = MutableLiveData<String>()
     var myDate = MutableLiveData<MyDate>()
@@ -24,6 +27,11 @@ class ProfileDetailViewModel(private val timeMasterRepository: TimeMasterReposit
     var selectedPosition =MutableLiveData<Int>().apply {
         value = -1
     }
+
+    private var _saveImage = MutableLiveData<String>()
+
+    val saveImage: LiveData<String>
+        get() = _saveImage
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -47,8 +55,8 @@ class ProfileDetailViewModel(private val timeMasterRepository: TimeMasterReposit
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-   fun addDate(image: String?) {
-       myDate.value = edDateName.value?.let {
+   private fun addDate(image: String?):MyDate? {
+       return  edDateName.value?.let {
            MyDate(
                name = it,
                birthday = editDate.value?.let { it1 -> dateToStamp(it1, Locale.TAIWAN) },
@@ -59,13 +67,13 @@ class ProfileDetailViewModel(private val timeMasterRepository: TimeMasterReposit
            )
        }
    }
-    fun postAddDate(myDate: MyDate) {
+    fun postAddDate() {
 
         coroutineScope.launch {
 
             _status.value = LoadApiStatus.LOADING
 
-            when (val result = timeMasterRepository.postDate(myDate)) {
+            when (val result = addDate(saveImage.value)?.let { timeMasterRepository.postDate(it) }) {
                 is com.max.timemaster.data.Result.Success -> {
                     _error.value = null
                     _status.value = LoadApiStatus.DONE
@@ -85,6 +93,44 @@ class ProfileDetailViewModel(private val timeMasterRepository: TimeMasterReposit
                 }
             }
         }
+    }
+
+    fun syncImage(uri: Uri) {
+
+        coroutineScope.launch {
+
+            _status.value = LoadApiStatus.LOADING
+
+            when (val result = timeMasterRepository.syncImage(uri)) {
+                is com.max.timemaster.data.Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadApiStatus.DONE
+                    _saveImage.value = result.data
+
+                }
+                is com.max.timemaster.data.Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadApiStatus.ERROR
+                }
+                is com.max.timemaster.data.Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadApiStatus.ERROR
+                }
+                else -> {
+                    _error.value = TimeMasterApplication.instance.getString(R.string.you_know_nothing)
+                    _status.value = LoadApiStatus.ERROR
+                }
+            }
+        }
+    }
+
+    fun getColorList(): MutableList<String>{
+        val arrayList = TimeMasterApplication.instance.resources.getStringArray(R.array.colorList)
+        val colorList = mutableListOf<String>()
+        for (x in 0..9) {
+            colorList.add(arrayList[x])
+        }
+        return colorList
     }
 
     fun leave(needRefresh: Boolean = false) {
