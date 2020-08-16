@@ -64,7 +64,7 @@
             <Button
                 android:id="@+id/select_end_time"
                 style="?android:attr/borderlessButtonStyle"
-                android:layout_width="60dp"
+                android:layout_width="65dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="@={viewModel.editEndTime}"
@@ -78,7 +78,7 @@
             <Button
                 android:id="@+id/select_time"
                 style="?android:attr/borderlessButtonStyle"
-                android:layout_width="60dp"
+                android:layout_width="65dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="8dp"

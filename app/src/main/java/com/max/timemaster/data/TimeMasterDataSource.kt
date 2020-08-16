@@ -2,6 +2,9 @@ package com.max.timemaster.data
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
+import com.facebook.AccessToken
+import com.facebook.login.LoginResult
+import com.google.firebase.auth.FirebaseUser
 
 interface TimeMasterDataSource {
     suspend fun getSelectEvent(greaterThan: Long, lessThan: Long): Result<List<CalendarEvent>>
@@ -21,6 +24,8 @@ interface TimeMasterDataSource {
     suspend fun upUserExp(exp: Long): Result<Boolean>
 
     suspend fun syncImage(uri: Uri): Result<String>
+
+    suspend fun handleFacebookAccessToken(token: AccessToken?): Result<FirebaseUser?>
 
     fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>>
 

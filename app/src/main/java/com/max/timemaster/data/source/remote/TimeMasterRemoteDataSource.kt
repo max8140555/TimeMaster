@@ -8,6 +8,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
+import com.facebook.AccessToken
+import com.facebook.login.LoginResult
+import com.google.firebase.auth.FacebookAuthProvider
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
@@ -434,6 +439,39 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                     }
                 }
         }
+
+    override suspend fun handleFacebookAccessToken(token: AccessToken?): Result<FirebaseUser?> =
+        suspendCoroutine { continuation ->
+
+            val credential = FacebookAuthProvider.getCredential(token?.token!!)
+            FirebaseAuth.getInstance()?.signInWithCredential(credential)
+                ?.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        //Third step
+                        //Login
+                        val userId = task.result?.additionalUserInfo?.profile?.getValue("id")
+                        UserManager.user.image = "https://graph.facebook.com/$userId/picture?height=500"
+                        UserManager.userEmail = task.result?.user?.email.toString()
+                        UserManager.user.email = task.result?.user?.email.toString()
+                        UserManager.user.name = task.result?.user?.displayName.toString()
+                        continuation.resume(Result.Success(task.result?.user))
+                    } else {
+                        task.exception?.let {
+
+                            Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                            return@addOnCompleteListener
+                        }
+                        continuation.resume(
+                            Result.Fail(
+                                TimeMasterApplication.instance.getString(
+                                    R.string.you_know_nothing
+                                )
+                            )
+                        )
+                    }
+                }
+    }
 
 
     override fun getLiveAllEvent(): MutableLiveData<List<CalendarEvent>> {

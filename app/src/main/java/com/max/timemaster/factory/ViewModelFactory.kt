@@ -8,6 +8,7 @@ import com.max.timemaster.cost.CostViewModel
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.favorite.FavoriteDetailDialogViewModel
 import com.max.timemaster.favorite.FavoriteViewModel
+import com.max.timemaster.login.LoginViewModel
 import com.max.timemaster.profile.ProfileViewModel
 import com.max.timemaster.profile.detail.ProfileDetailViewModel
 
@@ -34,6 +35,8 @@ class ViewModelFactory constructor(
                     ProfileDetailViewModel(timeMasterRepository)
                 isAssignableFrom(ProfileViewModel::class.java) ->
                     ProfileViewModel(timeMasterRepository)
+                isAssignableFrom(LoginViewModel::class.java) ->
+                    LoginViewModel(timeMasterRepository)
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }
