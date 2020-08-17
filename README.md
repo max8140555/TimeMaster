@@ -41,7 +41,7 @@
   - MPAndroidChart
   - ChipGroup
   - Facebook SDK
-  - Firebase Authorization
+  - Firebase Authentication
 - Jetpack
   - Navigation
   - Data Binding
