@@ -61,6 +61,6 @@
 - Android 6+ (Android SDK 23+)
 - Android Studio 4.0+
 ## 版本
-- 1.0.4
+- 1.0.5
 ## 聯絡方式
 max8140555@gmail.com
