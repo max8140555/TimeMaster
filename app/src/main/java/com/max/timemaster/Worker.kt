@@ -34,7 +34,7 @@ class Worker(appContext: Context, workerParams: WorkerParameters) :
                 manager =
                     TimeMasterApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 manager.createNotificationChannel(channel)
-             
+
             val title = inputData.getString(KEY_EVENT_TITLE)
             val content = inputData.getString(KEY_EVENT_CONTENT)
             val time = inputData.getLong(KEY_EVENT_TIME,0L)
