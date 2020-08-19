@@ -68,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
                 }
 
                 override fun onError(error: FacebookException?) {
-                    Log.e("Max", error.toString())
+
                 }
             })
     }

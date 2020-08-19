@@ -71,9 +71,8 @@ class LoginViewModel(private val timeMasterRepository: TimeMasterRepository) : V
                 is com.max.timemaster.data.Result.Success -> {
                     _error.value = null
                     _status.value = LoadApiStatus.DONE
-                    Log.d("MaxDD","${result.data}")
                     _user.value = result.data
-                    Log.d("MaxDDD","${user.value}")
+
                 }
                 is com.max.timemaster.data.Result.Fail -> {
                     _error.value = result.error

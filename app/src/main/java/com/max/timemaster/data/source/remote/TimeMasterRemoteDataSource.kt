@@ -4,12 +4,10 @@ package com.max.timemaster.data.source.remote
 import android.icu.util.Calendar
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.facebook.AccessToken
-import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -18,7 +16,6 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.max.timemaster.R
 import com.max.timemaster.TimeMasterApplication
-import com.max.timemaster.bindProfileImage
 import com.max.timemaster.data.*
 import com.max.timemaster.util.Logger
 import com.max.timemaster.util.UserManager
@@ -91,7 +88,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                             ?.add(calendarEvent)
                             ?.addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
-                                    Logger.i("postEvent: $calendarEvent")
+
                                     UserManager.exp.value = UserManager.exp.value?.plus(10)
 
                                     Toast.makeText(
@@ -138,8 +135,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                             ?.addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
 
-                                    Logger.i("postUser: $user")
-
                                     continuation.resume(Result.Success(true))
                                 } else {
                                     task.exception?.let {
@@ -158,7 +153,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                 }
                             }
                     } else {
-                        Log.d("postUser else", "已註冊過")
+                        Logger.d( "已註冊過")
                     }
                 }
 
@@ -180,7 +175,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                             document?.collection(PATH_DATE)?.add(myDate)
                                 ?.addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        Logger.i("postMyDate: $myDate")
 
                                         continuation.resume(Result.Success(true))
 
@@ -201,7 +195,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                                     }
                                 }
                         } else {
-                            Log.d("postDate else", "已註冊過")
+                            Logger.d( "已註冊過")
                         }
 
                     }
@@ -224,7 +218,7 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                             document?.collection(PATH_DATE_FAVORITE)?.add(dateFavorite)
                                 ?.addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        Logger.i("postdateFavorite: $dateFavorite")
+
                                         UserManager.exp.value = UserManager.exp.value?.plus(10)
                                         Toast.makeText(
                                             TimeMasterApplication.instance,
@@ -256,16 +250,13 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
 
                                 dateFavorite.favoriteContent?.let { it1 -> list.addAll(it1) }
 
-                                i["favoriteTitle"]
-                                Log.e("Max", "$list")
-                                Log.e("Max", "${i["favoriteContent"]}")
                                 document
                                     ?.collection(PATH_DATE_FAVORITE)
                                     ?.document(i.id)
                                     ?.update("favoriteContent", list)
                                     ?.addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
-                                            Logger.i("postdateFavorite: $dateFavorite")
+
                                             UserManager.exp.value = UserManager.exp.value?.plus(10)
                                             Toast.makeText(
                                                 TimeMasterApplication.instance,
@@ -310,7 +301,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                         document?.collection(PATH_DATE_COST)?.add(dateCost)
                             ?.addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
-                                    Logger.i("postEvent: $dateCost")
                                     UserManager.exp.value = UserManager.exp.value?.plus(10)
                                     Toast.makeText(
                                         TimeMasterApplication.instance,
@@ -365,8 +355,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                             )
                         }
 
-                        Logger.i("updateDate: $myDate")
-
                         continuation.resume(Result.Success(true))
                     }
                     .addOnFailureListener { exception ->
@@ -385,8 +373,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                     .update("exp", exp)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            Logger.i("updateExp: $exp")
-
                             continuation.resume(Result.Success(true))
                         } else {
                             task.exception?.let {
@@ -482,8 +468,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                 .collection(PATH_USERS).document(it).collection(PATH_CALENDAR)
                 .orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING)
                 .addSnapshotListener { snapshot, exception ->
-                    Logger.i("$snapshot")
-                    Logger.i("addSnapshotListener detect")
 
                     exception?.let {
                         Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
@@ -512,8 +496,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
             .whereEqualTo("email", UserManager.userEmail)
 
             .addSnapshotListener { snapshot, exception ->
-
-                Logger.i("addSnapshotListener detect")
 
                 exception?.let {
                     Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
@@ -547,8 +529,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                         .orderBy("loginDate", Query.Direction.ASCENDING)
                         .addSnapshotListener { snapshot, exception ->
 
-                            Logger.i("addSnapshotListener detect")
-
                             exception?.let {
                                 Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
                             }
@@ -576,8 +556,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
             db.document(it).collection(PATH_DATE_FAVORITE)
                 .addSnapshotListener { snapshot, exception ->
 
-                    Logger.i("addSnapshotListener detect")
-
                     exception?.let {
                         Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
                     }
@@ -604,8 +582,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
             db.document(it).collection(PATH_DATE_COST)
                 .orderBy("time", Query.Direction.DESCENDING)
                 .addSnapshotListener { snapshot, exception ->
-
-                    Logger.i("addSnapshotListener detect")
 
                     exception?.let {
                         Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
