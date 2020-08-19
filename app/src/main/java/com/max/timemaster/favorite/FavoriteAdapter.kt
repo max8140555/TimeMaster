@@ -62,6 +62,7 @@ class FavoriteAdapter :
                         TimeMasterApplication.instance.getString(R.string.color_white_text)
                     )
                     chip.setPadding(40, paddingDp, paddingDp, paddingDp)
+                    chipGroup.setBackgroundColor(Color.parseColor("#FCFCFC"))
                     chipGroup.addView(chip)
 
                     binding.executePendingBindings()
