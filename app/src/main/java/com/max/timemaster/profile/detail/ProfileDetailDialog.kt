@@ -70,7 +70,6 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
             ) {
                 viewModel.postAddDate()
                 UserManager.addDate.value = viewModel.edDateName.value
-                Log.d(" UserManager.addDate.value", "${UserManager.addDate.value}")
                 binding.editBirthday.background.setTint(R.color.black)
             } else {
                 findNavController().navigate(
@@ -173,7 +172,7 @@ class ProfileDetailDialog : AppCompatDialogFragment() {
                         data?.data?.let { viewModel.syncImage(it) }
                     }
                     Activity.RESULT_CANCELED -> {
-                        Log.wtf("getImageResult", resultCode.toString())
+
                     }
                 }
             }

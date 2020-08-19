@@ -192,7 +192,7 @@ class ProfileEditDialog : AppCompatDialogFragment() {
                         data?.data?.let { viewModel.syncImage(it) }
                     }
                     Activity.RESULT_CANCELED -> {
-                        Log.wtf("getImageResult", resultCode.toString())
+
                     }
                 }
             }

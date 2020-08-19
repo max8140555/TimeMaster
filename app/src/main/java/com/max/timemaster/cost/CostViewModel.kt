@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import com.max.timemaster.data.DateCost
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.network.LoadApiStatus
+import com.max.timemaster.util.Logger
 import com.max.timemaster.util.TimeUtil
 import com.max.timemaster.util.UserManager
 import kotlinx.coroutines.CoroutineScope
@@ -109,13 +110,13 @@ class CostViewModel(private val timeMasterRepository: TimeMasterRepository) : Vi
         }.map {
             it.costPrice
         }
-        Log.e("MaxCost allMoney","$allMoney")
+
         for (mon in allMoney) {
             if (mon != null) {
                 daySum += mon
             }
         }
-        Log.e("MaxCost daySum","$daySum")
+
         return daySum
     }
 

@@ -10,6 +10,7 @@ import com.max.timemaster.data.CalendarEvent
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.network.LoadApiStatus
 import com.max.timemaster.util.TimeUtil.dateToStampTime
+import com.max.timemaster.util.TimeUtil.stampToDateTime
 import com.max.timemaster.util.UserManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -143,6 +144,19 @@ class CalendarDetailViewModel(
                 is com.max.timemaster.data.Result.Success -> {
                     _error.value = null
                     _status.value = LoadApiStatus.DONE
+                    setData.value?.dateStamp?.let { startTime ->
+                        setData.value?.dateEndStamp?.let { endTime ->
+                            TimeMasterApplication.instance.setWork(
+                                "提醒你！等等要跟${setData.value?.attendee}去${setData.value?.calendarTitle}"
+                                ,
+                                stampToDateTime(startTime, Locale.TAIWAN) + " - " + stampToDateTime(
+                                    endTime,
+                                    Locale.TAIWAN
+                                ),
+                                startTime
+                            )
+                        }
+                    }
                     leave(true)
                 }
                 is com.max.timemaster.data.Result.Fail -> {
