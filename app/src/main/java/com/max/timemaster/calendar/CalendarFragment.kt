@@ -207,6 +207,7 @@ class CalendarFragment : Fragment() {
                 widget.selectedDate = CalendarDay.from(date.year, date.month, date.day)
             }
         }
+        viewModel.showTodayEvent()
     }
 
     private fun mark() {
@@ -283,17 +284,6 @@ class CalendarFragment : Fragment() {
             }
         }
     }
-
-
-//暫時先留著!!
-//    override fun onResume() {
-//        super.onResume()
-//
-//        UserManager.myDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-//            mark()
-//        })
-//    }
-
 }
 
 
