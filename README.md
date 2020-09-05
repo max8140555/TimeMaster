@@ -58,9 +58,9 @@
   - Firebase Ayalytics
   - Espresso
 ## 系統需求
-- Android 6+ (Android SDK 23+)
+- Android 8+ (Android SDK 26+)
 - Android Studio 4.0+
 ## 版本
-- 1.1.0
+- 1.2.1
 ## 聯絡方式
 max8140555@gmail.com
