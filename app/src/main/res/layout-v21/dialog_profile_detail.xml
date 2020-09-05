@@ -54,7 +54,7 @@
                 android:gravity="center"
                 android:hint="Name"
                 android:maxLength="15"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:text="@={viewModel.edDateName}"
                 android:textColorHint="@color/gray_999999"
                 android:textSize="14sp"

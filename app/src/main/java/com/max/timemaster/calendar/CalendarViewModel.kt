@@ -69,9 +69,7 @@ class CalendarViewModel(
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    init {
-        showTodayEvent()
-    }
+
 
     override fun onCleared() {
         super.onCleared()
@@ -151,7 +149,7 @@ class CalendarViewModel(
 
     }
 
-    private fun showTodayEvent() {
+     fun showTodayEvent() {
         when (returnDate) {
             null -> {
                 setTimeInterval(LocalDate.now().toString())
