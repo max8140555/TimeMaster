@@ -1,6 +1,8 @@
 package com.max.timemaster.cost
 
 
+import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +17,10 @@ import androidx.navigation.fragment.findNavController
 import com.max.timemaster.*
 import com.max.timemaster.databinding.DialogCostDetailBinding
 import com.max.timemaster.ext.getVmFactory
+import com.max.timemaster.util.TimeUtil
+import org.threeten.bp.LocalDate
+import java.lang.String
+import java.util.*
 
 
 class CostDetailDialog : AppCompatDialogFragment() {
@@ -47,6 +53,10 @@ class CostDetailDialog : AppCompatDialogFragment() {
             )
         )
 
+        binding.selectDate.setOnClickListener {
+            datePicker()
+        }
+
         binding.buttonPublish.setOnClickListener {
             if (!viewModel.edTitle.value.isNullOrEmpty() && !viewModel.edMoney.value.isNullOrEmpty()) {
 
@@ -74,6 +84,26 @@ class CostDetailDialog : AppCompatDialogFragment() {
 
         return binding.root
 
+    }
+
+
+    @SuppressLint("DefaultLocale", "SetTextI18n")
+    fun datePicker() {
+        val calender = Calendar.getInstance()
+        val dateListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
+            calender.set(year, month, day)
+            String.format("yyyy-MM-dd")
+            val newMonth = String.format("%02d", month)
+            val newDay = String.format("%02d", day)
+            binding.selectDate.text = "$year-${newMonth.toInt() + 1}-$newDay"
+            viewModel.edTime.value = "$year-${newMonth.toInt() + 1}-$newDay"
+        }
+
+        val date = TimeUtil.splitDateSet(LocalDate.now().toString(), "-")
+
+        activity?.let {
+            DatePickerDialog(it, dateListener, date.year, date.month-1, date.day).show()
+        }
     }
 
 }

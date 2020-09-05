@@ -9,10 +9,13 @@ import com.max.timemaster.TimeMasterApplication
 import com.max.timemaster.data.DateCost
 import com.max.timemaster.data.TimeMasterRepository
 import com.max.timemaster.network.LoadApiStatus
+import com.max.timemaster.util.TimeUtil.dateToStamp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDate
+import java.util.*
 
 class CostDetailDialogViewModel( private val timeMasterRepository: TimeMasterRepository) : ViewModel() {
 
@@ -20,7 +23,9 @@ class CostDetailDialogViewModel( private val timeMasterRepository: TimeMasterRep
     var edTitle = MutableLiveData<String>()
     var edMoney = MutableLiveData<String>()
     var edContent = MutableLiveData<String>()
-
+    var edTime = MutableLiveData<String>().apply {
+        value = LocalDate.now().toString()
+    }
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
 
@@ -83,7 +88,8 @@ class CostDetailDialogViewModel( private val timeMasterRepository: TimeMasterRep
             edAttendee.value,
             edTitle.value,
             edMoney.value?.toLong(),
-            edContent.value
+            edContent.value,
+            dateToStamp(edTime.value?:"${LocalDate.now()}", Locale.TAIWAN)
         )
     }
 

@@ -20,12 +20,28 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_publish"
             android:layout_width="0dp"
-            android:layout_height="225dp"
+            android:layout_height="285dp"
             android:background="@drawable/bg_publish"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:onClick="@{() -> viewModel.nothing()}">
+
+            <Button
+                android:id="@+id/select_date"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@color/white"
+                android:text="@={viewModel.edTime}"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/edit_publish_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="2020-08-22" />
+
+
 
             <EditText
                 android:id="@+id/edit_publish_title"
@@ -37,8 +53,8 @@
                 android:textColorHint="@color/gray_999999"
                 android:letterSpacing="0.1"
                 android:text="@={viewModel.edTitle}"
-                android:maxLines="1"
                 android:maxLength="10"
+                android:singleLine="true"
                 android:paddingHorizontal="18dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="12dp"
@@ -47,7 +63,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/select_date" />
 
             <EditText
                 android:id="@+id/edit_publish_money"
@@ -58,7 +74,7 @@
                 android:hint="金額"
                 android:inputType="number"
                 android:letterSpacing="0.1"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:maxLength="6"
                 android:paddingHorizontal="18dp"
                 android:paddingTop="16dp"
@@ -80,15 +96,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_publish_title"
                 app:layout_constraintBottom_toTopOf="@+id/edit_publish_money"/>
+
             <TextView
                 android:id="@+id/line_2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#cccccc"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_publish_money"
-/>
-
+                app:layout_constraintTop_toBottomOf="@+id/edit_publish_money" />
 
             <EditText
                 android:id="@+id/edit_publish_content"

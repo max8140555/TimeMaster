@@ -297,7 +297,6 @@ object TimeMasterRemoteDataSource : TimeMasterDataSource {
                 db.document(it)
                     .get()
                     .addOnSuccessListener { doc ->
-                        dateCost.time = Calendar.getInstance().timeInMillis
                         document?.collection(PATH_DATE_COST)?.add(dateCost)
                             ?.addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
