@@ -204,10 +204,8 @@ class CostFragment : Fragment() {
                 findNavController().navigate(R.id.navigate_to_costDetailDialog)
             }
         } else {
-
             binding.imagePrompt.visibility = GONE
             binding.prompt.visibility = GONE
-
         }
     }
 
