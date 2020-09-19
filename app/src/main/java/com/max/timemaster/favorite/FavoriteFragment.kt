@@ -119,6 +119,7 @@ class FavoriteFragment : Fragment() {
         when (state) {
             NOT_ATTENDEE -> {
                 binding.prompt.visibility = VISIBLE
+                binding.imagePrompt.visibility = GONE
                 binding.prompt.text = getString(R.string.hint_add_date_text)
             }
             SELECT_ATTENDEE -> {
